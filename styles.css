@@ -612,10 +612,10 @@ body.dark-mode .menu-item.active {
   display: block;
 }
 
-/* DASHBOARD 2-COLUMN INNER WRAPPER */
+/* DASHBOARD 1-COLUMN COHESIVE INNER WRAPPER */
 .dashboard-columns-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 270px;
+  display: flex;
+  flex-direction: column;
   gap: 18px;
 }
 
@@ -863,6 +863,17 @@ body.dark-mode .progress-track {
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
+}
+
+/* DASHBOARD DEALS SECTION (BELOW BUDGET CATEGORIES) */
+.dashboard-deals-section {
+  margin-top: 10px;
+}
+
+.dashboard-deals-horizontal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
 }
 
 .deals-vertical-list {

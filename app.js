@@ -469,7 +469,7 @@ function processUserQuery(query) {
       state.categories.shopping.percent = Math.min(100, Math.round((state.categories.shopping.spent / state.categories.shopping.limit) * 100));
       updateUIOverview();
 
-      addMessage('alexa', 'Alexa+', `🛡️ <strong>MCP Tool [validate_purchase_safety]:</strong> Validating order with remaining shopping allowance. Safe capacity verified ($${buyPrice.toFixed(2)} deducted). Purchase order initiated with 1-Click Prime Delivery!`);
+      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [validate_purchase_safety]:</strong> Validating order with remaining shopping allowance. Safe capacity verified ($${buyPrice.toFixed(2)} deducted). Purchase order initiated with 1-Click Prime Delivery!`);
     });
 
   } else if (qLower.includes('track') || qLower.includes('price') || qLower.includes('drop')) {
@@ -481,7 +481,7 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `🎯 <strong>MCP Tool [track_price_drop_target]:</strong> Price Drop Sniper activated for targeted Amazon product! Target set at -20% discount threshold.`);
+      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [track_price_drop_target]:</strong> Price Drop Sniper activated for targeted Amazon product! Target set at -20% discount threshold.`);
     });
 
   } else if (qLower.includes('split') || qLower.includes('household') || qLower.includes('share')) {
@@ -493,7 +493,7 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `👥 <strong>MCP Tool [split_shared_expense]:</strong> Household expense split 50/50 with Michael Jenkins. Updated shared pool ledger.`);
+      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [split_shared_expense]:</strong> Household expense split 50/50 with Michael Jenkins. Updated shared pool ledger.`);
     });
 
   } else if (qLower.includes('tech') || qLower.includes('deal') || qLower.includes('item')) {
@@ -504,7 +504,7 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', '🛍️ <strong>MCP Tool [search_amazon_deals]:</strong> Found top verified deals! Amazon Echo Show 8 ($99.99, 30% Off) & Bose 700 ($219.00).');
+      addMessage('alexa', 'Alexa+', '<strong>MCP Tool [search_amazon_deals]:</strong> Found top verified deals! Amazon Echo Show 8 ($99.99, 30% Off) & Bose 700 ($219.00).');
       switchTab('shopping');
     });
 
@@ -515,7 +515,7 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `🥦 <strong>MCP Tool [get_financial_summary]:</strong> You have spent $${state.categories.groceries.spent} out of $${state.categories.groceries.limit} (${state.categories.groceries.percent}%). Buffer remaining: $${state.categories.groceries.limit - state.categories.groceries.spent}.`);
+      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [get_financial_summary]:</strong> You have spent $${state.categories.groceries.spent} out of $${state.categories.groceries.limit} (${state.categories.groceries.percent}%). Buffer remaining: $${state.categories.groceries.limit - state.categories.groceries.spent}.`);
     });
 
   } else if (qLower.includes('balance') || qLower.includes('account')) {
@@ -525,7 +525,7 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `💳 <strong>MCP Resource [vault://financial/overview]:</strong> Account Balance is $${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})}. Investment Value: $${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})} (+4.2%).`);
+      addMessage('alexa', 'Alexa+', `<strong>MCP Resource [vault://financial/overview]:</strong> Account Balance is $${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})}. Investment Value: $${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})} (+4.2%).`);
     });
 
   } else {
@@ -536,7 +536,7 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `⚡ <strong>MCP Protocol 2025-11-25:</strong> Analyzed request via 6 Autonomous Tools & 3 Resources. Total monthly spending is $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All categories healthy.`);
+      addMessage('alexa', 'Alexa+', `<strong>MCP Protocol 2025-11-25:</strong> Analyzed request via 6 Autonomous Tools & 3 Resources. Total monthly spending is $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All categories healthy.`);
     });
   }
 }
