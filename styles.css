@@ -1079,12 +1079,14 @@ body.dark-mode .progress-track {
 /* DASHBOARD DEALS SECTION (BELOW BUDGET CATEGORIES) */
 .dashboard-deals-section {
   margin-top: 10px;
+  width: 100%;
 }
 
 .dashboard-deals-horizontal-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* auto-fit dynamically expands all 6 cards to stretch 100% full width */
   gap: 12px;
+  width: 100%;
 }
 
 .deal-item-card {
