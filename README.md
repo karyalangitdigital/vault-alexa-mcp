@@ -96,6 +96,26 @@ flowchart TD
 - **Amazon Selling Partner API**: Integrates live Prime catalog inventory, dynamic deals, and Seller fulfillment status.
 - **Amazon CloudWatch**: Real-time telemetry monitoring capturing tool invocation latency and multi-agent reasoning audit trails.
 
+### 🔄 End-to-End Multi-Layer Data Flow:
+
+1. **Layer 1: Multi-Modal Client & Voice Layer (User Interface)**
+   - **Components**: End-users interact through smart surfaces (Alexa Echo Show, Fire TV, or Web UI Dashboard).
+   - **Process**: Natural voice commands are processed via Speech Recognition & Neural TTS. Directives are transmitted over secure **Streamable HTTP / SSE Protocol via TLS 1.3** to backend endpoints.
+
+2. **Layer 2: API Gateway & Transport Security Layer**
+   - **Components**: Amazon API Gateway acts as the enterprise ingress controller.
+   - **Process**: Handles **Bidirectional JSON-RPC 2.0 / Server-Sent Events (SSE)** streaming for real-time text and trace delivery. Access control is strictly enforced using **Encrypted IAM Authentication** and **Signed SigV4 Amazon API** policies.
+
+3. **Layer 3: Compute & Multi-Agent Orchestration Layer (The AI Brain)**
+   - **Components**: Self-Hosted VaultAlexa+ MCP Server running on **AWS Lambda & Amazon ECS Fargate**, integrated with **AWS Bedrock AgentCore**.
+   - **Process**: Orchestrates workload distribution across an **Amazon Nova Pro & Claude 3.5 Agent Swarm**. Dynamic tool invocation routes low-complexity queries with minimum latency while applying deep reasoning chains to sensitive financial risk transactions.
+
+4. **Layer 4: MCP Registry & Secure Storage (Data & Enterprise Telemetry Layer)**
+   - **MCP Registry (Spec 2025-11-25 Compliant)**: Houses the manifest (`mcp-config.json`) registering **11 Multi-Agent Tools** (`predict_monthly_runway`, `initiate_purchase_dispute`, `trigger_peer_split_request`, etc.) and 3 active MCP Resources (`vault://financial/overview.json`).
+   - **Amazon DynamoDB**: High-throughput NoSQL datastore managing encrypted personal financial vaults and multi-user household ledgers.
+   - **Amazon Selling Partner API**: Real-time sync with Amazon Prime inventory and seller catalog fulfillment data.
+   - **Amazon CloudWatch Logs**: Central observability hub recording structured **Sub-15ms AI Reasoning Traces & Audit Trails** for financial regulatory compliance.
+
 ---
 
 ## 🛠️ Quickstart (Zero Dependencies Required for Web Demo)
