@@ -16,7 +16,7 @@
     "aws-bedrock",
     "financial-agent"
   ],
-  "author": "Hackathon Participant",
+  "author": "KARYA LANGIT Digital. ( Supriadi )",
   "license": "MIT",
   "dependencies": {
     "express": "^4.19.2",
