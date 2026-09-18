@@ -194,6 +194,10 @@
           <i class="fa-solid fa-gear"></i>
           <span>Settings</span>
         </button>
+        <button class="menu-item" data-tab="mcp-inspector">
+          <i class="fa-solid fa-terminal"></i>
+          <span>MCP Inspector</span>
+        </button>
       </nav>
     </aside>
 
@@ -558,6 +562,112 @@
               <input type="checkbox" checked class="toggle-switch">
             </div>
           </div>
+        </div>
+
+        <!-- 7. MCP Inspector & Dev Playground View -->
+        <div class="tab-view" id="view-mcp-inspector">
+          <div class="tab-page-header">
+            <div class="header-badge-row">
+              <h2 class="column-title"><i class="fa-solid fa-terminal text-green"></i> MCP Protocol Inspector & Playground</h2>
+              <span class="mcp-spec-pill"><i class="fa-solid fa-shield-halved"></i> Spec 2025-11-25 Compliant</span>
+            </div>
+            <p class="tab-description">Interactive Model Context Protocol (MCP) diagnostics suite for Amazon Bedrock, Alexa+, and Developer testing.</p>
+          </div>
+
+          <!-- Protocol Handshake Summary Cards -->
+          <div class="mcp-stats-grid">
+            <div class="mcp-stat-card">
+              <div class="mcp-stat-num text-blue">6 Tools</div>
+              <div class="mcp-stat-lbl">Registered JSON-RPC Handlers</div>
+            </div>
+            <div class="mcp-stat-card">
+              <div class="mcp-stat-num text-green">3 Resources</div>
+              <div class="mcp-stat-lbl">Active URIs (vault://)</div>
+            </div>
+            <div class="mcp-stat-card">
+              <div class="mcp-stat-num text-purple">2 Prompts</div>
+              <div class="mcp-stat-lbl">Structured Reusable Templates</div>
+            </div>
+            <div class="mcp-stat-card">
+              <div class="mcp-stat-num text-amber">JSON-RPC 2.0</div>
+              <div class="mcp-stat-lbl">Transport Protocol Standard</div>
+            </div>
+          </div>
+
+          <!-- 2-Column Inspector Layout: Request Builder on Left, Live Output on Right -->
+          <div class="mcp-inspector-workspace">
+            
+            <!-- Left: Request Builder -->
+            <div class="card mcp-pane">
+              <div class="mcp-pane-header">
+                <span class="mcp-pane-title"><i class="fa-solid fa-sliders"></i> JSON-RPC 2.0 Request Dispatcher</span>
+                <span class="mcp-method-badge" id="inspector-method-tag">tools/call</span>
+              </div>
+
+              <div class="inspector-field-group">
+                <label class="inspector-label">Select Registered MCP Tool:</label>
+                <select id="mcp-tool-select" class="mcp-select-input" onchange="onInspectorToolChange(this.value)">
+                  <option value="validate_purchase_safety">validate_purchase_safety (Guardrail & 1-Click Buy)</option>
+                  <option value="get_financial_summary">get_financial_summary (Liquidity & Spend Pacing)</option>
+                  <option value="search_amazon_deals">search_amazon_deals (Seller Inventory & Prime Discounts)</option>
+                  <option value="track_price_drop_target">track_price_drop_target (Deal Sniper Watcher)</option>
+                  <option value="split_shared_expense">split_shared_expense (Amazon Household Pool)</option>
+                  <option value="log_transaction">log_transaction (Real-Time Ledger Sync)</option>
+                </select>
+              </div>
+
+              <div class="inspector-field-group">
+                <div class="inspector-label-row">
+                  <label class="inspector-label">Tool Input Arguments (JSON):</label>
+                  <button type="button" class="btn-micro-reset" onclick="resetInspectorArgs()">Reset Defaults</button>
+                </div>
+                <textarea id="mcp-tool-args-input" class="mcp-code-editor" rows="6"></textarea>
+              </div>
+
+              <div class="inspector-action-row">
+                <button type="button" class="btn-primary-action" id="btn-execute-mcp-tool" onclick="executeInspectorTool()">
+                  <i class="fa-solid fa-play"></i> Execute JSON-RPC Tool
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Live Response Output -->
+            <div class="card mcp-pane">
+              <div class="mcp-pane-header">
+                <span class="mcp-pane-title"><i class="fa-solid fa-code"></i> Live Server Response</span>
+                <div class="mcp-header-metrics">
+                  <span class="latency-badge" id="inspector-latency-badge"><i class="fa-solid fa-bolt"></i> 12 ms</span>
+                  <span class="status-code-badge" id="inspector-status-badge">200 OK</span>
+                </div>
+              </div>
+
+              <div class="mcp-response-box" id="inspector-response-output">
+                <pre><code id="inspector-json-code">// Click "Execute JSON-RPC Tool" to inspect live payload...</code></pre>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Section: 1-Click MCP Config Exporter -->
+          <div class="card mcp-config-exporter-card">
+            <div class="exporter-header">
+              <div>
+                <h3 class="card-subtitle" style="margin-bottom:2px;"><i class="fa-solid fa-file-code text-blue"></i> 1-Click MCP Configuration Manifest (mcp-config.json)</h3>
+                <p class="exporter-sub">Ready for immediate plug-and-play integration with Amazon Bedrock Agent, Alexa Developer Console, and Claude Desktop.</p>
+              </div>
+              <button class="btn-copy-config" id="btn-copy-mcp-config" onclick="copyMcpConfigSnippet()">
+                <i class="fa-solid fa-copy"></i> Copy Config JSON
+              </button>
+            </div>
+            <pre class="mcp-config-preview"><code>{
+  "name": "vault-alexa-mcp",
+  "version": "1.0.0",
+  "protocolVersion": "2025-11-25",
+  "transport": { "type": "http-jsonrpc", "url": "http://localhost:3000/mcp/v1/rpc" },
+  "capabilities": { "tools": { "listChanged": true }, "resources": { "subscribe": true }, "prompts": {} }
+}</code></pre>
+          </div>
+
         </div>
 
       </div>

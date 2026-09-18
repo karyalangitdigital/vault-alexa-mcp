@@ -78,6 +78,7 @@ const I18N_DICT = {
     navGoals: 'Target',
     navInsights: 'Wawasan AI',
     navSettings: 'Pengaturan',
+    navMcpInspector: 'Inspektur MCP',
     overviewTitle: 'Ringkasan Keuangan Anda',
     accBalanceLbl: 'Saldo Rekening',
     investValLbl: 'Nilai Investasi',
@@ -107,6 +108,7 @@ const I18N_DICT = {
     navGoals: 'Goals',
     navInsights: 'Insights',
     navSettings: 'Settings',
+    navMcpInspector: 'MCP Inspector',
     overviewTitle: 'Your Financial Overview',
     accBalanceLbl: 'Account Balance',
     investValLbl: 'Investment Value',
@@ -567,7 +569,8 @@ function applyLanguage(lang, announce = true) {
     shopping: d.navShopping,
     goals: d.navGoals,
     insights: d.navInsights,
-    settings: d.navSettings
+    settings: d.navSettings,
+    'mcp-inspector': d.navMcpInspector
   };
   document.querySelectorAll('.menu-item').forEach(item => {
     const tabKey = item.getAttribute('data-tab');
@@ -1062,8 +1065,203 @@ if (chatResizerHandle && chatColumn) {
   });
 }
 
+// MCP Inspector & Playground Logic
+const DEFAULT_TOOL_ARGS = {
+  validate_purchase_safety: {
+    itemTitle: "Bose Headphones 700",
+    itemPrice: 219.00,
+    category: "shopping",
+    requiresApprovalAbove: 100.00
+  },
+  get_financial_summary: {
+    includeRecentDays: 30,
+    computeWeeklyPacing: true
+  },
+  search_amazon_deals: {
+    category: "electronics",
+    minimumDiscountPercent: 15,
+    primeOnly: true
+  },
+  track_price_drop_target: {
+    itemTitle: "Amazon Echo Show 8",
+    targetPrice: 79.99,
+    notifyViaVoice: true
+  },
+  split_shared_expense: {
+    amount: 120.00,
+    description: "Whole Foods Organic Groceries",
+    splitCount: 3,
+    payer: "Sarah Jenkins"
+  },
+  log_transaction: {
+    description: "Starbucks Coffee & Snacks",
+    amount: 14.50,
+    category: "diningOut"
+  }
+};
+
+window.onInspectorToolChange = function(toolName) {
+  const argsInput = document.getElementById('mcp-tool-args-input');
+  if (argsInput && DEFAULT_TOOL_ARGS[toolName]) {
+    argsInput.value = JSON.stringify(DEFAULT_TOOL_ARGS[toolName], null, 2);
+  }
+};
+
+window.resetInspectorArgs = function() {
+  const select = document.getElementById('mcp-tool-select');
+  if (select) {
+    onInspectorToolChange(select.value);
+  }
+};
+
+window.executeInspectorTool = function() {
+  const select = document.getElementById('mcp-tool-select');
+  const argsInput = document.getElementById('mcp-tool-args-input');
+  const codeOutput = document.getElementById('inspector-json-code');
+  const latencyBadge = document.getElementById('inspector-latency-badge');
+  const statusBadge = document.getElementById('inspector-status-badge');
+
+  if (!select || !argsInput || !codeOutput) return;
+
+  const toolName = select.value;
+  let parsedArgs = {};
+  try {
+    parsedArgs = JSON.parse(argsInput.value);
+  } catch (err) {
+    codeOutput.textContent = JSON.stringify({
+      jsonrpc: "2.0",
+      error: { code: -32700, message: "Parse Error: Invalid JSON input format" },
+      id: "req-" + Date.now()
+    }, null, 2);
+    if (statusBadge) {
+      statusBadge.textContent = "400 BAD REQUEST";
+      statusBadge.className = "status-code-badge text-amber";
+    }
+    return;
+  }
+
+  const startTime = performance.now();
+  
+  // Simulate standard MCP JSON-RPC 2.0 execution result
+  let toolResultContent = {};
+
+  if (toolName === 'validate_purchase_safety') {
+    const isSafe = (state.categories.shopping.spent + (parsedArgs.itemPrice || 0)) <= state.categories.shopping.limit;
+    toolResultContent = {
+      status: isSafe ? "APPROVED_SAFE" : "OVER_BUDGET_WARNING",
+      item: parsedArgs.itemTitle || "Item",
+      price: parsedArgs.itemPrice || 0,
+      monthlyLimit: state.categories.shopping.limit,
+      currentSpent: state.categories.shopping.spent,
+      safeToSpendScore: isSafe ? "9.4/10" : "4.2/10",
+      actionRecommendation: isSafe ? "Execute 1-Click Prime Order" : "Request Manual User Confirmation / Transfer"
+    };
+  } else if (toolName === 'get_financial_summary') {
+    toolResultContent = {
+      accountBalance: state.accountBalance,
+      investmentValue: state.investmentValue,
+      monthlySpending: state.monthlySpending,
+      categoryUtilization: state.categories,
+      healthStatus: "NOMINAL",
+      currency: "USD"
+    };
+  } else if (toolName === 'search_amazon_deals') {
+    toolResultContent = {
+      dealsFoundCount: state.deals.length,
+      deals: state.deals.map(d => ({ title: d.title, price: d.price, discount: d.discount, prime: true })),
+      curationVerdict: "6 Verified Prime Deals matching current budget pacing"
+    };
+  } else if (toolName === 'track_price_drop_target') {
+    toolResultContent = {
+      watchdogId: "watch-" + Math.floor(1000 + Math.random() * 9000),
+      item: parsedArgs.itemTitle,
+      targetPrice: parsedArgs.targetPrice,
+      status: "ACTIVE_BACKGROUND_POLL",
+      triggerCondition: `Current Price <= $${parsedArgs.targetPrice}`
+    };
+  } else if (toolName === 'split_shared_expense') {
+    const splitAmt = ((parsedArgs.amount || 0) / (parsedArgs.splitCount || 1)).toFixed(2);
+    toolResultContent = {
+      splitStatus: "LEDGER_SYNCHRONIZED",
+      totalAmount: parsedArgs.amount,
+      splitCount: parsedArgs.splitCount,
+      perMemberShare: parseFloat(splitAmt),
+      householdMembersDebited: ["Sarah Jenkins", "Michael Jenkins", "David Jenkins"]
+    };
+  } else if (toolName === 'log_transaction') {
+    toolResultContent = {
+      status: "LOGGED_SUCCESSFULLY",
+      transactionId: "tx-" + Math.floor(10000 + Math.random() * 90000),
+      recorded: parsedArgs,
+      newLedgerBalance: state.accountBalance - (parsedArgs.amount || 0)
+    };
+  }
+
+  const durationMs = Math.max(8, Math.round(performance.now() - startTime + Math.random() * 8));
+
+  const responseRpc = {
+    jsonrpc: "2.0",
+    id: "rpc-call-" + Date.now().toString(36),
+    result: {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(toolResultContent, null, 2)
+        }
+      ],
+      isError: false,
+      _meta: {
+        protocolVersion: "2025-11-25",
+        serverTimestamp: new Date().toISOString(),
+        executionLatencyMs: durationMs
+      }
+    }
+  };
+
+  codeOutput.textContent = JSON.stringify(responseRpc, null, 2);
+
+  if (latencyBadge) {
+    latencyBadge.innerHTML = `<i class="fa-solid fa-bolt"></i> ${durationMs} ms`;
+  }
+  if (statusBadge) {
+    statusBadge.textContent = "200 OK";
+    statusBadge.className = "status-code-badge";
+  }
+};
+
+window.copyMcpConfigSnippet = function() {
+  const configText = `{
+  "name": "vault-alexa-mcp",
+  "version": "1.0.0",
+  "protocolVersion": "2025-11-25",
+  "transport": {
+    "type": "http-jsonrpc",
+    "url": "http://localhost:3000/mcp/v1/rpc"
+  },
+  "capabilities": {
+    "tools": { "listChanged": true },
+    "resources": { "subscribe": true },
+    "prompts": { "listChanged": true }
+  }
+}`;
+
+  navigator.clipboard.writeText(configText).then(() => {
+    const btn = document.getElementById('btn-copy-mcp-config');
+    if (btn) {
+      btn.innerHTML = `<i class="fa-solid fa-check"></i> Copied!`;
+      setTimeout(() => {
+        btn.innerHTML = `<i class="fa-solid fa-copy"></i> Copy Config JSON`;
+      }, 2000);
+    }
+  }).catch(() => {
+    alert("MCP Config copied to clipboard!");
+  });
+};
+
 // Initialize Application on Load
 renderShoppingGrid();
 updateUIOverview();
 applyLanguage('ID', false);
 setMicActiveState(false);
+resetInspectorArgs();
+

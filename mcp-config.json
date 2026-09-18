@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json.schemastore.org/mcp.json",
+  "name": "vault-alexa-mcp",
+  "version": "1.0.0",
+  "description": "VaultAlexa+ Enterprise Financial AI Agent & Autonomous Amazon Shopping MCP Server",
+  "protocolVersion": "2025-11-25",
+  "author": "Amazon Developer Hackathon 2026 - Alexa+ Track Participant",
+  "mcpServers": {
+    "vault-alexa": {
+      "command": "node",
+      "args": [
+        "mcp-server.js"
+      ],
+      "env": {
+        "PORT": "3000",
+        "NODE_ENV": "production",
+        "MCP_PROTOCOL_VERSION": "2025-11-25"
+      },
+      "transport": {
+        "type": "http-jsonrpc",
+        "url": "http://localhost:3000/mcp/v1/rpc"
+      }
+    }
+  },
+  "capabilities": {
+    "tools": {
+      "listChanged": true
+    },
+    "resources": {
+      "subscribe": true,
+      "listChanged": true
+    },
+    "prompts": {
+      "listChanged": true
+    },
+    "logging": {}
+  },
+  "alexaPlusIntegration": {
+    "skillId": "amzn1.ask.skill.vault-alexa-plus-2026",
+    "endpointUri": "https://vault-alexa-mcp.aws.amazon.com/mcp/v1/rpc",
+    "supportedIntents": [
+      "CheckBudgetIntent",
+      "SafePurchaseIntent",
+      "AmazonDealSearchIntent",
+      "SplitBillIntent",
+      "PriceDropSniperIntent"
+    ]
+  },
+  "amazonBedrockAgent": {
+    "agentName": "VaultAlexaBedrockAgent",
+    "foundationModel": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+    "actionGroups": [
+      {
+        "actionGroupName": "MCP_Tools_Action_Group",
+        "apiSchema": "openapi-3.0",
+        "executionType": "LAMBDA"
+      }
+    ]
+  }
+}
