@@ -420,13 +420,13 @@ function processUserQuery(query) {
   if (qLower.includes('prediksi') || qLower.includes('forecast') || qLower.includes('runway') || qLower.includes('defisit') || qLower.includes('tagihan rutin') || qLower.includes('jatuh tempo')) {
     const traceSteps = isID ? [
       '🤖 [Multi-Agent Swarm] Kolaborasi 3 Sub-Agen Khusus Teraktivasi',
-      '🔍 [Sub-Agen 1: Risk & Forecast Analyst] Memanggil Tool: predict_monthly_runway(itemPrice: $210)',
-      '📊 [Sub-Agen 2: Wealth Manager] Mendeteksi 2 Tagihan Jatuh Tempo ($450) dalam 7 Hari',
+      '🔍 [Sub-Agen 1: Risk & Forecast Analyst] Memanggil Tool: predict_monthly_runway(itemPrice: $219.00)',
+      '📊 [Sub-Agen 2: Wealth Manager] Mendeteksi 2 Tagihan Jatuh Tempo ($450.00) dalam 7 Hari',
       '🛡️ [Sub-Agen 3: Safe-to-Spend Guard] Mensimulasikan Risiko Defisit Akhir Bulan'
     ] : [
       '🤖 [Multi-Agent Swarm] 3 Specialized Sub-Agents Engaged',
-      '🔍 [Sub-Agent 1: Risk & Forecast Analyst] Calling Tool: predict_monthly_runway(itemPrice: $210)',
-      '📊 [Sub-Agent 2: Wealth Manager] Detected 2 Pending Obligations ($450) Due in 7 Days',
+      '🔍 [Sub-Agent 1: Risk & Forecast Analyst] Calling Tool: predict_monthly_runway(itemPrice: $219.00)',
+      '📊 [Sub-Agent 2: Wealth Manager] Detected 2 Pending Obligations ($450.00) Due in 7 Days',
       '🛡️ [Sub-Agent 3: Safe-to-Spend Guard] Simulating Month-End Deficit Runway'
     ];
 
@@ -439,10 +439,10 @@ function processUserQuery(query) {
           </div>
           <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
             ⚠️ <strong>Analisis Prediksi AI (AWS Forecast):</strong><br>
-            Meskipun saldo Anda saat ini mencukupi, model kami mendeteksi <strong>2 tagihan rutin wajib ($450.00)</strong> yang akan jatuh tempo dalam 5-7 hari ke depan:<br>
+            Saya melihat Anda ingin membeli <strong>Bose Headphones 700</strong> seharga <strong>$219.00</strong>. Meskipun saldo Anda saat ini mencukupi, model kami mendeteksi <strong>2 tagihan rutin wajib ($450.00)</strong> yang akan jatuh tempo dalam 5-7 hari ke depan:<br>
             • <em>Tagihan Listrik & Smart Home:</em> $180.00 (5 hari lagi)<br>
             • <em>Premi Asuransi & Kesehatan:</em> $270.00 (7 hari lagi)<br><br>
-            💡 <strong>Saran Alexa+:</strong> Jika membeli barang sekarang, arus kas akhir bulan diproyeksikan <strong>defisit -$120.00</strong>. Disarankan menjadwalkan pembelian setelah tanggal gajian!
+            💡 <strong>Saran Alexa+:</strong> Jika membeli barang sekarang, arus kas akhir bulan diproyeksikan <strong>defisit -$129.00</strong>. Disarankan menjadwalkan pembelian setelah tanggal gajian!
           </div>
         </div>
       ` : `
@@ -453,10 +453,10 @@ function processUserQuery(query) {
           </div>
           <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
             ⚠️ <strong>AI Predictive Analysis (AWS Forecast):</strong><br>
-            While your current checking balance is sufficient, our forecast model identified <strong>2 recurring obligations ($450.00)</strong> due in 5-7 days:<br>
+            I see you want to purchase <strong>Bose Headphones 700</strong> for <strong>$219.00</strong>. While your current balance is sufficient, our forecast model identified <strong>2 recurring obligations ($450.00)</strong> due in 5-7 days:<br>
             • <em>Utilities & Smart Home Bill:</em> $180.00 (in 5 days)<br>
             • <em>Health & Insurance Premium:</em> $270.00 (in 7 days)<br><br>
-            💡 <strong>Alexa+ Advice:</strong> Executing this purchase now triggers a projected month-end <strong>deficit of -$120.00</strong>. We advise rescheduling after your next payroll!
+            💡 <strong>Alexa+ Advice:</strong> Executing this purchase now triggers a projected month-end <strong>deficit of -$129.00</strong>. We advise rescheduling after your next payroll!
           </div>
         </div>
       `;
@@ -481,30 +481,34 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
+      // Immediately reflect instant refund into state
+      state.accountBalance += 219.00;
+      updateUIOverview();
+
       const msg = isID ? `
         <strong>Tool MCP [initiate_purchase_dispute]:</strong>
-        <div class="chat-order-card" style="border-color:#ef4444;">
-          <div class="order-card-header" style="color:#dc2626;">
-            <i class="fa-solid fa-arrow-rotate-left"></i> Tiket Klaim & Pengembalian Dana Diterbitkan
+        <div class="chat-order-card" style="border-color:#10b981;">
+          <div class="order-card-header" style="color:#059669;">
+            <i class="fa-solid fa-arrow-rotate-left"></i> Tiket Klaim Disetujui & Refund Instan Berhasil!
           </div>
           <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
             🎫 <strong>Nomor RMA Tiket:</strong> <span class="badge badge-success">${disputeId}</span><br>
             📦 <strong>Barang:</strong> Bose Headphones 700 ($219.00)<br>
             🚚 <strong>Label Retur Prime:</strong> Label pengembalian gratis telah dikirim ke email Anda.<br>
-            💵 <strong>Status Refund:</strong> <strong style="color:#10b981;">+$219.00 dikembalikan</strong> ke saldo Prime Vault Anda dalam 1x24 jam kerja.
+            💵 <strong>Status Refund:</strong> <strong style="color:#10b981;">+$219.00 telah berhasil dikembalikan saat ini juga</strong> ke saldo Prime Vault Anda.
           </div>
         </div>
       ` : `
         <strong>MCP Tool [initiate_purchase_dispute]:</strong>
-        <div class="chat-order-card" style="border-color:#ef4444;">
-          <div class="order-card-header" style="color:#dc2626;">
-            <i class="fa-solid fa-arrow-rotate-left"></i> Amazon RMA Claim & Refund Authorized
+        <div class="chat-order-card" style="border-color:#10b981;">
+          <div class="order-card-header" style="color:#059669;">
+            <i class="fa-solid fa-arrow-rotate-left"></i> Amazon RMA Approved & Instant Refund Issued!
           </div>
           <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
             🎫 <strong>RMA Ticket ID:</strong> <span class="badge badge-success">${disputeId}</span><br>
             📦 <strong>Item:</strong> Bose Headphones 700 ($219.00)<br>
             🚚 <strong>Prime Return Label:</strong> Prepaid shipping QR code dispatched to your email.<br>
-            💵 <strong>Refund Status:</strong> <strong style="color:#10b981;">+$219.00 escrow refund</strong> credited to Prime Vault within 24 hours.
+            💵 <strong>Refund Status:</strong> <strong style="color:#10b981;">+$219.00 has been credited instantly</strong> to your Prime Vault balance right now.
           </div>
         </div>
       `;
@@ -1939,7 +1943,7 @@ const DEFAULT_TOOL_ARGS = {
     targetGoalName: "Vacation to Tokyo"
   },
   predict_monthly_runway: {
-    plannedPurchaseAmount: 210.00,
+    plannedPurchaseAmount: 219.00,
     itemTitle: "Bose Headphones 700",
     daysRemainingInMonth: 12
   },
@@ -2082,7 +2086,7 @@ window.executeInspectorTool = function() {
       advice: `Purchasing redirects funds equivalent to ${delayDays} days of savings toward "${goal}".`
     };
   } else if (toolName === 'predict_monthly_runway') {
-    const plannedAmt = parsedArgs.plannedPurchaseAmount || 210.00;
+    const plannedAmt = parsedArgs.plannedPurchaseAmount || 219.00;
     const upcomingBills = [
       { bill: "Electricity & Smart Home", amount: 180.00, dueInDays: 5 },
       { bill: "Insurance Premium", amount: 270.00, dueInDays: 7 }
