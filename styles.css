@@ -1,8 +1,8 @@
-/* VaultAlexa+ Design System - Exact 3-Column Desktop Alignment */
+/* VaultAlexa+ Design System - Exact Match to Design Mockup */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap');
 
 :root {
-  --bg-app: #f1f4f8;
+  --bg-app: #eef2f6;
   --bg-card: #ffffff;
   
   --primary-blue: #2563eb;
@@ -50,7 +50,7 @@ body {
 
 /* APP HEADER */
 .app-header {
-  height: 68px;
+  height: 64px;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border-light);
   display: flex;
@@ -74,13 +74,13 @@ body {
 }
 
 .logo-v-icon {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   background: linear-gradient(135deg, #2563eb, #3b82f6);
   color: #ffffff;
   font-weight: 800;
-  font-size: 20px;
-  border-radius: 10px;
+  font-size: 18px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,14 +89,14 @@ body {
 
 .logo-title {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: var(--text-main);
   line-height: 1.1;
 }
 
 .logo-subtitle {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
 }
 
@@ -116,12 +116,12 @@ body {
 
 .search-input {
   width: 100%;
-  height: 40px;
+  height: 38px;
   background: #f1f5f9;
   border: 1px solid var(--border-light);
   border-radius: 20px;
   padding: 0 16px 0 38px;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   outline: none;
   color: var(--text-main);
   transition: all 0.2s ease;
@@ -139,7 +139,7 @@ body.dark-mode .search-input {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .user-profile {
@@ -149,21 +149,21 @@ body.dark-mode .search-input {
 }
 
 .user-avatar {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   object-fit: cover;
 }
 
 .user-name {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: var(--text-main);
 }
 
 .header-icon-btn {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: #f1f5f9;
   display: flex;
@@ -172,7 +172,7 @@ body.dark-mode .search-input {
   color: var(--text-muted);
   cursor: pointer;
   position: relative;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 body.dark-mode .header-icon-btn {
@@ -193,9 +193,9 @@ body.dark-mode .header-icon-btn {
 .theme-mode-btn {
   background: #f1f5f9;
   border: 1px solid var(--border-light);
-  padding: 6px 14px;
+  padding: 5px 12px;
   border-radius: 20px;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -216,25 +216,29 @@ body.dark-mode .theme-mode-btn {
 }
 
 .left-sidebar {
-  width: 190px;
-  background: var(--bg-card);
+  width: 175px;
+  background: #f8fafc;
   border-right: 1px solid var(--border-light);
-  padding: 20px 12px;
+  padding: 20px 10px;
   flex-shrink: 0;
+}
+
+body.dark-mode .left-sidebar {
+  background: #1e293b;
 }
 
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
+  padding: 10px 14px;
+  border-radius: 20px; /* Capsule pill styling matching user screenshot */
   background: transparent;
   border: none;
   cursor: pointer;
@@ -242,22 +246,23 @@ body.dark-mode .theme-mode-btn {
   text-align: left;
   color: var(--text-muted);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   transition: all 0.2s ease;
 }
 
 .menu-item:hover {
-  background: #f8fafc;
+  background: #f1f5f9;
   color: var(--primary-blue);
 }
 
 .menu-item.active {
-  background: var(--primary-blue-light);
+  background: #e2e8f0; /* Crisp soft capsule highlight as in user markup */
   color: var(--primary-blue);
+  font-weight: 700;
 }
 
 body.dark-mode .menu-item.active {
-  background: rgba(37, 99, 235, 0.2);
+  background: #334155;
   color: #60a5fa;
 }
 
@@ -265,8 +270,8 @@ body.dark-mode .menu-item.active {
 .main-workspace-layout {
   flex: 1;
   display: flex;
-  gap: 20px;
-  padding: 24px;
+  gap: 18px;
+  padding: 20px 24px;
   align-items: stretch;
 }
 
@@ -283,16 +288,16 @@ body.dark-mode .menu-item.active {
   display: block;
 }
 
-/* DASHBOARD 2-COLUMN INNER WRAPPER (Col 1: Financial Overview + Col 2: Smart Amazon Deals) */
+/* DASHBOARD 2-COLUMN INNER WRAPPER */
 .dashboard-columns-wrapper {
   display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 20px;
+  grid-template-columns: 1fr 270px;
+  gap: 18px;
 }
 
-/* RIGHT FIXED CHAT COLUMN (Col 3) */
+/* RIGHT FIXED CHAT COLUMN */
 .chat-column {
-  width: 360px;
+  width: 350px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -303,20 +308,20 @@ body.dark-mode .menu-item.active {
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-card);
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  padding: 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
 }
 
 .column-title {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   color: var(--text-main);
 }
 
 .card-label {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
   font-weight: 600;
   margin-bottom: 4px;
@@ -324,22 +329,22 @@ body.dark-mode .menu-item.active {
 
 .card-subtitle {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 /* FINANCIAL OVERVIEW COLUMN */
 .overview-column {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 .financial-cards-grid {
   display: grid;
-  grid-template-columns: 1fr 180px;
-  gap: 16px;
+  grid-template-columns: 1fr 170px;
+  gap: 14px;
 }
 
 .balance-card {
@@ -352,15 +357,15 @@ body.dark-mode .menu-item.active {
 
 .card-value-large {
   font-family: var(--font-display);
-  font-size: 2rem;
+  font-size: 1.9rem;
   font-weight: 800;
   color: var(--text-main);
   margin-top: 4px;
 }
 
 .chart-svg-wrapper {
-  margin-top: 20px;
-  height: 80px;
+  margin-top: 16px;
+  height: 75px;
   width: 100%;
 }
 
@@ -372,22 +377,22 @@ body.dark-mode .menu-item.active {
 .side-metrics {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .small-metric-card {
-  padding: 16px;
+  padding: 14px;
 }
 
 .card-value-medium {
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--text-main);
 }
 
 .trend-badge {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   margin-top: 4px;
 }
@@ -404,7 +409,7 @@ body.dark-mode .menu-item.active {
 .cat-progress-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .cat-progress-row {
@@ -417,7 +422,7 @@ body.dark-mode .menu-item.active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
 }
 
 .cat-row-title {
@@ -435,11 +440,11 @@ body.dark-mode .menu-item.active {
 
 .cat-row-amt {
   color: var(--text-muted);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 
 .progress-track {
-  height: 8px;
+  height: 7px;
   background: #f1f5f9;
   border-radius: 4px;
   overflow: hidden;
@@ -469,7 +474,7 @@ body.dark-mode .progress-track {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .view-all-btn {
@@ -477,7 +482,7 @@ body.dark-mode .progress-track {
   border: 1px solid var(--border-light);
   padding: 4px 10px;
   border-radius: 12px;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
@@ -486,24 +491,24 @@ body.dark-mode .progress-track {
 .deals-vertical-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .deal-item-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
+  gap: 10px;
+  padding: 14px;
 }
 
 .deal-discount-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 4px 10px;
-  border-radius: 14px;
-  font-size: 0.72rem;
+  top: 10px;
+  right: 10px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
   font-weight: 800;
   color: #ffffff;
 }
@@ -514,7 +519,7 @@ body.dark-mode .progress-track {
 
 .deal-item-img-wrapper {
   width: 100%;
-  height: 110px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -529,15 +534,15 @@ body.dark-mode .deal-item-img-wrapper {
 
 .deal-item-img-wrapper img {
   max-width: 100%;
-  max-height: 100px;
+  max-height: 90px;
   object-fit: contain;
 }
 
 .deal-item-title {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-main);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .deal-price-line {
@@ -548,12 +553,12 @@ body.dark-mode .deal-item-img-wrapper {
 
 .deal-now-price {
   font-weight: 800;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   color: var(--text-main);
 }
 
 .deal-was-price {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: var(--text-light);
   text-decoration: line-through;
 }
@@ -563,64 +568,64 @@ body.dark-mode .deal-item-img-wrapper {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 18px;
 }
 
 .chat-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--border-light);
 }
 
 .chat-header-title {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .chat-v-icon {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   background: #2563eb;
   color: #ffffff;
   font-weight: 800;
-  border-radius: 8px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .chat-title-text {
   font-weight: 800;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .chat-subtitle-text {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
 }
 
 .chat-header-actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   color: var(--text-light);
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
 }
 
 .chat-scroll-area {
   flex: 1;
-  min-height: 220px;
-  max-height: 380px;
+  min-height: 180px;
+  max-height: 360px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
 .chat-msg {
@@ -630,7 +635,7 @@ body.dark-mode .deal-item-img-wrapper {
 }
 
 .msg-sender-name {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--text-muted);
 }
@@ -642,9 +647,9 @@ body.dark-mode .deal-item-img-wrapper {
 .user-bubble {
   background: #f1f5f9;
   color: var(--text-main);
-  padding: 10px 14px;
-  border-radius: 14px 14px 2px 14px;
-  font-size: 0.88rem;
+  padding: 8px 12px;
+  border-radius: 12px 12px 2px 12px;
+  font-size: 0.85rem;
   max-width: 85%;
 }
 
@@ -656,9 +661,9 @@ body.dark-mode .user-bubble {
 .alexa-bubble {
   background: #eff6ff;
   color: var(--text-main);
-  padding: 10px 14px;
-  border-radius: 14px 14px 14px 2px;
-  font-size: 0.88rem;
+  padding: 8px 12px;
+  border-radius: 12px 12px 12px 2px;
+  font-size: 0.85rem;
   max-width: 85%;
   border: 1px solid #dbeafe;
 }
@@ -669,18 +674,18 @@ body.dark-mode .alexa-bubble {
   border-color: #1d4ed8;
 }
 
-/* LISTENING MIC SECTION - STANDBY VS ACTIVE LISTENING */
+/* LISTENING MIC SECTION */
 .listening-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 12px 0;
-  gap: 8px;
+  padding: 8px 0;
+  gap: 6px;
 }
 
 .listening-label {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-muted);
   transition: color 0.3s ease;
@@ -689,17 +694,16 @@ body.dark-mode .alexa-bubble {
 .listening-section.is-listening .listening-label {
   color: #2563eb;
   font-weight: 700;
-  animation: pulse 1s infinite;
 }
 
 .big-mic-button {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: #e2e8f0;
   color: var(--text-muted);
   border: none;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -718,14 +722,14 @@ body.dark-mode .big-mic-button {
   background: linear-gradient(135deg, #2563eb, #3b82f6);
   color: #ffffff;
   box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .colorful-waveform {
   display: flex;
   align-items: center;
   gap: 4px;
-  height: 20px;
+  height: 18px;
   opacity: 0.4;
   filter: grayscale(80%);
   transition: opacity 0.3s ease, filter 0.3s ease;
@@ -739,7 +743,7 @@ body.dark-mode .big-mic-button {
 .colorful-waveform .bar {
   width: 3px;
   border-radius: 3px;
-  height: 6px;
+  height: 5px;
 }
 
 .listening-section.is-listening .colorful-waveform .bar {
@@ -757,12 +761,12 @@ body.dark-mode .big-mic-button {
 
 @keyframes wavePulse {
   0%, 100% { height: 4px; }
-  50% { height: 20px; }
+  50% { height: 18px; }
 }
 
 /* CHAT INPUT CAPSULE */
 .chat-form {
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .input-capsule {
@@ -771,7 +775,7 @@ body.dark-mode .big-mic-button {
   background: #f1f5f9;
   border: 1px solid var(--border-light);
   border-radius: 24px;
-  padding: 4px 6px 4px 16px;
+  padding: 4px 6px 4px 14px;
 }
 
 body.dark-mode .input-capsule {
@@ -783,14 +787,14 @@ body.dark-mode .input-capsule {
   background: transparent;
   border: none;
   outline: none;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-main);
-  padding: 8px 0;
+  padding: 6px 0;
 }
 
 .chat-send-btn {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: #2563eb;
   color: #ffffff;
@@ -799,50 +803,48 @@ body.dark-mode .input-capsule {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
 }
 
-/* OTHER TAB STYLES & LAYOUTS */
+/* OTHER TAB STYLES */
 .tab-page-header {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .tab-description {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
 .tab-grid-2col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 16px;
 }
 
 .shopping-deals-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
 }
 
-/* Custom Forms & Inputs */
 .custom-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 0.85rem;
+  gap: 4px;
+  font-size: 0.82rem;
   font-weight: 600;
-  color: var(--text-main);
 }
 
 .custom-input {
-  padding: 10px 14px;
-  border-radius: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
   border: 1px solid var(--border-light);
   background: #f8fafc;
   outline: none;
@@ -858,29 +860,28 @@ body.dark-mode .custom-input {
   background: #2563eb;
   color: #ffffff;
   border: none;
-  padding: 10px 16px;
-  border-radius: 12px;
+  padding: 9px 14px;
+  border-radius: 10px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
-/* Ledger List */
 .transaction-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .trans-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  padding: 8px 0;
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -891,38 +892,37 @@ body.dark-mode .custom-input {
 
 .trans-title {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .trans-date {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
 }
 
 .trans-amt {
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .trans-amt.negative { color: #ef4444; }
 .trans-amt.positive { color: #10b981; }
 
-/* Goal Cards */
 .goal-card {
   display: flex;
   flex-direction: column;
 }
 
 .goal-icon-wrapper {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 16px;
   color: #ffffff;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .blue-bg { background: #2563eb; }
@@ -931,34 +931,33 @@ body.dark-mode .custom-input {
 
 .goal-title {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.92rem;
 }
 
 .goal-amount {
   font-weight: 800;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin: 4px 0;
 }
 
 .goal-footer {
   display: flex;
   justify-content: space-between;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
-.margin-v { margin: 10px 0; }
-.margin-t { margin-top: 14px; }
+.margin-v { margin: 8px 0; }
+.margin-t { margin-top: 10px; }
 .max-w-600 { max-width: 600px; }
 
-/* Insights Box */
 .insight-box {
   background: #f8fafc;
   border-left: 4px solid #2563eb;
-  padding: 14px;
+  padding: 12px;
   border-radius: 8px;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   line-height: 1.5;
 }
 
@@ -969,14 +968,14 @@ body.dark-mode .insight-box {
 .mcp-diag-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .diag-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
-  padding-bottom: 8px;
+  font-size: 0.82rem;
+  padding-bottom: 6px;
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -988,39 +987,19 @@ body.dark-mode .insight-box {
 .text-purple { color: #8b5cf6; }
 .text-amber { color: #f59e0b; }
 
-/* Settings Switch */
 .setting-item-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--border-light);
 }
 
-.setting-title { font-weight: 700; font-size: 0.9rem; }
-.setting-desc { font-size: 0.78rem; color: var(--text-muted); }
+.setting-title { font-weight: 700; font-size: 0.88rem; }
+.setting-desc { font-size: 0.75rem; color: var(--text-muted); }
 
 .toggle-switch {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
-}
-
-/* RESPONSIVE DESIGN */
-@media (max-width: 1200px) {
-  .dashboard-columns-wrapper {
-    grid-template-columns: 1fr;
-  }
-  .deals-column {
-    display: none;
-  }
-}
-
-@media (max-width: 992px) {
-  .main-workspace-layout {
-    flex-direction: column;
-  }
-  .chat-column {
-    width: 100%;
-  }
 }
