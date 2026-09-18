@@ -17,6 +17,18 @@ It acts as a **Two-Sided Bridge (Bilateral Protocol)** connecting **Consumers (B
 
 ---
 
+## 📸 Screenshots & UI Showcase
+
+| 📊 Financial Dashboard & Alexa+ Chat | 🛍️ Intelligent Amazon Shopping Assistant |
+| :---: | :---: |
+| ![Dashboard Overview](docs/screenshots/dashboard_preview.jpg) | ![Shopping Catalog](docs/screenshots/shopping_deals.jpg) |
+
+| 🔌 Interactive MCP Protocol Inspector | 🤖 Live Autonomous Reasoning & Tool Calling |
+| :---: | :---: |
+| ![MCP Inspector](docs/screenshots/mcp_inspector.jpg) | ![Agent Reasoning](docs/screenshots/dashboard_preview.jpg) |
+
+---
+
 ## 🌟 Key Features
 
 1. **Autonomous Safe-to-Spend Validator (`validate_purchase_safety`)**: Pre-validates prospective purchase costs against remaining monthly category allowances to prevent impulsive overspending.
