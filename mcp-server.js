@@ -155,6 +155,25 @@ const MCP_RESOURCES = [
   }
 ];
 
+// MCP Prompts Templates (Spec 2025-11-25)
+const MCP_PROMPTS = [
+  {
+    name: 'financial_health_audit',
+    description: 'Autonomous financial health assessment prompt template for Alexa+ LLM reasoning',
+    arguments: [
+      { name: 'user_persona', description: 'User spending risk profile (conservative, balanced, aggressive)', required: false }
+    ]
+  },
+  {
+    name: 'amazon_deal_negotiator',
+    description: 'Prompt template to evaluate if an Amazon item is a true deal versus historical price trends',
+    arguments: [
+      { name: 'item_name', description: 'Product title to evaluate', required: true },
+      { name: 'current_deal_price', description: 'Listed deal price', required: true }
+    ]
+  }
+];
+
 // MCP JSON-RPC Server Endpoint (MCP Spec 2025-11-25)
 app.post('/mcp/v1/rpc', (req, res) => {
   const { jsonrpc, method, params, id } = req.body;
@@ -172,11 +191,12 @@ app.post('/mcp/v1/rpc', (req, res) => {
         protocolVersion: '2025-11-25',
         capabilities: {
           tools: {},
-          resources: {}
+          resources: {},
+          prompts: {}
         },
         serverInfo: {
           name: 'VaultAlexa-Autonomous-MCP-Server',
-          version: '2.0.0'
+          version: '2.5.0'
         }
       }
     });
@@ -202,6 +222,61 @@ app.post('/mcp/v1/rpc', (req, res) => {
         resources: MCP_RESOURCES
       }
     });
+  }
+
+  // 4. Handle MCP Protocol List Prompts
+  if (method === 'prompts/list') {
+    return res.json({
+      jsonrpc: '2.0',
+      id,
+      result: {
+        prompts: MCP_PROMPTS
+      }
+    });
+  }
+
+  // 5. Handle MCP Protocol Get Prompt
+  if (method === 'prompts/get') {
+    const { name, arguments: args } = params || {};
+    if (name === 'financial_health_audit') {
+      return res.json({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          description: 'Comprehensive financial evaluation prompt',
+          messages: [
+            {
+              role: 'user',
+              content: {
+                type: 'text',
+                text: `Audit the user's monthly budget of $${userAccount.monthlyBudget.toFixed(2)} ($${userAccount.spentSoFar.toFixed(2)} spent so far). Identify high-risk categories and generate 3 actionable cost-cutting tips.`
+              }
+            }
+          ]
+        }
+      });
+    }
+
+    if (name === 'amazon_deal_negotiator') {
+      const item = (args && args.item_name) || 'Echo Show 8';
+      const price = (args && args.current_deal_price) || 99.99;
+      return res.json({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          description: 'Amazon price vs budget evaluation prompt',
+          messages: [
+            {
+              role: 'user',
+              content: {
+                type: 'text',
+                text: `Evaluate purchasing ${item} for $${price}. Cross-reference with current shopping allowance ($${userAccount.categories.shopping.spent.toFixed(2)}/$${userAccount.categories.shopping.allocated.toFixed(2)}). Issue a buy or wait verdict.`
+              }
+            }
+          ]
+        }
+      });
+    }
   }
 
   // 4. Handle MCP Protocol Read Resource
