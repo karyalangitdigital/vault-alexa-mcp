@@ -1,8 +1,8 @@
-/* VaultAlexa+ Design System - Exact Match to Design Mockup */
+/* VaultAlexa+ Design System - Exact Layout with Bottom Input Capsule */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap');
 
 :root {
-  --bg-app: #eef2f6;
+  --bg-app: #f1f4f8;
   --bg-card: #ffffff;
   
   --primary-blue: #2563eb;
@@ -238,7 +238,7 @@ body.dark-mode .left-sidebar {
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  border-radius: 20px; /* Capsule pill styling matching user screenshot */
+  border-radius: 20px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -256,7 +256,7 @@ body.dark-mode .left-sidebar {
 }
 
 .menu-item.active {
-  background: #e2e8f0; /* Crisp soft capsule highlight as in user markup */
+  background: #e2e8f0;
   color: var(--primary-blue);
   font-weight: 700;
 }
@@ -563,11 +563,13 @@ body.dark-mode .deal-item-img-wrapper {
   text-decoration: line-through;
 }
 
-/* CHAT CARD CONTAINER & ALEXA SIMULATOR */
+/* CHAT CARD CONTAINER & ALEXA SIMULATOR (Anchored to Bottom) */
 .chat-card-container {
   height: 100%;
+  min-height: 520px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   padding: 18px;
 }
 
@@ -619,8 +621,7 @@ body.dark-mode .deal-item-img-wrapper {
 
 .chat-scroll-area {
   flex: 1;
-  min-height: 180px;
-  max-height: 360px;
+  min-height: 140px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -680,7 +681,8 @@ body.dark-mode .alexa-bubble {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px 0;
+  padding: 10px 0;
+  margin-top: auto; /* Pushes mic to bottom area */
   gap: 6px;
 }
 
@@ -764,9 +766,9 @@ body.dark-mode .big-mic-button {
   50% { height: 18px; }
 }
 
-/* CHAT INPUT CAPSULE */
+/* CHAT INPUT CAPSULE (Pinned at the very bottom of the card) */
 .chat-form {
-  margin-top: 6px;
+  margin-top: 10px;
 }
 
 .input-capsule {
@@ -775,7 +777,7 @@ body.dark-mode .big-mic-button {
   background: #f1f5f9;
   border: 1px solid var(--border-light);
   border-radius: 24px;
-  padding: 4px 6px 4px 14px;
+  padding: 6px 8px 6px 16px;
 }
 
 body.dark-mode .input-capsule {
@@ -787,14 +789,14 @@ body.dark-mode .input-capsule {
   background: transparent;
   border: none;
   outline: none;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   color: var(--text-main);
   padding: 6px 0;
 }
 
 .chat-send-btn {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #2563eb;
   color: #ffffff;
@@ -803,7 +805,7 @@ body.dark-mode .input-capsule {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 /* OTHER TAB STYLES */
