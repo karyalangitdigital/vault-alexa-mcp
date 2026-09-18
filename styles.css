@@ -1084,8 +1084,8 @@ body.dark-mode .progress-track {
 
 .dashboard-deals-horizontal-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* auto-fit dynamically expands all 6 cards to stretch 100% full width */
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); /* Dynamically scales: 4 cards when agent panel is wide, 5-6 cards when narrow/closed */
+  gap: 14px;
   width: 100%;
 }
 
