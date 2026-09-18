@@ -1336,21 +1336,48 @@ body.dark-mode .product-tag {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.chat-header-actions i:hover {
-  background: rgba(0, 0, 0, 0.06);
+/* Dedicated Circle Pill for Close (X) Button */
+.chat-header-actions #btn-close-chat {
+  background: #f1f5f9;
   color: var(--text-main);
+  border: 1px solid var(--border-light);
+  font-size: 12px;
+}
+
+.chat-header-actions #btn-close-chat:hover {
+  background: #e2e8f0;
+  color: var(--accent-rose);
+  border-color: #cbd5e1;
   transform: scale(1.08);
 }
 
-body.dark-mode .chat-header-actions i:hover {
+body.dark-mode .chat-header-actions #btn-close-chat {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+body.dark-mode .chat-header-actions #btn-close-chat:hover {
+  background: #334155;
+  color: #f87171;
+  border-color: #475569;
+}
+
+.chat-header-actions #btn-clear-chat:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--accent-rose);
+  transform: scale(1.08);
+}
+
+body.dark-mode .chat-header-actions #btn-clear-chat:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  color: #f87171;
 }
 
 .chat-scroll-area {
