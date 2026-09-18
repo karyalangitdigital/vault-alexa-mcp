@@ -677,3 +677,65 @@ if (synth) {
 // Default state is Standby
 setMicActiveState(false);
 
+// Interactive Draggable Splitter Handle (Resize Agent Panel)
+const chatResizerHandle = document.getElementById('chat-resizer-handle');
+const chatColumn = document.getElementById('chat-column');
+
+if (chatResizerHandle && chatColumn) {
+  let isDragging = false;
+  let startX = 0;
+  let startWidth = 350;
+
+  chatResizerHandle.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startWidth = chatColumn.getBoundingClientRect().width;
+    chatResizerHandle.classList.add('is-dragging');
+    document.body.classList.add('resizing-active');
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    // Dragging to the left expands the chat column, dragging right shrinks it
+    const deltaX = startX - e.clientX;
+    const newWidth = Math.min(650, Math.max(280, startWidth + deltaX));
+    chatColumn.style.width = `${newWidth}px`;
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      chatResizerHandle.classList.remove('is-dragging');
+      document.body.classList.remove('resizing-active');
+    }
+  });
+
+  // Touch Support for Mobile / Touchscreens
+  chatResizerHandle.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      startX = e.touches[0].clientX;
+      startWidth = chatColumn.getBoundingClientRect().width;
+      chatResizerHandle.classList.add('is-dragging');
+      document.body.classList.add('resizing-active');
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging || e.touches.length !== 1) return;
+    const deltaX = startX - e.touches[0].clientX;
+    const newWidth = Math.min(650, Math.max(280, startWidth + deltaX));
+    chatColumn.style.width = `${newWidth}px`;
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
+    if (isDragging) {
+      isDragging = false;
+      chatResizerHandle.classList.remove('is-dragging');
+      document.body.classList.remove('resizing-active');
+    }
+  });
+}
+
+

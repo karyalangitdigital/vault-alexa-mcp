@@ -619,9 +619,62 @@ body.dark-mode .menu-item.active {
   gap: 18px;
 }
 
-/* RIGHT FIXED CHAT COLUMN */
+/* DRAGGABLE RESIZER SPLITTER HANDLE */
+.chat-resizer-handle {
+  width: 10px;
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+  user-select: none;
+  touch-action: none;
+  transition: background 0.2s ease;
+  margin: 0 -4px;
+}
+
+.chat-resizer-handle:hover,
+.chat-resizer-handle.is-dragging {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.resizer-pill {
+  width: 4px;
+  height: 48px;
+  border-radius: 4px;
+  background: #cbd5e1;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.chat-resizer-handle:hover .resizer-pill,
+.chat-resizer-handle.is-dragging .resizer-pill {
+  background: #2563eb;
+  height: 72px;
+  width: 5px;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+}
+
+body.dark-mode .resizer-pill {
+  background: #475569;
+}
+
+body.dark-mode .chat-resizer-handle:hover .resizer-pill,
+body.dark-mode .chat-resizer-handle.is-dragging .resizer-pill {
+  background: #60a5fa;
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
+}
+
+body.resizing-active {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+
+/* RIGHT RESIZABLE CHAT COLUMN */
 .chat-column {
   width: 350px;
+  min-width: 280px;
+  max-width: 650px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;

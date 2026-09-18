@@ -544,8 +544,13 @@
 
       </div>
 
-      <!-- Right Column 3: Alexa+ AI Chat Panel (Stays in its exact 3rd column position on Desktop) -->
-      <aside class="chat-column">
+      <!-- Interactive Draggable Splitter Handle (Resize Agent Panel) -->
+      <div class="chat-resizer-handle" id="chat-resizer-handle" title="Drag left/right to resize Agent panel">
+        <div class="resizer-pill"></div>
+      </div>
+
+      <!-- Right Column 3: Alexa+ AI Chat Panel (Resizable with Cursor) -->
+      <aside class="chat-column" id="chat-column">
         <div class="card chat-card-container">
           <!-- Chat Header -->
           <div class="chat-card-header">
