@@ -37,19 +37,34 @@
       <!-- User Profile Dropdown Button -->
       <div class="profile-dropdown-wrapper">
         <div class="user-profile" id="btn-user-profile" title="Account & Identity Menu">
-          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" alt="Sarah Jenkins" class="user-avatar">
-          <span class="user-name">Sarah Jenkins</span>
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" alt="Sarah Jenkins" class="user-avatar" id="header-user-avatar">
+          <span class="user-name" id="header-user-name">Sarah Jenkins</span>
+          <span class="header-role-badge" id="header-role-badge">Buyer</span>
           <i class="fa-solid fa-chevron-down profile-arrow"></i>
         </div>
 
         <!-- Professional Profile Menu Modal / Dropdown -->
         <div class="header-popover-menu" id="profile-popover">
           <div class="popover-header">
-            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" alt="Sarah Jenkins" class="popover-avatar">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" alt="Sarah Jenkins" class="popover-avatar" id="popover-avatar-img">
             <div>
-              <div class="popover-name">Sarah Jenkins</div>
-              <div class="popover-email">sarah.jenkins@amazon.dev</div>
-              <span class="prime-member-tag"><i class="fa-brands fa-amazon"></i> Prime Family Head</span>
+              <div class="popover-name" id="popover-user-name">Sarah Jenkins</div>
+              <div class="popover-email" id="popover-user-email">sarah.jenkins@amazon.dev</div>
+              <span class="prime-member-tag" id="popover-user-badge"><i class="fa-brands fa-amazon"></i> Prime Family Head</span>
+            </div>
+          </div>
+          <div class="popover-divider"></div>
+          
+          <!-- Role Switcher (Buyer vs Seller) -->
+          <div class="popover-role-selector">
+            <div class="role-selector-lbl"><i class="fa-solid fa-arrows-rotate"></i> Mode Akun / Account Role:</div>
+            <div class="role-toggle-pill">
+              <button type="button" class="btn-role-choice active" id="btn-role-buyer" onclick="setUserRole('buyer')">
+                <i class="fa-solid fa-cart-shopping"></i> Buyer (Pembeli)
+              </button>
+              <button type="button" class="btn-role-choice" id="btn-role-seller" onclick="setUserRole('seller')">
+                <i class="fa-solid fa-store"></i> Seller (Penjual)
+              </button>
             </div>
           </div>
           <div class="popover-divider"></div>

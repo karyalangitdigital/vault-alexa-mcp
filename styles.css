@@ -2347,4 +2347,75 @@ body.dark-mode .impact-card {
   overflow-x: auto;
 }
 
+/* ROLE SWITCHER STYLES */
+.header-role-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--amazon-blue);
+  margin-left: 6px;
+}
+
+.header-role-badge.seller-badge {
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+}
+
+.popover-role-selector {
+  padding: 4px 0;
+}
+
+.role-selector-lbl {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.role-toggle-pill {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 3px;
+  gap: 4px;
+}
+
+body.dark-mode .role-toggle-pill {
+  background: #0f172a;
+}
+
+.btn-role-choice {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-role-choice.active {
+  background: #ffffff;
+  color: var(--text-main);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+body.dark-mode .btn-role-choice.active {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+
 

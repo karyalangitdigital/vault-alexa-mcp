@@ -609,6 +609,90 @@ function processUserQuery(query) {
       addMessage('alexa', 'Alexa+', msg);
     });
 
+  } else if (qLower.includes('performa') || qLower.includes('performance') || qLower.includes('analisis penjualan')) {
+    const traceSteps = isID ? [
+      'Maksud: [Audit Analisis Performa Merchant Apex Tech]',
+      'Membaca Resource MCP: vault://deals/catalog.json',
+      'Memanggil Tool: get_financial_summary(tipe: "laporan_merchant")',
+      'Mengevaluasi Tren Konversi & Margin Keuntungan'
+    ] : [
+      'Intent: [Apex Tech Store Merchant Performance Audit]',
+      'Reading MCP Resource: vault://deals/catalog.json',
+      'Calling Tool: get_financial_summary(type: "merchant_report")',
+      'Evaluating Conversion Trends & Profit Margins'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
+      const msg = isID ? `
+        <strong>Resource MCP [vault://deals/catalog - Toko Apex]:</strong>
+        <div class="chat-order-card" style="border-color:#10b981;">
+          <div class="order-card-header" style="color:#059669;">
+            <i class="fa-solid fa-store"></i> Ringkasan Performa Apex Tech Store
+          </div>
+          <div style="font-size: 0.82rem; line-height: 1.5; margin-top: 6px;">
+            💵 <strong>Total Pendapatan:</strong> $14,850.00 (+18.4% vs bulan lalu)<br>
+            📦 <strong>Pesanan Selesai:</strong> 142 pesanan terkirim via Prime Fulfillment<br>
+            ⚡ <strong>Tingkat Konversi AI Alexa+:</strong> 32.4% (Rata-rata industri: 14.2%)<br>
+            ⭐ <strong>Rating Toko:</strong> 4.9/5.0 (98% Ulasan Positif)
+          </div>
+        </div>
+      ` : `
+        <strong>MCP Resource [vault://deals/catalog - Apex Store]:</strong>
+        <div class="chat-order-card" style="border-color:#10b981;">
+          <div class="order-card-header" style="color:#059669;">
+            <i class="fa-solid fa-store"></i> Apex Tech Store Performance Summary
+          </div>
+          <div style="font-size: 0.82rem; line-height: 1.5; margin-top: 6px;">
+            💵 <strong>Total Revenue:</strong> $14,850.00 (+18.4% vs last month)<br>
+            📦 <strong>Fulfilled Orders:</strong> 142 orders dispatched via Prime Fulfillment<br>
+            ⚡ <strong>Alexa+ AI Conversion Rate:</strong> 32.4% (Industry Avg: 14.2%)<br>
+            ⭐ <strong>Merchant Rating:</strong> 4.9/5.0 (98% Positive Feedback)
+          </div>
+        </div>
+      `;
+      addMessage('alexa', 'Alexa+', msg);
+    });
+
+  } else if (qLower.includes('pesanan') || qLower.includes('order') || qLower.includes('stok')) {
+    const traceSteps = isID ? [
+      'Maksud: [Pemeriksaan Pesanan Masuk & Status Inventaris]',
+      'Membaca Resource MCP: vault://deals/catalog.json',
+      'Menghubungkan ke Amazon Prime Fulfillment Center'
+    ] : [
+      'Intent: [Incoming Orders & Inventory Dispatch Check]',
+      'Reading MCP Resource: vault://deals/catalog.json',
+      'Connecting to Amazon Prime Fulfillment Dispatch'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
+      const msg = isID ? `
+        <strong>Tool MCP [search_amazon_deals - Status Pesanan Hari Ini]:</strong>
+        <div class="chat-order-card" style="border-color:#3b82f6;">
+          <div class="order-card-header" style="color:#2563eb;">
+            <i class="fa-solid fa-truck-fast"></i> 14 Pesanan Masuk Hari Ini (Semua Siap Dikirim)
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+            • <strong>6x Amazon Echo Show 8</strong> ($99.99) -> <em>Telah Diverifikasi Pembayaran</em><br>
+            • <strong>5x Bose Headphones 700</strong> ($219.00) -> <em>Sedang Dikemas di Gudang Prime</em><br>
+            • <strong>3x Running Shoes Pro</strong> ($65.50) -> <em>Dalam Perjalanan Pengantaran</em>
+          </div>
+        </div>
+      ` : `
+        <strong>MCP Tool [search_amazon_deals - Daily Orders Dispatch]:</strong>
+        <div class="chat-order-card" style="border-color:#3b82f6;">
+          <div class="order-card-header" style="color:#2563eb;">
+            <i class="fa-solid fa-truck-fast"></i> 14 Incoming Orders Today (Prime Ready)
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+            • <strong>6x Amazon Echo Show 8</strong> ($99.99) -> <em>Payment Verified</em><br>
+            • <strong>5x Bose Headphones 700</strong> ($219.00) -> <em>Packing at Prime Hub</em><br>
+            • <strong>3x Running Shoes Pro</strong> ($65.50) -> <em>Out for Dispatch</em>
+          </div>
+        </div>
+      `;
+      addMessage('alexa', 'Alexa+', msg);
+    });
+
   } else if (qLower.includes('seller') || qLower.includes('penjual') || qLower.includes('jual') || qLower.includes('penjualan') || qLower.includes('produk') || qLower.includes('omset') || qLower.includes('toko') || qLower.includes('marketing') || qLower.includes('laris') || qLower.includes('conversion') || qLower.includes('sales')) {
     const traceSteps = isID ? [
       'Maksud: [Analisis & Rekomendasi Pertumbuhan Penjualan Seller]',
@@ -1429,10 +1513,126 @@ window.copyMcpConfigSnippet = function() {
   });
 };
 
+// Role Switcher Management (Buyer vs Seller Mode)
+window.currentUserRole = 'buyer';
+
+window.setUserRole = function(role) {
+  window.currentUserRole = role;
+  const isID = currentLang === 'ID';
+
+  const btnBuyer = document.getElementById('btn-role-buyer');
+  const btnSeller = document.getElementById('btn-role-seller');
+  const headerAvatar = document.getElementById('header-user-avatar');
+  const headerName = document.getElementById('header-user-name');
+  const headerBadge = document.getElementById('header-role-badge');
+  const popoverAvatar = document.getElementById('popover-avatar-img');
+  const popoverName = document.getElementById('popover-user-name');
+  const popoverEmail = document.getElementById('popover-user-email');
+  const popoverBadge = document.getElementById('popover-user-badge');
+
+  if (role === 'seller') {
+    if (btnBuyer) btnBuyer.classList.remove('active');
+    if (btnSeller) btnSeller.classList.add('active');
+
+    const sellerAvatarUrl = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&auto=format&fit=crop&q=80';
+    if (headerAvatar) headerAvatar.src = sellerAvatarUrl;
+    if (popoverAvatar) popoverAvatar.src = sellerAvatarUrl;
+    if (headerName) headerName.textContent = 'Apex Tech Store';
+    if (popoverName) popoverName.textContent = 'Apex Tech Store';
+    if (popoverEmail) popoverEmail.textContent = 'merchant@apexstore.amazon.com';
+    if (headerBadge) {
+      headerBadge.textContent = 'Seller';
+      headerBadge.className = 'header-role-badge seller-badge';
+    }
+    if (popoverBadge) {
+      popoverBadge.innerHTML = '<i class="fa-solid fa-store"></i> Verified Amazon Merchant';
+    }
+
+    // Transform Dashboard to Seller Analytics
+    const overviewH2 = document.querySelector('.overview-column .column-title');
+    if (overviewH2) overviewH2.textContent = isID ? 'Ringkasan Performa Penjualan Toko' : 'Store Merchant Performance Overview';
+
+    const cardLabels = document.querySelectorAll('.balance-card .card-label, .small-metric-card .card-label');
+    if (cardLabels[0]) cardLabels[0].textContent = isID ? 'Total Pendapatan Toko' : 'Total Store Revenue';
+    if (cardLabels[1]) cardLabels[1].textContent = isID ? 'Total Pesanan Masuk' : 'Incoming Orders';
+    if (cardLabels[2]) cardLabels[2].textContent = isID ? 'Tingkat Konversi AI' : 'AI Conversion Rate';
+
+    const balanceEl = document.getElementById('dash-account-balance');
+    const spendEl = document.getElementById('dash-monthly-spending');
+    if (balanceEl) balanceEl.textContent = '$14,850.00';
+    if (spendEl) spendEl.textContent = '32.4%';
+
+    const cardBalanceEl = document.getElementById('card-live-balance');
+    if (cardBalanceEl) cardBalanceEl.textContent = '$14,850.00';
+
+    const cardHolderEl = document.querySelector('.card-holder-name');
+    if (cardHolderEl) cardHolderEl.textContent = 'APEX TECH STORE';
+
+    // Seller Quick Action Chips
+    const chips = document.querySelectorAll('.chip-item');
+    if (chips[0]) {
+      chips[0].textContent = isID ? '📈 Analisis Penjualan' : '📈 Sales Analytics';
+      chips[0].onclick = () => handleChipClick(isID ? 'Bagaimana performa penjualan toko saya bulan ini?' : 'How is my store sales performance this month?');
+    }
+    if (chips[1]) {
+      chips[1].textContent = isID ? '🏷️ Pasang Diskon Prime' : '🏷️ Prime Discounts';
+      chips[1].onclick = () => handleChipClick(isID ? 'Rekomendasikan diskon Prime untuk tingkatkan pesanan' : 'Recommend Prime discounts to boost orders');
+    }
+    if (chips[2]) {
+      chips[2].textContent = isID ? '📦 Pesanan Hari Ini' : '📦 Daily Orders';
+      chips[2].onclick = () => handleChipClick(isID ? 'Berapa jumlah pesanan masuk hari ini?' : 'How many incoming orders today?');
+    }
+    if (chips[3]) {
+      chips[3].textContent = isID ? '🎯 Optimasi AI' : '🎯 AI Optimization';
+      chips[3].onclick = () => handleChipClick(isID ? 'Bagaimana cara meningkatkan penjualan produk seller?' : 'How to boost seller product sales?');
+    }
+
+    if (profilePopover) profilePopover.classList.remove('active');
+
+    const welcomeSeller = isID
+      ? `🏪 <strong>Mode Penjual (Seller) Aktif:</strong> Selamat datang di <em>Apex Tech Store</em>! Saya adalah AI Business Co-Pilot Anda via Protokol MCP. Siap menganalisis konversi produk, merekomendasikan diskon Prime, dan memantau pesanan masuk.`
+      : `🏪 <strong>Seller Mode Activated:</strong> Welcome to <em>Apex Tech Store</em>! I am your AI Business Co-Pilot via MCP Protocol. Ready to optimize product conversions, suggest Prime deals, and monitor incoming orders.`;
+    addMessage('alexa', 'Alexa+', welcomeSeller);
+
+  } else {
+    // Restore Buyer Mode (Sarah Jenkins)
+    if (btnBuyer) btnBuyer.classList.add('active');
+    if (btnSeller) btnSeller.classList.remove('active');
+
+    const buyerAvatarUrl = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80';
+    if (headerAvatar) headerAvatar.src = buyerAvatarUrl;
+    if (popoverAvatar) popoverAvatar.src = buyerAvatarUrl;
+    if (headerName) headerName.textContent = 'Sarah Jenkins';
+    if (popoverName) popoverName.textContent = 'Sarah Jenkins';
+    if (popoverEmail) popoverEmail.textContent = 'sarah.jenkins@amazon.dev';
+    if (headerBadge) {
+      headerBadge.textContent = 'Buyer';
+      headerBadge.className = 'header-role-badge';
+    }
+    if (popoverBadge) {
+      popoverBadge.innerHTML = '<i class="fa-brands fa-amazon"></i> Prime Family Head';
+    }
+
+    const cardHolderEl = document.querySelector('.card-holder-name');
+    if (cardHolderEl) cardHolderEl.textContent = 'SARAH JENKINS';
+
+    updateUIOverview();
+    applyLanguage(currentLang, false);
+
+    if (profilePopover) profilePopover.classList.remove('active');
+
+    const welcomeBuyer = isID
+      ? `🛒 <strong>Mode Pembeli (Buyer) Aktif:</strong> Kembali ke akun personal <em>Sarah Jenkins</em>. Saya siap memeriksa keamanan anggaran belanja, membagi tagihan, dan memburu promo diskon Amazon!`
+      : `🛒 <strong>Buyer Mode Activated:</strong> Switched back to personal account for <em>Sarah Jenkins</em>. Ready to safeguard your shopping budget, split bills, and hunt Amazon Prime deals!`;
+    addMessage('alexa', 'Alexa+', welcomeBuyer);
+  }
+};
+
 // Initialize Application on Load
 renderShoppingGrid();
 updateUIOverview();
 applyLanguage('ID', false);
 setMicActiveState(false);
 resetInspectorArgs();
+
 
