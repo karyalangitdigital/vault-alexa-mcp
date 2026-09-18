@@ -1,5 +1,5 @@
 /**
- * VaultAlexa+ Controller Logic - Full Multi-Tab Navigation & Interactive Feature Integration
+ * VaultAlexa+ Controller Logic - Interactive Features & Sidebar Toggle
  */
 
 const SERVER_URL = 'http://localhost:3000/mcp/v1/rpc';
@@ -35,12 +35,19 @@ const themeToggleBtn = document.getElementById('theme-toggle-btn');
 const themeIcon = document.getElementById('theme-icon');
 const themeText = document.getElementById('theme-text');
 const leftSidebar = document.getElementById('left-sidebar');
-const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
 const fullShoppingGrid = document.getElementById('full-shopping-grid');
 const formAddExpense = document.getElementById('form-add-expense');
 const transactionLedgerList = document.getElementById('transaction-ledger-list');
 const btnClearChat = document.getElementById('btn-clear-chat');
 const btnSwitchToShopping = document.getElementById('btn-switch-to-shopping');
+
+// Sidebar Toggle Functionality
+if (sidebarToggleBtn && leftSidebar) {
+  sidebarToggleBtn.addEventListener('click', () => {
+    leftSidebar.classList.toggle('is-collapsed');
+  });
+}
 
 // Tab Navigation Logic
 const menuItems = document.querySelectorAll('.menu-item');
@@ -62,10 +69,6 @@ function switchTab(tabId) {
       view.classList.remove('active');
     }
   });
-
-  if (window.innerWidth <= 900) {
-    leftSidebar.classList.remove('mobile-open');
-  }
 }
 
 menuItems.forEach(item => {
@@ -77,13 +80,6 @@ menuItems.forEach(item => {
 
 if (btnSwitchToShopping) {
   btnSwitchToShopping.addEventListener('click', () => switchTab('shopping'));
-}
-
-// Mobile Menu Toggle
-if (mobileMenuToggle) {
-  mobileMenuToggle.addEventListener('click', () => {
-    leftSidebar.classList.toggle('mobile-open');
-  });
 }
 
 // Render Shopping Deals

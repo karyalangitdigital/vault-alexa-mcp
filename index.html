@@ -10,9 +10,13 @@
 </head>
 <body>
 
-  <!-- Top Navigation Header -->
+  <!-- Top Navigation Header with Toggleable Sidebar Menu Icon -->
   <header class="app-header">
     <div class="header-left">
+      <!-- Sidebar Hamburger Toggle Button -->
+      <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" title="Toggle Sidebar Menu" aria-label="Toggle Sidebar Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
       <div class="header-logo">
         <div class="logo-v-icon">V</div>
         <div>
@@ -51,7 +55,7 @@
   <!-- App Main Content Container with Left Sidebar & 3-Column Grid -->
   <div class="app-body">
 
-    <!-- Left Sidebar Menu -->
+    <!-- Left Sidebar Menu (Collapsible / Toggleable on Desktop & Mobile) -->
     <aside class="left-sidebar" id="left-sidebar">
       <nav class="sidebar-menu">
         <button class="menu-item active" data-tab="dashboard">
@@ -87,7 +91,7 @@
       <!-- Dynamic Center Views (Switches between Dashboard, Finance, Shopping, Goals, Insights, Settings) -->
       <div class="center-views-container">
 
-        <!-- 1. Dashboard View (Exact match to original screenshot) -->
+        <!-- 1. Dashboard View -->
         <div class="tab-view active" id="view-dashboard">
           <div class="dashboard-columns-wrapper">
 

@@ -1,4 +1,4 @@
-/* VaultAlexa+ Design System - Exact Layout with Bottom Input Capsule */
+/* VaultAlexa+ Design System - Sidebar Toggle & Exact Design Layout */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap');
 
 :root {
@@ -65,6 +65,33 @@ body {
 .header-left {
   display: flex;
   align-items: center;
+  gap: 14px;
+}
+
+/* Sidebar Hamburger Toggle Button */
+.sidebar-toggle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid var(--border-light);
+  color: var(--text-main);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.sidebar-toggle-btn:hover {
+  background: var(--primary-blue-light);
+  color: var(--primary-blue);
+}
+
+body.dark-mode .sidebar-toggle-btn {
+  background: #334155;
+  color: #ffffff;
 }
 
 .header-logo {
@@ -213,6 +240,7 @@ body.dark-mode .theme-mode-btn {
 .app-body {
   display: flex;
   flex: 1;
+  position: relative;
 }
 
 .left-sidebar {
@@ -221,10 +249,21 @@ body.dark-mode .theme-mode-btn {
   border-right: 1px solid var(--border-light);
   padding: 20px 10px;
   flex-shrink: 0;
+  transition: width 0.25s ease, padding 0.25s ease, opacity 0.25s ease, transform 0.25s ease;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 body.dark-mode .left-sidebar {
   background: #1e293b;
+}
+
+/* Collapsed Sidebar State (Toggled by user click) */
+.left-sidebar.is-collapsed {
+  width: 0;
+  padding: 20px 0;
+  opacity: 0;
+  border-right: none;
 }
 
 .sidebar-menu {
@@ -563,7 +602,7 @@ body.dark-mode .deal-item-img-wrapper {
   text-decoration: line-through;
 }
 
-/* CHAT CARD CONTAINER & ALEXA SIMULATOR (Anchored to Bottom) */
+/* CHAT CARD CONTAINER & ALEXA SIMULATOR */
 .chat-card-container {
   height: 100%;
   min-height: 520px;
@@ -682,7 +721,7 @@ body.dark-mode .alexa-bubble {
   align-items: center;
   justify-content: center;
   padding: 10px 0;
-  margin-top: auto; /* Pushes mic to bottom area */
+  margin-top: auto;
   gap: 6px;
 }
 
@@ -766,7 +805,7 @@ body.dark-mode .big-mic-button {
   50% { height: 18px; }
 }
 
-/* CHAT INPUT CAPSULE (Pinned at the very bottom of the card) */
+/* CHAT INPUT CAPSULE */
 .chat-form {
   margin-top: 10px;
 }
