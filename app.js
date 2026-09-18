@@ -1558,15 +1558,85 @@ window.setUserRole = function(role) {
     if (cardLabels[2]) cardLabels[2].textContent = isID ? 'Tingkat Konversi AI' : 'AI Conversion Rate';
 
     const balanceEl = document.getElementById('dash-account-balance');
+    const investEl = document.getElementById('dash-investment-value');
     const spendEl = document.getElementById('dash-monthly-spending');
     if (balanceEl) balanceEl.textContent = '$14,850.00';
+    if (investEl) investEl.textContent = '142 Orders';
     if (spendEl) spendEl.textContent = '32.4%';
 
+    const subMetaRows = document.querySelectorAll('.small-metric-card .metric-meta-row');
+    if (subMetaRows[0]) {
+      subMetaRows[0].innerHTML = '<span class="trend-badge positive">+28.4% this week</span><span class="text-muted font-small">Prime Fulfilled</span>';
+    }
+    if (subMetaRows[1]) {
+      subMetaRows[1].innerHTML = '<span class="cat-row-pct green font-small">+18.2% vs Benchmark</span><span class="text-muted font-small">AI Traffic</span>';
+    }
+
+    // Transform Virtual Card
+    const cardBrandEl = document.querySelector('.card-brand');
+    if (cardBrandEl) cardBrandEl.innerHTML = '<i class="fa-brands fa-amazon"></i> Merchant Prime Vault';
+    const cardVaultLbl = document.querySelectorAll('.card-holder-lbl');
+    if (cardVaultLbl[1]) cardVaultLbl[1].textContent = 'REVENUE VAULT';
     const cardBalanceEl = document.getElementById('card-live-balance');
     if (cardBalanceEl) cardBalanceEl.textContent = '$14,850.00';
-
     const cardHolderEl = document.querySelector('.card-holder-name');
     if (cardHolderEl) cardHolderEl.textContent = 'APEX TECH STORE';
+
+    // Transform Category Breakdown to Seller Sales Categories
+    const budgetH3 = document.querySelector('.category-breakdown-card .card-subtitle');
+    if (budgetH3) budgetH3.textContent = isID ? 'Performa Kategori Penjualan Toko' : 'Merchant Category Sales Breakdown';
+
+    const catContainer = document.getElementById('cat-progress-container');
+    if (catContainer) {
+      catContainer.innerHTML = `
+        <div class="cat-progress-row">
+          <div class="cat-row-header">
+            <span class="cat-row-title">${isID ? 'Elektronik Audio & Video' : 'Audio & Video Electronics'}</span>
+            <span class="cat-row-pct blue">78%</span>
+            <span class="cat-row-amt">$6,450 / $8,000</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill blue-fill" style="width: 78%;"></div></div>
+        </div>
+        <div class="cat-progress-row">
+          <div class="cat-row-header">
+            <span class="cat-row-title">${isID ? 'Aksesori Gadget & Daya' : 'Power & Gadget Accessories'}</span>
+            <span class="cat-row-pct green">65%</span>
+            <span class="cat-row-amt">$3,250 / $5,000</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill green-fill" style="width: 65%;"></div></div>
+        </div>
+        <div class="cat-progress-row">
+          <div class="cat-row-header">
+            <span class="cat-row-title">${isID ? 'Perangkat Smart Home' : 'Smart Home Devices'}</span>
+            <span class="cat-row-pct purple">82%</span>
+            <span class="cat-row-amt">$3,150 / $4,000</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill purple-fill" style="width: 82%;"></div></div>
+        </div>
+        <div class="cat-progress-row">
+          <div class="cat-row-header">
+            <span class="cat-row-title">${isID ? 'Sepatu & Apparel Olahraga' : 'Footwear & Sports Apparel'}</span>
+            <span class="cat-row-pct green">90%</span>
+            <span class="cat-row-amt">$2,000 / $2,200</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill green-fill" style="width: 90%;"></div></div>
+        </div>
+      `;
+    }
+
+    // Transform Deals Header & Buttons for Seller
+    const dealsH2 = document.querySelector('.dashboard-deals-section .column-title');
+    if (dealsH2) dealsH2.innerHTML = `<i class="fa-solid fa-boxes-stacked text-amber"></i> ${isID ? 'Manajemen Produk & Pengaturan Diskon Toko' : 'Store Product Inventory & Prime Promo Controls'}`;
+
+    // Update buttons in deals to Seller Action
+    document.querySelectorAll('.btn-buy-alexa').forEach((btn, idx) => {
+      const deal = state.deals[idx] || state.deals[0];
+      btn.innerHTML = `<i class="fa-solid fa-sliders"></i> ${isID ? 'Atur Promo Prime' : 'Optimize Prime Deal'}`;
+      btn.onclick = () => {
+        const query = isID ? `Rekomendasikan diskon Prime terbaik untuk ${deal.title}` : `Recommend optimal Prime discount for ${deal.title}`;
+        processUserQuery(query);
+      };
+    });
 
     // Seller Quick Action Chips
     const chips = document.querySelectorAll('.chip-item');
@@ -1590,8 +1660,8 @@ window.setUserRole = function(role) {
     if (profilePopover) profilePopover.classList.remove('active');
 
     const welcomeSeller = isID
-      ? `🏪 <strong>Mode Penjual (Seller) Aktif:</strong> Selamat datang di <em>Apex Tech Store</em>! Saya adalah AI Business Co-Pilot Anda via Protokol MCP. Siap menganalisis konversi produk, merekomendasikan diskon Prime, dan memantau pesanan masuk.`
-      : `🏪 <strong>Seller Mode Activated:</strong> Welcome to <em>Apex Tech Store</em>! I am your AI Business Co-Pilot via MCP Protocol. Ready to optimize product conversions, suggest Prime deals, and monitor incoming orders.`;
+      ? `🏪 <strong>Mode Penjual (Seller) Aktif:</strong> Selamat datang di <em>Apex Tech Store</em>! Dashboard telah beralih ke metrik toko merchant (Pendapatan $14,850, 142 pesanan terkirim, konversi 32.4%). Siap menganalisis promo dan pesanan masuk!`
+      : `🏪 <strong>Seller Mode Activated:</strong> Welcome to <em>Apex Tech Store</em>! Dashboard switched to merchant revenue analytics ($14,850 revenue, 142 fulfilled orders, 32.4% conversion rate). Ready to optimize deals and monitor incoming orders!`;
     addMessage('alexa', 'Alexa+', welcomeSeller);
 
   } else {
@@ -1613,17 +1683,33 @@ window.setUserRole = function(role) {
       popoverBadge.innerHTML = '<i class="fa-brands fa-amazon"></i> Prime Family Head';
     }
 
+    const cardBrandEl = document.querySelector('.card-brand');
+    if (cardBrandEl) cardBrandEl.innerHTML = '<i class="fa-brands fa-amazon"></i> Prime Vault';
+    const cardVaultLbl = document.querySelectorAll('.card-holder-lbl');
+    if (cardVaultLbl[1]) cardVaultLbl[1].textContent = 'AVAILABLE VAULT';
     const cardHolderEl = document.querySelector('.card-holder-name');
     if (cardHolderEl) cardHolderEl.textContent = 'SARAH JENKINS';
 
+    const subMetaRows = document.querySelectorAll('.small-metric-card .metric-meta-row');
+    if (subMetaRows[0]) {
+      subMetaRows[0].innerHTML = '<span class="trend-badge positive">+4.2% YTD</span><span class="text-muted font-small">Portfolio Active</span>';
+    }
+    if (subMetaRows[1]) {
+      subMetaRows[1].innerHTML = '<span class="cat-row-pct blue font-small">78% of budget</span><span class="text-muted font-small">12 days left</span>';
+    }
+
+    const investEl = document.getElementById('dash-investment-value');
+    if (investEl) investEl.textContent = '$68,125.00';
+
     updateUIOverview();
     applyLanguage(currentLang, false);
+    renderShoppingGrid();
 
     if (profilePopover) profilePopover.classList.remove('active');
 
     const welcomeBuyer = isID
-      ? `🛒 <strong>Mode Pembeli (Buyer) Aktif:</strong> Kembali ke akun personal <em>Sarah Jenkins</em>. Saya siap memeriksa keamanan anggaran belanja, membagi tagihan, dan memburu promo diskon Amazon!`
-      : `🛒 <strong>Buyer Mode Activated:</strong> Switched back to personal account for <em>Sarah Jenkins</em>. Ready to safeguard your shopping budget, split bills, and hunt Amazon Prime deals!`;
+      ? `🛒 <strong>Mode Pembeli (Buyer) Aktif:</strong> Kembali ke akun personal <em>Sarah Jenkins</em>. Dashboard memantau saldo rekening, batas belanja bulanan, dan promo Prime!`
+      : `🛒 <strong>Buyer Mode Activated:</strong> Switched back to personal account for <em>Sarah Jenkins</em>. Monitoring personal checking balance, monthly category budgets, and Prime deals!`;
     addMessage('alexa', 'Alexa+', welcomeBuyer);
   }
 };
