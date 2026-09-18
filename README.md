@@ -95,7 +95,23 @@ npm start
 
 ---
 
+## 🚀 Future Roadmap & Next-Gen MCP Capabilities
+
+1. **🤖 Autonomous Deal Negotiation Protocol (`negotiate_dynamic_discount`)**:
+   - Multi-agent negotiation bridge between Buyer and Seller MCP servers to unlock tailored bundle vouchers and dynamic volume discounts.
+2. **🧾 Instant Receipt & Offline Expense OCR (`parse_receipt_data`)**:
+   - Automated invoice scanning and tax itemization to log offline retail transactions directly into the private financial vault.
+3. **🚨 Impulse Buying Cool-Down & Opportunity Cost Simulator (`calculate_opportunity_cost`)**:
+   - Behavioral AI guardrails that simulate the long-term impact on savings goals before purchasing discretionary luxury items.
+4. **📦 Multi-Store Basket Arbitrage & Unit-Price Optimizer (`find_unit_price_arbitrage`)**:
+   - Real-time price-per-unit comparisons across Amazon Prime sizes to maximize household savings.
+5. **📊 Interactive Voice-Driven Stress-Test Simulator (`simulate_financial_stress_test`)**:
+   - On-demand "What-If" voice simulations to model income fluctuations or unexpected emergency expenses.
+
+---
+
 ## 📜 Bonus Point Claims & Friction Log
 
 - **10% Bonus Point Claim**: Comprehensive developer feedback report in [`FRICTION_LOG.md`](file:///C:/Users/karya/.gemini/antigravity-ide/scratch/vault-alexa-mcp/FRICTION_LOG.md).
 - **Open Source**: Distributed under the **MIT License**.
+

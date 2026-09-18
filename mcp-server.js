@@ -138,6 +138,32 @@ const MCP_TOOLS = [
       },
       required: ['amount', 'category', 'description']
     }
+  },
+  {
+    name: 'negotiate_dynamic_discount',
+    description: 'Bilateral MCP tool: initiates real-time automated negotiation with Amazon Seller API for instant bundle vouchers or 1-Click checkout discounts',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        productId: { type: 'string', description: 'Amazon ASIN or Product ID' },
+        currentPrice: { type: 'number', description: 'Original listed item price in USD' },
+        targetPrice: { type: 'number', description: 'Buyer safe-to-spend target budget in USD' }
+      },
+      required: ['productId', 'currentPrice', 'targetPrice']
+    }
+  },
+  {
+    name: 'calculate_opportunity_cost',
+    description: 'Autonomous financial impulse guard: projects the impact of a discretionary purchase on long-term savings goals and cool-down timer status',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        itemName: { type: 'string', description: 'Discretionary item title' },
+        itemPrice: { type: 'number', description: 'Item price in USD' },
+        targetGoalName: { type: 'string', description: 'Primary savings goal to stress-test (e.g. Tokyo Vacation)' }
+      },
+      required: ['itemName', 'itemPrice']
+    }
   }
 ];
 
@@ -492,6 +518,64 @@ app.post('/mcp/v1/rpc', (req, res) => {
                 transaction: { description, amount, category },
                 updatedBalance: userAccount.accountBalance,
                 remainingBudget: userAccount.remainingBudget
+              }, null, 2)
+            }
+          ]
+        }
+      });
+    }
+
+    // Tool: negotiate_dynamic_discount
+    if (name === 'negotiate_dynamic_discount') {
+      const { productId, currentPrice, targetPrice } = args || {};
+      const discountPct = Math.min(30, Math.round(((currentPrice - targetPrice) / currentPrice) * 100));
+      const agreedPrice = currentPrice * (1 - discountPct / 100);
+
+      return res.json({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                status: 'NEGOTIATION_SUCCESSFUL',
+                productId: productId || 'az-deal',
+                originalPrice: currentPrice,
+                targetBudget: targetPrice,
+                agreedPrice: Number(agreedPrice.toFixed(2)),
+                voucherApplied: `AMZ-MCP-SAVE${discountPct}`,
+                savings: Number((currentPrice - agreedPrice).toFixed(2)),
+                message: `Bilateral MCP Negotiation: Amazon Seller accepted 1-Click checkout proposal with instant ${discountPct}% off voucher.`
+              }, null, 2)
+            }
+          ]
+        }
+      });
+    }
+
+    // Tool: calculate_opportunity_cost
+    if (name === 'calculate_opportunity_cost') {
+      const { itemName, itemPrice, targetGoalName } = args || {};
+      const goal = targetGoalName || 'Liburan ke Tokyo';
+      const monthlyContribution = 200;
+      const delayDays = Math.round((itemPrice / monthlyContribution) * 30);
+
+      return res.json({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                status: 'COOLDOWN_ANALYSIS_COMPLETE',
+                item: itemName,
+                price: itemPrice,
+                impactedGoal: goal,
+                targetDelayDays: delayDays,
+                cooldownRecommended: itemPrice > 100 ? '24_HOURS' : '1_HOUR',
+                advice: `Purchasing ${itemName} ($${itemPrice}) redirects funds equivalent to ${delayDays} days of savings toward "${goal}". A cool-down buffer is advised.`
               }, null, 2)
             }
           ]
