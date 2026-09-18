@@ -64,7 +64,7 @@ flowchart TD
         end
 
         subgraph MCPRegistry ["🛠️ MCP Registry (Spec 2025-11-25)"]
-            MCPTools["🛠️ 8 MCP Tools\n(validate_purchase_safety, negotiate_discount, etc.)"]
+            MCPTools["🛠️ 11 Multi-Agent Tools\n(predict_runway, dispute_refund, peer_split, etc.)"]
             MCPResources["📦 3 MCP Resources\n(vault://financial/overview, etc.)"]
             MCPPrompts["📝 2 Context Prompts"]
         end

@@ -1189,18 +1189,18 @@ function processUserQuery(query) {
   } else {
     const traceSteps = isID ? [
       'Klasifikasi Maksud Otomatis (Protokol MCP 2025-11-25)',
-      'Memindai 6 Tools & 3 Resources Terdaftar',
+      'Memindai 11 Tools & 3 Resources Terdaftar',
       'Diagnostik Kesehatan: Normal'
     ] : [
       'Autonomous Intent Classifier (MCP Spec 2025-11-25)',
-      'Scanning 6 Registered Tools & 3 Resources',
+      'Scanning 11 Registered Tools & 3 Resources',
       'Health Diagnostics: Nominal'
     ];
 
     showReasoningTrace(traceSteps, () => {
       const msg = isID
-        ? `<strong>Protokol MCP 2025-11-25:</strong> Permintaan dianalisis melalui 6 Tools & 3 Resources. Total pengeluaran bulan ini $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. Semua parameter normal.`
-        : `<strong>MCP Protocol 2025-11-25:</strong> Analyzed query across 6 Tools & 3 Resources. Total monthly spending is $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All system parameters nominal.`;
+        ? `<strong>Protokol MCP 2025-11-25:</strong> Permintaan dianalisis melalui 11 Tools & 3 Resources Multi-Agent. Total pengeluaran bulan ini $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. Semua parameter normal.`
+        : `<strong>MCP Protocol 2025-11-25:</strong> Analyzed query across 11 Tools & 3 Multi-Agent Resources. Total monthly spending is $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All system parameters nominal.`;
       addMessage('alexa', 'Alexa+', msg);
     });
   }
