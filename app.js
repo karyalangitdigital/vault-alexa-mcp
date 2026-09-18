@@ -315,7 +315,20 @@ function processUserQuery(query) {
   const isID = currentLang === 'ID';
 
   if (qLower.includes('buy') || qLower.includes('beli') || qLower.includes('purchase') || qLower.includes('order')) {
-    let matchedDeal = state.deals.find(d => qLower.includes(d.title.toLowerCase())) || state.deals[0];
+    let matchedDeal = state.deals.find(d => {
+      const dTitle = d.title.toLowerCase();
+      if (qLower.includes(dTitle)) return true;
+      if (dTitle.includes('running') && (qLower.includes('running') || qLower.includes('shoe') || qLower.includes('sepatu'))) return true;
+      if (dTitle.includes('echo') && (qLower.includes('echo') || qLower.includes('show') || qLower.includes('alexa'))) return true;
+      if (dTitle.includes('bose') && (qLower.includes('bose') || qLower.includes('headphone') || qLower.includes('earphone'))) return true;
+      if (dTitle.includes('kindle') && (qLower.includes('kindle') || qLower.includes('paperwhite') || qLower.includes('ebook') || qLower.includes('buku'))) return true;
+      if (dTitle.includes('watch') && (qLower.includes('watch') || qLower.includes('apple') || qLower.includes('jam'))) return true;
+      if (dTitle.includes('anker') && (qLower.includes('anker') || qLower.includes('power bank') || qLower.includes('charger'))) return true;
+      
+      // Word token matching
+      const words = dTitle.split(' ').filter(w => w.length > 3);
+      return words.some(w => qLower.includes(w));
+    }) || state.deals[0];
     let buyPrice = matchedDeal.price;
 
     const priceMatch = query.match(/\$([0-9.]+)/) || query.match(/for ([0-9.]+)/) || query.match(/sebesar ([0-9.]+)/);
