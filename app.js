@@ -89,6 +89,16 @@ const I18N_DICT = {
     catUtilities: 'Tagihan & Listrik',
     catShopping: 'Belanja Santai',
     smartDealsTitle: 'Promo Cerdas Amazon',
+    shoppingTitle: 'Asisten Belanja Cerdas Amazon',
+    shoppingDesc: 'Promo pilihan Amazon yang tersinkronisasi dengan kemampuan pembelian suara Alexa+ dan pemeriksaan batas anggaran aman.',
+    financeTitle: 'Buku Kas & Pelacak Pengeluaran',
+    financeDesc: 'Catat transaksi dan pantau alokasi kategori anggaran secara real-time via Protokol MCP.',
+    goalsTitle: 'Target Finansial & Tabungan Masa Depan',
+    goalsDesc: 'Lacak progres tabungan otomatis dan alokasi dana cadangan.',
+    insightsTitle: 'Wawasan Keuangan Berbasis AI',
+    insightsDesc: 'Analisis prediktif dan rekomendasi efisiensi pengeluaran bulanan.',
+    settingsTitle: 'Pengaturan Agen & Aplikasi',
+    settingsDesc: 'Konfigurasikan preferensi suara AI Alexa+, nada dering, dan integrasi MCP.',
     chatTitle: 'Obrolan dengan Alexa+',
     chatInputPlaceholder: 'Ketik atau bicara ke VaultAlexa+...',
     chipBudget: '📊 Sisa Anggaran',
@@ -119,6 +129,16 @@ const I18N_DICT = {
     catUtilities: 'Utilities',
     catShopping: 'Shopping',
     smartDealsTitle: 'Smart Amazon Deals',
+    shoppingTitle: 'Intelligent Amazon Shopping Assistant',
+    shoppingDesc: 'Curated Amazon deals synchronized with Alexa+ voice purchasing capability and budget safety checks.',
+    financeTitle: 'Ledger & Expense Tracker',
+    financeDesc: 'Log transactions and monitor category allocations in real-time via MCP Protocol.',
+    goalsTitle: 'Financial Goals & Savings Targets',
+    goalsDesc: 'Track automatic savings progress and reserve fund allocations.',
+    insightsTitle: 'AI-Powered Financial Insights',
+    insightsDesc: 'Predictive analytics and monthly spending efficiency recommendations.',
+    settingsTitle: 'Agent & Application Settings',
+    settingsDesc: 'Configure your VaultAlexa+ AI voice preferences, budget limits, and MCP integration.',
     chatTitle: 'Chat with Alexa+',
     chatInputPlaceholder: 'Type or speak to VaultAlexa+...',
     chipBudget: '📊 Budget',
@@ -646,6 +666,32 @@ function applyLanguage(lang, announce = true) {
 
   const dealsH2 = document.querySelector('.dashboard-deals-section .column-title');
   if (dealsH2) dealsH2.innerHTML = `<i class="fa-solid fa-bolt text-amber"></i> ${d.smartDealsTitle}`;
+
+  // Tab Page Headers & Subtitles
+  const shoppingH2 = document.querySelector('#view-shopping .column-title');
+  const shoppingP = document.querySelector('#view-shopping .tab-description');
+  if (shoppingH2) shoppingH2.innerHTML = `<i class="fa-solid fa-cart-shopping text-blue"></i> ${d.shoppingTitle}`;
+  if (shoppingP) shoppingP.textContent = d.shoppingDesc;
+
+  const financeH2 = document.querySelector('#view-finance .column-title');
+  const financeP = document.querySelector('#view-finance .tab-description');
+  if (financeH2) financeH2.innerHTML = `<i class="fa-solid fa-wallet text-green"></i> ${d.financeTitle}`;
+  if (financeP) financeP.textContent = d.financeDesc;
+
+  const goalsH2 = document.querySelector('#view-goals .column-title');
+  const goalsP = document.querySelector('#view-goals .tab-description');
+  if (goalsH2) goalsH2.innerHTML = `<i class="fa-solid fa-bullseye text-purple"></i> ${d.goalsTitle}`;
+  if (goalsP) goalsP.textContent = d.goalsDesc;
+
+  const insightsH2 = document.querySelector('#view-insights .column-title');
+  const insightsP = document.querySelector('#view-insights .tab-description');
+  if (insightsH2) insightsH2.innerHTML = `<i class="fa-solid fa-chart-simple text-amber"></i> ${d.insightsTitle}`;
+  if (insightsP) insightsP.textContent = d.insightsDesc;
+
+  const settingsH2 = document.querySelector('#view-settings .column-title');
+  const settingsP = document.querySelector('#view-settings .tab-description');
+  if (settingsH2) settingsH2.innerHTML = `<i class="fa-solid fa-gear text-blue"></i> ${d.settingsTitle}`;
+  if (settingsP) settingsP.textContent = d.settingsDesc;
 
   // Chips
   const chips = document.querySelectorAll('.chip-item');
