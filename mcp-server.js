@@ -619,6 +619,8 @@ app.post('/mcp/v1/rpc', (req, res) => {
           ]
         }
       });
+    }
+
     // Tool: predict_monthly_runway
     if (name === 'predict_monthly_runway') {
       const { plannedPurchaseAmount, daysRemainingInMonth } = args || {};
