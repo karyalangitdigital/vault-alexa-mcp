@@ -23,9 +23,9 @@ It acts as a **Two-Sided Bridge (Bilateral Protocol)** connecting **Consumers (B
 | :---: | :---: |
 | ![Dashboard Overview](docs/screenshots/dashboard_preview.jpeg) | ![Shopping Catalog](docs/screenshots/shopping_deals.jpeg) |
 
-| 🔌 Interactive MCP Protocol Inspector | 🤖 Live Autonomous Reasoning & Tool Calling |
+| 🔌 Interactive MCP Protocol Inspector | 🤝 AI Negotiation & Anti-Impulse Guard |
 | :---: | :---: |
-| ![MCP Inspector](docs/screenshots/mcp_inspector.jpeg) | ![Agent Reasoning](docs/screenshots/dashboard_preview.jpeg) |
+| ![MCP Inspector](docs/screenshots/mcp_inspector.jpeg) | ![AI Negotiation & Cooldown Guard](docs/screenshots/ai_negotiation_cooldown.jpeg) |
 
 ---
 
