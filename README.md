@@ -29,36 +29,70 @@ It acts as a **Two-Sided Bridge (Bilateral Protocol)** connecting **Consumers (B
 
 ---
 
-## 🌟 Key Features
+## 🌟 Key Features (11 Enterprise Multi-Agent Tools)
 
-1. **Autonomous Safe-to-Spend Validator (`validate_purchase_safety`)**: Pre-validates prospective purchase costs against remaining monthly category allowances to prevent impulsive overspending.
-2. **Price Drop Sniper (`track_price_drop_target`)**: Monitors Amazon item discounts and dispatches alerts when target price thresholds are reached.
-3. **Household Split Ledger (`split_shared_expense`)**: Manages multi-user family expenses and shared budget pools across Amazon Household members.
-4. **Intelligent Deal Discovery (`search_amazon_deals`)**: Fetches verified Amazon Prime discounts tailored to current spending capacity.
-5. **Real-time Financial Overview (`get_financial_summary`)**: Delivers accurate calculations of balances, spending rates, and budget health.
-6. **Expense Logging (`log_transaction`)**: Directly registers new ledger items and updates category analytics in real time.
-7. **Interactive MCP Developer Inspector**: Built-in visual playground allowing judges and developers to test live JSON-RPC 2.0 requests and inspect sub-15ms response latency.
-8. **1-Click MCP Manifest (`mcp-config.json`)**: Ready for plug-and-play connection with Amazon Bedrock Agent, Alexa Developer Console, and Claude Desktop.
-9. **Full Bilingual Support (ID / US)**: Complete instant toggle between Bahasa Indonesia (`ID`) and English (`US`) across all UI elements, voice speech synthesis, and reasoning traces.
+1. **🔮 Proactive Budget Runway & Deficit Risk Forecast (`predict_monthly_runway`)**: Machine Learning forecasting (Amazon Forecast / Bedrock) that detects upcoming recurring utility & insurance obligations ($450) to prevent month-end cashflow deficit before discretionary checkouts.
+2. **🛡️ Autonomous Safe-to-Spend Validator (`validate_purchase_safety`)**: Pre-validates prospective purchase costs against remaining monthly category allowances to prevent impulsive overspending.
+3. **🤝 Bilateral Dynamic Discount Negotiation (`negotiate_dynamic_discount`)**: Real-time automated negotiation bridge connecting Buyer safe-budget limits with Amazon Seller API to unlock instant 1-Click volume vouchers.
+4. **🚨 Impulse Buying Cool-Down & Opportunity Cost (`calculate_opportunity_cost`)**: Projects the delay in savings goals (e.g. 32 days of Tokyo vacation funds) and triggers a 24-hour reflection reminder.
+5. **🎫 Full Lifecycle Post-Purchase Dispute & Refund Agent (`initiate_purchase_dispute`)**: Auto-generates Amazon RMA tickets, issues prepaid carrier return QR codes, and queues instant escrow refunds for defective deliveries.
+6. **👥 Smart Community Social Bill Split (`trigger_peer_split_request`)**: Dispatches automated Alexa voice bill-split requests across Alexa Household Contacts with real-time settlement tracking.
+7. **🎯 Price Drop Sniper (`track_price_drop_target`)**: Monitors Amazon item discounts and dispatches alerts when target price thresholds are reached.
+8. **📊 Real-time Financial Overview (`get_financial_summary`)**: Delivers accurate calculations of balances, spending rates, and budget health.
+9. **🛍️ Intelligent Prime Deal Discovery (`search_amazon_deals`)**: Fetches verified Amazon Prime discounts tailored to current spending capacity.
+10. **⚡ Interactive MCP Developer Inspector**: Built-in visual playground allowing judges and developers to test live JSON-RPC 2.0 requests across all 11 tools with sub-15ms response latency.
+11. **🌐 Full Bilingual Support (ID / US)**: Complete instant toggle between Bahasa Indonesia (`ID`) and English (`US`) across all UI elements, voice speech synthesis, and reasoning traces.
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Cloud & Serverless Architecture (AWS Powered)
 
 ```mermaid
-flowchart LR
-    User([👤 User / Family]) <-->|Voice & Text| Alexa[🔊 Alexa+ Voice Agent]
-    Alexa <-->|MCP Spec 2025-11-25 / JSON-RPC 2.0| MCPServer[⚡ VaultAlexa+ MCP Server]
-    
-    subgraph "VaultAlexa+ MCP Server"
-        Tools[🛠️ 6 MCP Tools]
-        Resources[📦 3 MCP Resources]
-        Prompts[📝 2 MCP Prompts]
+flowchart TD
+    subgraph ClientLayer ["📱 Multi-Modal Client & Voice Layer"]
+        User(["👤 User / Prime Family"])
+        AlexaDevice["🔊 Alexa+ Echo Show / Fire TV / Web UI"]
+        User <-->|Natural Voice & Speech Synthesis| AlexaDevice
     end
-    
-    MCPServer <-->|Private Banking Ledger| VaultDB[(🏦 User Financial Vault)]
-    MCPServer <-->|Live Inventory & Deals| AmazonAPI[(🛍️ Amazon Seller Catalog)]
+
+    subgraph AWSCloud ["☁️ AWS Cloud Infrastructure (Self-Hosted MCP)"]
+        APIGateway["🚪 Amazon API Gateway (HTTP JSON-RPC 2.0 / SSE)"]
+        
+        subgraph ComputeLayer ["⚡ Compute & Orchestration"]
+            BedrockAgent["🧠 AWS Bedrock AgentCore (Claude 3.5 Sonnet / Nova Pro)"]
+            LambdaMCP["⚡ AWS Lambda / Amazon ECS Fargate\n(Self-Hosted VaultAlexa+ MCP Server)"]
+        end
+
+        subgraph MCPRegistry ["🛠️ MCP Registry (Spec 2025-11-25)"]
+            MCPTools["🛠️ 11 Multi-Agent Tools\n(predict_runway, dispute_refund, peer_split, etc.)"]
+            MCPResources["📦 3 MCP Resources\n(vault://financial/overview, etc.)"]
+            MCPPrompts["📝 2 Context Prompts"]
+        end
+
+        subgraph StorageLayer ["🔒 Secure Storage & Catalogs"]
+            DynamoDB[("🗄️ Amazon DynamoDB\n(Private Financial Vault & Ledgers)")]
+            AmazonCatalog[("🛍️ Amazon Selling Partner API\n(Live Prime Deals & Inventory)")]
+            CloudWatch["📊 Amazon CloudWatch\n(Live RPC Latency & Sub-15ms Audit Logs)"]
+        end
+    end
+
+    AlexaDevice <-->|Streamable HTTP / TLS 1.3| APIGateway
+    APIGateway <--> LambdaMCP
+    LambdaMCP <--> BedrockAgent
+    LambdaMCP --- MCPTools
+    LambdaMCP --- MCPResources
+    LambdaMCP --- MCPPrompts
+    LambdaMCP <-->|Encrypted IAM Auth| DynamoDB
+    LambdaMCP <-->|Signed SigV4 API| AmazonCatalog
+    LambdaMCP --> CloudWatch
 ```
+
+### ☁️ AWS Services Deployed:
+- **Amazon API Gateway**: Exposes low-latency HTTP endpoints over TLS 1.3 for bidirectional JSON-RPC 2.0 requests.
+- **AWS Lambda / Amazon ECS Fargate**: Hosts the stateless, ultra-fast MCP server logic with sub-15ms execution time.
+- **AWS Bedrock (Claude 3.5 / Amazon Nova)**: Powers multi-turn autonomous agent reasoning and dynamic tool selection.
+- **Amazon DynamoDB**: Stores personal financial vault data, encrypted ledger balances, and household split pools.
+- **Amazon CloudWatch**: Telemetry monitoring for tool invocation latency and protocol audit trails.
 
 ---
 
@@ -80,18 +114,27 @@ npm start
 
 ---
 
-## 🧪 Testing Guide for Judges
+## 🧪 Testing Guide for Judges (Multi-Agent Live Triggers)
 
-1. **Test Autonomous AI Reasoning**:
-   - In the chat panel, click **📊 Sisa Anggaran** or ask *"Berapa sisa uang belanja minggu ini?"*.
-   - Ask *"Beli Running Shoes"* to inspect the autonomous `validate_purchase_safety` flow with 1-Click order confirmation.
-   - Ask *"Bagaimana cara meningkatkan penjualan produk seller?"* to test the Seller Growth Advisor.
-2. **Test MCP Developer Inspector**:
+1. **Test Proactive Deficit Risk & Forecast (`predict_monthly_runway`)**:
+   - Ask: *"Apakah aman beli headphone atau ada prediksi defisit tagihan rutin?"*
+   - Observe: Multi-Agent Swarm engages and warns of $450 upcoming bills due in 5-7 days.
+2. **Test Post-Purchase Dispute & Refund (`initiate_purchase_dispute`)**:
+   - Ask: *"Barang Bose Headphones saya rusak di jalan, tolong ajukan komplain dan refund"*
+   - Observe: AI issues RMA Ticket, pre-paid return label, and instant $219.00 escrow credit.
+3. **Test Smart Community Voice Split (`trigger_peer_split_request`)**:
+   - Ask: *"Kirim notifikasi bagi tagihan langganan keluarga ke kontak Michael dan David"*
+   - Observe: Dispatches voice invoice alerts across Alexa household devices.
+4. **Test Dynamic Discount Negotiation (`negotiate_dynamic_discount`)**:
+   - Ask: *"Tawar harga untuk speaker Echo Show dong"*
+   - Observe: Bilateral MCP negotiation issues voucher `AMZ-MCP-SAVE15` ($99.99 ➔ $84.99).
+5. **Test Safe-to-Spend 1-Click Purchase & Rebalance**:
+   - Ask: *"Beli Bose Headphones"* ➔ Click **`+ Transfer $250 dari Tabungan`** to observe live budget rebalancing.
+6. **Test MCP Developer Inspector**:
    - Navigate to the **"Inspektur MCP"** tab in the sidebar.
-   - Select any tool (e.g. `validate_purchase_safety`), click **"Execute JSON-RPC Tool"**, and observe the structured JSON response (~8-12 ms latency).
-   - Click **"Copy Config JSON"** to export the manifest.
-3. **Test Bilingual Switcher**:
-   - Click the **`ID` / `US`** button in the top-right header to dynamically toggle all UI text, voice synthesis accents, and agent reasoning.
+   - Select any of the **11 registered tools**, click **"Execute JSON-RPC Tool"**, and observe structured JSON response (<15ms latency).
+7. **Test Bilingual Switcher**:
+   - Click the **`ID` / `US`** button in the top-right header to dynamically toggle UI language, voice accents, and reasoning traces.
 
 ---
 

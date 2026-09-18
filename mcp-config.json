@@ -43,7 +43,12 @@
       "SafePurchaseIntent",
       "AmazonDealSearchIntent",
       "SplitBillIntent",
-      "PriceDropSniperIntent"
+      "PriceDropSniperIntent",
+      "ProactiveRunwayForecastIntent",
+      "InitiatePurchaseDisputeIntent",
+      "PeerSplitRequestIntent",
+      "DynamicNegotiateIntent",
+      "OpportunityCostIntent"
     ]
   },
   "amazonBedrockAgent": {
