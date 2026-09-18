@@ -232,10 +232,12 @@
               </div>
 
               <div class="financial-cards-grid">
-                <!-- Big Account Balance Card with SVG Trend Line -->
+                <!-- Card 1: Account Balance with SVG Trend Line -->
                 <div class="card balance-card">
-                  <div class="card-label">Account Balance</div>
-                  <div class="card-value-large" id="dash-account-balance">$24,560.80</div>
+                  <div>
+                    <div class="card-label">Account Balance</div>
+                    <div class="card-value-large" id="dash-account-balance">$24,560.80</div>
+                  </div>
                   
                   <!-- SVG Trendline Chart -->
                   <div class="chart-svg-wrapper">
@@ -252,17 +254,27 @@
                   </div>
                 </div>
 
-                <!-- Small Metrics Cards -->
-                <div class="side-metrics">
-                  <div class="card small-metric-card">
+                <!-- Card 2: Investment Value -->
+                <div class="card small-metric-card">
+                  <div>
                     <div class="card-label">Investment Value</div>
                     <div class="card-value-medium" id="dash-investment-value">$68,125.00</div>
-                    <div class="trend-badge positive">+4.2%</div>
                   </div>
+                  <div class="metric-meta-row">
+                    <span class="trend-badge positive">+4.2% YTD</span>
+                    <span class="text-muted font-small">Portfolio Active</span>
+                  </div>
+                </div>
 
-                  <div class="card small-metric-card">
+                <!-- Card 3: Monthly Spending -->
+                <div class="card small-metric-card">
+                  <div>
                     <div class="card-label">Monthly Spending</div>
                     <div class="card-value-medium" id="dash-monthly-spending">$3,150.45</div>
+                  </div>
+                  <div class="metric-meta-row">
+                    <span class="cat-row-pct blue font-small">78% of budget</span>
+                    <span class="text-muted font-small">12 days left</span>
                   </div>
                 </div>
               </div>

@@ -726,8 +726,9 @@ body.resizing-active {
 
 .financial-cards-grid {
   display: grid;
-  grid-template-columns: 1fr 170px;
-  gap: 14px;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
 }
 
 .balance-card {
@@ -736,19 +737,20 @@ body.resizing-active {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 18px;
 }
 
 .card-value-large {
   font-family: var(--font-display);
-  font-size: 1.9rem;
+  font-size: 1.75rem;
   font-weight: 800;
   color: var(--text-main);
   margin-top: 4px;
 }
 
 .chart-svg-wrapper {
-  margin-top: 16px;
-  height: 75px;
+  margin-top: 10px;
+  height: 48px;
   width: 100%;
 }
 
@@ -757,21 +759,30 @@ body.resizing-active {
   height: 100%;
 }
 
-.side-metrics {
+.small-metric-card {
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-}
-
-.small-metric-card {
-  padding: 14px;
+  justify-content: space-between;
 }
 
 .card-value-medium {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.55rem;
   font-weight: 800;
   color: var(--text-main);
+  margin-top: 4px;
+}
+
+.metric-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.font-small {
+  font-size: 0.72rem;
 }
 
 .trend-badge {
