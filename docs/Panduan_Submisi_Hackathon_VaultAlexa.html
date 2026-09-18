@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panduan Pemenang Hackathon & Strategi Submisi - VaultAlexa+ MCP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm 15mm 15mm 15mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      line-height: 1.6;
+      background: #ffffff;
+      margin: 0;
+      padding: 24px 32px;
+    }
+    
+    /* Tombol Print */
+    .print-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+    .print-btn {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 10pt;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .print-btn:hover {
+      background: #1e40af;
+      transform: translateY(-1px);
+    }
+    @media print {
+      .print-bar { display: none !important; }
+      body { padding: 0 !important; }
+    }
+
+    /* Header */
+    .header {
+      border-bottom: 3px solid #ff9900;
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+    }
+    .header-title h1 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 22pt;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+    .header-title .subtitle {
+      color: #1d4ed8;
+      font-size: 11pt;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .header-badge {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 8.5pt;
+      color: #475569;
+      text-align: right;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    /* Headings */
+    h2 {
+      color: #0f172a;
+      font-size: 13.5pt;
+      font-weight: 800;
+      border-left: 5px solid #2563eb;
+      padding-left: 12px;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      letter-spacing: -0.3px;
+    }
+    h3 {
+      color: #0f172a;
+      font-size: 11pt;
+      font-weight: 700;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+    p, li {
+      font-size: 9.5pt;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+    ul, ol {
+      margin-top: 6px;
+      margin-bottom: 12px;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+
+    /* Cards */
+    .card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      page-break-inside: avoid;
+    }
+    .card-accent {
+      border-left: 5px solid #ff9900;
+      background: #fffdfa;
+    }
+    .card-blue {
+      border-left: 5px solid #2563eb;
+      background: #f8faff;
+    }
+    .card-green {
+      border-left: 5px solid #059669;
+      background: #f6fdf9;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 5px;
+      font-size: 8pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-gold { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .badge-blue { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    .badge-green { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+
+    /* Code style */
+    code {
+      font-family: 'JetBrains Mono', Consolas, Menlo, monospace;
+      background: #f1f5f9;
+      color: #0f172a;
+      font-size: 9pt;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Babak 1: Demo Step Cards (Super Crisp & High Contrast) */
+    .demo-step-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-left: 6px solid #2563eb;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+      page-break-inside: avoid;
+    }
+    .demo-step-card.accent-orange { border-left-color: #ea580c; }
+    .demo-step-card.accent-purple { border-left-color: #7c3aed; }
+    .demo-step-card.accent-green  { border-left-color: #059669; }
+    .demo-step-card.accent-slate  { border-left-color: #334155; }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .step-title {
+      font-size: 11pt;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.2px;
+    }
+    .step-timecode {
+      background: #0f172a;
+      color: #f8fafc;
+      font-size: 8.5pt;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.3px;
+    }
+
+    .step-row {
+      margin-bottom: 8px;
+      font-size: 9.5pt;
+      line-height: 1.6;
+      color: #1e293b;
+    }
+    .step-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 8.5pt;
+      font-weight: 700;
+      margin-right: 6px;
+      border: 1px solid transparent;
+    }
+    .step-tag.visual {
+      background: #e0f2fe;
+      color: #0369a1;
+      border-color: #bae6fd;
+    }
+    .step-tag.narasi {
+      background: #dcfce7;
+      color: #15803d;
+      border-color: #bbf7d0;
+    }
+    .step-tag.action {
+      background: #fef3c7;
+      color: #b45309;
+      border-color: #fde68a;
+    }
+
+    .quote-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #3b82f6;
+      border-radius: 4px;
+      padding: 10px 14px;
+      margin: 6px 0 10px 0;
+      color: #0f172a;
+      font-size: 9.5pt;
+      line-height: 1.6;
+    }
+    .quote-box strong {
+      color: #1d4ed8;
+    }
+
+    /* Table */
+    .table-custom {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      margin-bottom: 16px;
+      font-size: 9pt;
+    }
+    .table-custom th, .table-custom td {
+      border: 1px solid #cbd5e1;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .table-custom th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 800;
+    }
+    .table-custom tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .footer {
+      margin-top: 36px;
+      border-top: 1px solid #cbd5e1;
+      padding-top: 12px;
+      font-size: 8pt;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tombol Print PDF -->
+  <div class="print-bar">
+    <button class="print-btn" onclick="window.print()">
+      🖨️ Cetak / Simpan sebagai PDF (Ctrl + P)
+    </button>
+  </div>
+
+  <div class="header">
+    <div class="header-title">
+      <h1>VaultAlexa+ MCP</h1>
+      <div class="subtitle">Strategi Pemenang Hackathon Amazon Developer 2026</div>
+    </div>
+    <div class="header-badge">
+      <strong>Kategori:</strong> Autonomous Voice Commerce<br>
+      <strong>Framework:</strong> Model Context Protocol (MCP)<br>
+      <strong>Developer:</strong> KARYA LANGIT Digital
+    </div>
+  </div>
+
+  <div class="card card-accent">
+    <span class="badge badge-gold">Ringkasan Eksekutif</span>
+    <h3 style="margin-top: 8px;">🎯 Visi & Keunggulan Kompetitif Proyek</h3>
+    <p style="margin-bottom: 0;">
+      <strong>VaultAlexa+</strong> adalah Enterprise Autonomous Financial Operating System untuk ekosistem <strong>Alexa+</strong>. Proyek ini memecahkan masalah pembelian impulsif dalam voice-commerce melalui <strong>11 Enterprise Multi-Agent Tools</strong>, arsitektur serverless AWS (Lambda, Bedrock AgentCore, DynamoDB, CloudWatch), serta kepatuhan mutlak terhadap protokol standar <strong>Streamable HTTP / JSON-RPC 2.0 (Spec 2025-11-25)</strong>.
+    </p>
+  </div>
+
+  <h2>🎬 Babak 1: Rencana Video Demo Juri (Durasi Ideal: 2.5 Menit)</h2>
+  <p style="font-size: 10pt; color: #475569; margin-bottom: 14px;">
+    Gunakan panduan waktu (timecode), petunjuk visual, dan naskah tajam berikut saat merekam video demonstrasi layar (screen recording) untuk memukau dewan juri:
+  </p>
+
+  <!-- Step 1 -->
+  <div class="demo-step-card">
+    <div class="step-header">
+      <span class="step-title">BABAK 1: THE HOOK & THE PROBLEM (Masalah Belanja Impulsif)</span>
+      <span class="step-timecode">⏱️ 00:00 - 00:30 (30 Detik)</span>
+    </div>
+    <div class="step-row">
+      <span class="step-tag visual">👁️ Tampilan Visual</span>
+      Tampilkan Dashboard Utama VaultAlexa+ di browser (Kartu 3D Prime Vault & Ringkasan Keuangan).
+    </div>
+    <div class="step-row">
+      <span class="step-tag narasi">🗣️ Naskah Narasi Suara</span>
+    </div>
+    <div class="quote-box">
+      "Voice commerce dengan Alexa membuat belanja sangat instan—bahkan terlalu mudah hingga memicu pembelian impulsif tanpa memikirkan sisa anggaran bulanan. Perkenalkan <strong>VaultAlexa+</strong>, asisten finansial otonom berbasis <strong>Model Context Protocol (MCP)</strong> resmi Amazon yang melindungi dompet pengguna secara cerdas."
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="demo-step-card accent-orange">
+    <div class="step-header">
+      <span class="step-title">BABAK 2: PRE-PURCHASE SAFETY & DYNAMIC NEGOTIATION</span>
+      <span class="step-timecode">⏱️ 00:30 - 01:15 (45 Detik)</span>
+    </div>
+    <div class="step-row">
+      <span class="step-tag visual">👁️ Tampilan Visual</span>
+      Buka panel chat interaktif Alexa+ di sebelah kanan dashboard.
+    </div>
+    <div class="step-row">
+      <span class="step-tag action">⚡ Aksi Demo 1</span>
+      Ketik <code>Beli Bose Headphones</code> ➔ Muncul peringatan batas belanja 100%. Klik tombol <strong>"+ Transfer $250 dari Tabungan"</strong> ➔ Tunjukkan limit dan grafik otomatis rebalancing secara live.
+    </div>
+    <div class="step-row">
+      <span class="step-tag action">⚡ Aksi Demo 2</span>
+      Ketik <code>Tawar harga untuk speaker Echo Show</code> ➔ Tunjukkan simulasi negosiasi bilateral MCP yang otomatis menerbitkan voucher <strong>AMZ-MCP-SAVE15</strong> ($99.99 ➔ $84.99).
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="demo-step-card accent-purple">
+    <div class="step-header">
+      <span class="step-title">BABAK 3: PROACTIVE RUNWAY FORECAST (AI Proaktif Anti-Defisit)</span>
+      <span class="step-timecode">⏱️ 01:15 - 01:50 (35 Detik)</span>
+    </div>
+    <div class="step-row">
+      <span class="step-tag visual">👁️ Tampilan Visual</span>
+      Tetap pada kolom obrolan chat Alexa+.
+    </div>
+    <div class="step-row">
+      <span class="step-tag action">⚡ Aksi Demo</span>
+      Ketik perintah: <code>Apakah aman beli headphone atau ada prediksi defisit tagihan rutin?</code>
+    </div>
+    <div class="step-row">
+      <span class="step-tag narasi">🗣️ Naskah Narasi Suara</span>
+    </div>
+    <div class="quote-box">
+      "VaultAlexa+ bersifat proaktif, bukan reaktif. Menggunakan Amazon Forecast dan Bedrock Swarm, agen mendeteksi 2 tagihan wajib (listrik & asuransi) sebesar $450 yang jatuh tempo dalam 7 hari ke depan, lalu memperingatkan risiko defisit -$129.00 sebelum checkout dilakukan."
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="demo-step-card accent-green">
+    <div class="step-header">
+      <span class="step-title">BABAK 4: FULL LIFECYCLE DISPUTE & MCP PROTOCOL INSPECTOR</span>
+      <span class="step-timecode">⏱️ 01:50 - 02:20 (30 Detik)</span>
+    </div>
+    <div class="step-row">
+      <span class="step-tag action">⚡ Aksi Chat</span>
+      Ketik <code>Barang Bose Headphones rusak di jalan, tolong ajukan komplain dan refund</code> ➔ Kartu tiket RMA resmi otomatis terbit dan refund +$219.00 seketika dikembalikan ke saldo Prime Vault.
+    </div>
+    <div class="step-row">
+      <span class="step-tag visual">👁️ Pindah Tab</span>
+      Klik menu <strong>"Inspektur MCP"</strong> di sidebar kiri.
+    </div>
+    <div class="step-row">
+      <span class="step-tag action">⚡ Uji Coba Langsung</span>
+      Pilih tool <code>predict_monthly_runway</code> ➔ Klik tombol <strong>"Execute JSON-RPC Tool"</strong> ➔ Perlihatkan structured JSON payload dan badge kecepatan <strong>Sub-15ms Latency</strong> live di layar!
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="demo-step-card accent-slate">
+    <div class="step-header">
+      <span class="step-title">BABAK 5: CLOSING & AWS ARCHITECTURE CALLOUT</span>
+      <span class="step-timecode">⏱️ 02:20 - 02:30 (10 Detik)</span>
+    </div>
+    <div class="step-row">
+      <span class="step-tag visual">👁️ Tampilan Visual</span>
+      Buka halaman GitHub repository README.md dan sorot diagram Arsitektur Cloud AWS Serverless.
+    </div>
+    <div class="step-row">
+      <span class="step-tag narasi">🗣️ Naskah Narasi Suara</span>
+    </div>
+    <div class="quote-box">
+      "Ditenagai AWS Lambda, Bedrock AgentCore, DynamoDB, dan CloudWatch, VaultAlexa+ siap merevolusi pengalaman belanja suara yang aman dan bertanggung jawab. Terima kasih."
+    </div>
+  </div>
+
+  <h2>📝 Babak 2: Jawaban Formulir Submisi Devpost (Tinggal Copy-Paste)</h2>
+  <p style="color: #475569;">Gunakan format Bahasa Inggris profesional berikut untuk mengisi formulir pendaftaran Devpost / Hackathon:</p>
+
+  <div class="card">
+    <h3>1. Project Title & Tagline</h3>
+    <ul>
+      <li><strong>Title:</strong> VaultAlexa+ : Autonomous Multi-Agent Financial Advisor & Intelligent Shopping Assistant</li>
+      <li><strong>Tagline:</strong> Enterprise-grade Alexa+ agent powered by Model Context Protocol (MCP Spec 2025-11-25) and AWS Bedrock for budget-safe voice commerce, bilateral seller negotiation, and proactive cashflow protection.</li>
+    </ul>
+
+    <h3>2. Inspiration</h3>
+    <p>
+      As voice shopping on Alexa becomes seamless, consumers face a growing friction: unintentional budget overspending and lack of pre-purchase financial visibility. We built VaultAlexa+ to act as an intelligent autonomous guardian—empowering users to shop Prime deals with confidence while proactively protecting their savings goals and recurring obligations.
+    </p>
+
+    <h3>3. What it Does (Key Capabilities)</h3>
+    <ul>
+      <li><strong>11 Enterprise Multi-Agent Tools:</strong> Covers the entire commerce lifecycle—from pre-purchase runway forecast (<code>predict_monthly_runway</code>), bilateral seller discount bargaining (<code>negotiate_dynamic_discount</code>), to automated post-purchase dispute & instant escrow refunds (<code>initiate_purchase_dispute</code>).</li>
+      <li><strong>Proactive Deficit Protection:</strong> Powered by AWS Bedrock AgentCore and Amazon Forecast heuristics, identifying pending utility/insurance bills due in 5-7 days before checkouts.</li>
+      <li><strong>Two-Sided Bilateral Bridge:</strong> Empowers everyday Buyers (safe-to-spend limits, household bill splitting) and verified Amazon Sellers (Prime promotion optimization & conversion analytics).</li>
+      <li><strong>Developer & Regulatory Observability:</strong> Built-in live MCP Protocol Inspector delivering sub-15ms JSON-RPC 2.0 telemetry and Amazon CloudWatch audit trails.</li>
+    </ul>
+
+    <h3>4. How We Built It (AWS Cloud Architecture)</h3>
+    <ul>
+      <li><strong>Protocol Standard:</strong> Model Context Protocol (MCP Spec <code>2025-11-25</code>) over Streamable HTTP & Server-Sent Events (SSE) with TLS 1.3.</li>
+      <li><strong>Compute Layer:</strong> Self-Hosted MCP Server deployed on <strong>AWS Lambda & Amazon ECS Fargate</strong> for sub-15ms stateless execution.</li>
+      <li><strong>AI Orchestration:</strong> <strong>AWS Bedrock AgentCore</strong> coordinating Amazon Nova Pro and Claude 3.5 multi-agent swarm collectives.</li>
+      <li><strong>Database & Storage:</strong> <strong>Amazon DynamoDB</strong> (<code>PrimeVaultLedger</code> table) in region <code>us-east-1</code> for encrypted ledger transactions and household split pools.</li>
+      <li><strong>Auditing & Telemetry:</strong> <strong>Amazon CloudWatch Logs</strong> capturing live tool execution latency and multi-agent reasoning traces.</li>
+    </ul>
+
+    <h3>5. Bonus Point Claims (10% Developer Feedback)</h3>
+    <p>
+      We officially submit our detailed developer feedback report in <code>FRICTION_LOG.md</code>, highlighting our hands-on experience with MCP HTTP SSE header resolution, rich visual card standardization, and actionable suggestions for future AWS Bedrock MCP SDK tooling.
+    </p>
+  </div>
+
+  <h2>📋 Babak 3: Checklist Audit Akhir Sebelum Klik Submit</h2>
+  <div class="card card-green">
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>Komponen</th>
+          <th>Status</th>
+          <th>Kriteria Kelulusan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Lisensi Open Source</strong></td>
+          <td><span class="badge badge-green">Lengkap</span></td>
+          <td>File <code>LICENSE</code> resmi MIT atas nama KARYA LANGIT Digital (Supriadi).</td>
+        </tr>
+        <tr>
+          <td><strong>Konfigurasi MCP</strong></td>
+          <td><span class="badge badge-green">Lengkap</span></td>
+          <td>File <code>mcp-config.json</code> terdaftar dengan 10 intent suara dan environment AWS DynamoDB.</td>
+        </tr>
+        <tr>
+          <td><strong>Backend Server</strong></td>
+          <td><span class="badge badge-green">Lengkap</span></td>
+          <td>File <code>mcp-server.js</code> mengeksekusi 11 JSON-RPC Tools dan 3 Resources (vault://).</td>
+        </tr>
+        <tr>
+          <td><strong>Web Simulator</strong></td>
+          <td><span class="badge badge-green">Lengkap</span></td>
+          <td><code>index.html</code> & <code>app.js</code> responsif, dual role Buyer/Seller, bilingual ID/US.</td>
+        </tr>
+        <tr>
+          <td><strong>Dokumentasi GitHub</strong></td>
+          <td><span class="badge badge-green">Lengkap</span></td>
+          <td><code>README.md</code> memuat diagram Mermaid AWS, data flow 4 layer, dan galeri screenshot.</td>
+        </tr>
+        <tr>
+          <td><strong>Bonus Log</strong></td>
+          <td><span class="badge badge-green">Lengkap</span></td>
+          <td><code>FRICTION_LOG.md</code> siap untuk klaim 10% bonus nilai juri.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <span>Dokumen Panduan Submisi VaultAlexa+ MCP • Amazon Developer Hackathon 2026</span>
+    <span>Halaman 1 / 1 • Hak Cipta KARYA LANGIT Digital</span>
+  </div>
+
+</body>
+</html>
