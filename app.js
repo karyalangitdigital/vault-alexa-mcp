@@ -451,33 +451,96 @@ function addMessage(sender, name, text) {
   }
 }
 
+// Quick Suggestion Chip Handler
+window.handleChipClick = function(queryText) {
+  processUserQuery(queryText);
+};
+
+// Vault Transfer Action Handler
+window.transferFromSavings = function(amount) {
+  state.accountBalance += amount;
+  state.categories.shopping.limit += amount;
+  state.categories.shopping.percent = Math.min(100, Math.round((state.categories.shopping.spent / state.categories.shopping.limit) * 100));
+  updateUIOverview();
+  addMessage('alexa', 'Alexa+', `✅ Successfully transferred <strong>+$${amount.toFixed(2)}</strong> from Vault Savings to Shopping Allowance. New category limit is $${state.categories.shopping.limit}.`);
+};
+
 // Process User Query with Autonomous MCP Tool Logic & Reasoning Flow
 function processUserQuery(query) {
   addMessage('user', 'Sarah', query);
   const qLower = query.toLowerCase();
 
   if (qLower.includes('buy') || qLower.includes('purchase')) {
+    // Extract actual price & item name from query or default
+    let matchedDeal = state.deals.find(d => qLower.includes(d.title.toLowerCase())) || state.deals[0];
+    let buyPrice = matchedDeal.price;
+
+    // Check if user specified price directly (e.g. "Buy Running Shoes for $65.50")
+    const priceMatch = query.match(/\$([0-9.]+)/) || query.match(/for ([0-9.]+)/);
+    if (priceMatch) {
+      const parsedPrice = parseFloat(priceMatch[1]);
+      if (!isNaN(parsedPrice) && parsedPrice > 0) buyPrice = parsedPrice;
+    }
+
+    const isOverBudget = (state.categories.shopping.spent + buyPrice) > state.categories.shopping.limit;
+
     const traceSteps = [
-      'Parsing natural language intent: [Amazon Purchase Request]',
+      `Parsing intent: [Amazon Purchase - ${matchedDeal.title}]`,
       'Reading MCP Resource: vault://financial/overview.json',
-      'Calling Tool: validate_purchase_safety(item_price, user_allowance)',
-      'Evaluating 30-day budget margin: Buffer Capacity Safe ($420.50 remaining)',
+      `Calling Tool: validate_purchase_safety(price: $${buyPrice.toFixed(2)}, limit: $${state.categories.shopping.limit})`,
+      isOverBudget 
+        ? `⚠️ Warning: Shopping budget limit exceeded by $${((state.categories.shopping.spent + buyPrice) - state.categories.shopping.limit).toFixed(2)}`
+        : `Evaluating 30-day budget margin: Safe buffer remaining`,
       'Generating 1-Click Prime Order Dispatch'
     ];
 
     showReasoningTrace(traceSteps, () => {
-      // Deduct sample price & update UI Live!
-      const buyPrice = 99.99;
+      // Deduct actual item price
       state.accountBalance -= buyPrice;
       state.monthlySpending += buyPrice;
       state.categories.shopping.spent += buyPrice;
       state.categories.shopping.percent = Math.min(100, Math.round((state.categories.shopping.spent / state.categories.shopping.limit) * 100));
       updateUIOverview();
 
-      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [validate_purchase_safety]:</strong> Validating order with remaining shopping allowance. Safe capacity verified ($${buyPrice.toFixed(2)} deducted). Purchase order initiated with 1-Click Prime Delivery!`);
+      const trackingNum = 'AMZ-' + Math.floor(100000 + Math.random() * 900000);
+
+      let responseHTML = `
+        <strong>MCP Tool [validate_purchase_safety]:</strong> Order verified for <em>${matchedDeal.title}</em>. 
+        <div class="chat-order-card">
+          <div class="order-card-header">
+            <i class="fa-brands fa-amazon"></i> Prime 1-Click Order Placed
+          </div>
+          <div class="order-card-body">
+            <img src="${matchedDeal.image}" class="order-card-thumb" alt="${matchedDeal.title}">
+            <div class="order-card-details">
+              <div class="order-card-title">${matchedDeal.title}</div>
+              <div class="order-card-price">$${buyPrice.toFixed(2)}</div>
+              <div class="order-card-dispatch">🚚 Arriving Tomorrow • Tracking: ${trackingNum}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (isOverBudget) {
+        responseHTML += `
+          <div class="chat-warning-card">
+            <div class="warning-card-title">
+              <i class="fa-solid fa-triangle-exclamation"></i> Budget Warning Threshold Reached
+            </div>
+            <div class="warning-card-desc">
+              Your shopping category is now at <strong>${state.categories.shopping.percent}%</strong> capacity ($${state.categories.shopping.spent.toFixed(2)} / $${state.categories.shopping.limit}).
+            </div>
+            <div class="warning-actions-row">
+              <button class="btn-warning-action primary" onclick="transferFromSavings(250)">+ Transfer $250 from Savings</button>
+            </div>
+          </div>
+        `;
+      }
+
+      addMessage('alexa', 'Alexa+', responseHTML);
     });
 
-  } else if (qLower.includes('track') || qLower.includes('price') || qLower.includes('drop')) {
+  } else if (qLower.includes('track') || qLower.includes('price') || qLower.includes('drop') || qLower.includes('sniper')) {
     const traceSteps = [
       'Intent: [Amazon Price Drop Notification Watchdog]',
       'Querying Amazon Deals API via MCP Spec 2025-11-25',
@@ -486,10 +549,10 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [track_price_drop_target]:</strong> Price Drop Sniper activated for targeted Amazon product! Target set at -20% discount threshold.`);
+      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [track_price_drop_target]:</strong> Price Drop Sniper activated! Watching Amazon Echo Show & Bose Headphones. You'll be alerted when price drops by 20%.`);
     });
 
-  } else if (qLower.includes('split') || qLower.includes('household') || qLower.includes('share')) {
+  } else if (qLower.includes('split') || qLower.includes('household') || qLower.includes('share') || qLower.includes('rent')) {
     const traceSteps = [
       'Reading MCP Resource: vault://household/summary.json',
       'Calling Tool: split_shared_expense(amount: $120.00, members: 3)',
@@ -498,10 +561,10 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [split_shared_expense]:</strong> Household expense split 50/50 with Michael Jenkins. Updated shared pool ledger.`);
+      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [split_shared_expense]:</strong> Household expense of $120.00 split 3-ways with Michael & David ($40.00/person). Shared ledger updated.`);
     });
 
-  } else if (qLower.includes('tech') || qLower.includes('deal') || qLower.includes('item')) {
+  } else if (qLower.includes('tech') || qLower.includes('deal') || qLower.includes('item') || qLower.includes('shopping')) {
     const traceSteps = [
       'Calling Tool: search_amazon_deals(category: "Electronics", discount_min: 15)',
       'Matching deals against remaining shopping allowance',
@@ -509,7 +572,7 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', '<strong>MCP Tool [search_amazon_deals]:</strong> Found top verified deals! Amazon Echo Show 8 ($99.99, 30% Off) & Bose 700 ($219.00).');
+      addMessage('alexa', 'Alexa+', '<strong>MCP Tool [search_amazon_deals]:</strong> Curated Prime deals found! Amazon Echo Show 8 ($99.99, 30% Off) & Bose 700 ($219.00). Switched to Shopping View.');
       switchTab('shopping');
     });
 
@@ -523,14 +586,14 @@ function processUserQuery(query) {
       addMessage('alexa', 'Alexa+', `<strong>MCP Tool [get_financial_summary]:</strong> You have spent $${state.categories.groceries.spent} out of $${state.categories.groceries.limit} (${state.categories.groceries.percent}%). Buffer remaining: $${state.categories.groceries.limit - state.categories.groceries.spent}.`);
     });
 
-  } else if (qLower.includes('balance') || qLower.includes('account')) {
+  } else if (qLower.includes('balance') || qLower.includes('budget') || qLower.includes('account')) {
     const traceSteps = [
       'Reading MCP Resource: vault://financial/overview.json',
       'Aggregating Liquid Checking & Investment Portfolio'
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `<strong>MCP Resource [vault://financial/overview]:</strong> Account Balance is $${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})}. Investment Value: $${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})} (+4.2%).`);
+      addMessage('alexa', 'Alexa+', `<strong>MCP Resource [vault://financial/overview]:</strong> Account Balance: <strong>$${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})}</strong>. Investment Portfolio: <strong>$${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})}</strong> (+4.2%). Remaining monthly budget: <strong>$${(state.monthlySpending * 0.2).toFixed(2)}</strong>.`);
     });
 
   } else {
@@ -541,7 +604,7 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `<strong>MCP Protocol 2025-11-25:</strong> Analyzed request via 6 Autonomous Tools & 3 Resources. Total monthly spending is $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All categories healthy.`);
+      addMessage('alexa', 'Alexa+', `<strong>MCP Protocol 2025-11-25:</strong> Analyzed query across 6 Tools & 3 Resources. Total monthly spending is $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All system parameters nominal.`);
     });
   }
 }
