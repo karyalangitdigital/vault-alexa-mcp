@@ -518,6 +518,60 @@ function processUserQuery(query) {
       addMessage('alexa', 'Alexa+', msg);
     });
 
+  } else if (qLower.includes('seller') || qLower.includes('penjual') || qLower.includes('jual') || qLower.includes('penjualan') || qLower.includes('produk') || qLower.includes('omset') || qLower.includes('toko') || qLower.includes('marketing') || qLower.includes('laris') || qLower.includes('conversion') || qLower.includes('sales')) {
+    const traceSteps = isID ? [
+      'Maksud: [Analisis & Rekomendasi Pertumbuhan Penjualan Seller]',
+      'Membaca Resource MCP: vault://deals/catalog.json',
+      'Menganalisis Perilaku Keranjang Belanja & Sensitivitas Harga Pembeli',
+      'Memanggil Tool: search_amazon_deals(kategori: "Semua", filter: "Tren_Konversi_Tertinggi")',
+      'Menghasilkan 4 Strategi Pertumbuhan Penjual Amazon Terverifikasi'
+    ] : [
+      'Intent: [Seller Sales Growth & Conversion Rate Optimization]',
+      'Reading MCP Resource: vault://deals/catalog.json',
+      'Analyzing Consumer Cart Abandonment & Price Sensitivity Patterns',
+      'Calling Tool: search_amazon_deals(category: "All", filter: "High_Conversion_Deals")',
+      'Synthesizing 4 Actionable Amazon Seller Growth Strategies'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
+      const msg = isID ? `
+        <strong>Tool MCP [search_amazon_deals & Seller Growth Advisor]:</strong>
+        <div class="chat-order-card" style="border-color:#3b82f6;">
+          <div class="order-card-header" style="color:#2563eb;">
+            <i class="fa-solid fa-chart-line"></i> 4 Strategi Utama Meningkatkan Penjualan Produk Seller
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; color: var(--text-main); margin-top: 6px;">
+            <strong>1. Pasang Diskon Ambang Batas Otomatis (15-20%):</strong><br>
+            <span style="color:var(--text-muted);">Memicu algoritma <em>Deal Sniper</em> milik Buyer sehingga produk Anda langsung dipesan otomatis saat diskon tercapai.</span><br><br>
+            <strong>2. Optimalkan untuk Perintah Suara Alexa+ (1-Click Voice Buy):</strong><br>
+            <span style="color:var(--text-muted);">Pastikan judul produk ringkas dan relevan agar Agent dapat merekomendasikan produk Anda saat pembeli bertanya <em>"Cari promo teknologi"</em>.</span><br><br>
+            <strong>3. Sasar Anggaran Belanja Bersama Keluarga ($50 - $150):</strong><br>
+            <span style="color:var(--text-muted);">Produk di rentang harga ini memiliki tingkat persetujuan (*approval rate*) tercepat dalam fitur <em>Amazon Household Pool</em>.</span><br><br>
+            <strong>4. Gunakan Bundling Produk Komplementer:</strong><br>
+            <span style="color:var(--text-muted);">Gabungkan aksesori pelengkap (misal: Headphone + Power Bank) agar pas dengan sisa anggaran belanja mingguan pembeli.</span>
+          </div>
+        </div>
+      ` : `
+        <strong>MCP Tool [search_amazon_deals & Seller Growth Advisor]:</strong>
+        <div class="chat-order-card" style="border-color:#3b82f6;">
+          <div class="order-card-header" style="color:#2563eb;">
+            <i class="fa-solid fa-chart-line"></i> 4 Actionable Strategies to Boost Seller Product Sales
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; color: var(--text-main); margin-top: 6px;">
+            <strong>1. Implement Threshold Discounts (15-20% Off):</strong><br>
+            <span style="color:var(--text-muted);">Triggers Buyer <em>Deal Sniper</em> watchers to auto-execute purchases once the discount target is hit.</span><br><br>
+            <strong>2. Optimize for Alexa+ Voice Commerce:</strong><br>
+            <span style="color:var(--text-muted);">Keep titles clean so the MCP agent can curate your listings during natural queries like <em>"Find tech deals"</em>.</span><br><br>
+            <strong>3. Target Household Budget Range ($50 - $150):</strong><br>
+            <span style="color:var(--text-muted);">Items in this bracket experience highest instant checkout approvals across Amazon Family pools.</span><br><br>
+            <strong>4. Smart Complementary Bundling:</strong><br>
+            <span style="color:var(--text-muted);">Pair accessories (e.g. Headphones + Power Bank) to capture remaining weekly buyer allowances.</span>
+          </div>
+        </div>
+      `;
+      addMessage('alexa', 'Alexa+', msg);
+    });
+
   } else {
     const traceSteps = isID ? [
       'Klasifikasi Maksud Otomatis (Protokol MCP 2025-11-25)',
@@ -1206,7 +1260,7 @@ window.executeInspectorTool = function() {
       content: [
         {
           type: "text",
-          text: JSON.stringify(toolResultContent, null, 2)
+          structured: toolResultContent
         }
       ],
       isError: false,
