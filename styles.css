@@ -745,8 +745,8 @@ body.resizing-active {
 
 /* RIGHT RESIZABLE CHAT COLUMN */
 .chat-column {
-  width: 360px;
-  min-width: 280px;
+  width: 420px;
+  min-width: 380px;
   max-width: 650px;
   flex-shrink: 0;
   display: flex;
