@@ -536,7 +536,9 @@ function processUserQuery(query) {
     qLower.includes('bulb') || qLower.includes('minyak') || qLower.includes('olive') || 
     qLower.includes('makan') || qLower.includes('dining') || qLower.includes('watch') || 
     qLower.includes('anker') || qLower.includes('thermostat') || qLower.includes('cari') ||
-    qLower.includes('diskon') || qLower.includes('tampilkan') || qLower.includes('semua')
+    qLower.includes('diskon') || qLower.includes('tampilkan') || qLower.includes('semua') ||
+    qLower.includes('termahal') || qLower.includes('termurah') || qLower.includes('expensive') ||
+    qLower.includes('cheapest') || qLower.includes('urutan') || qLower.includes('sort')
   ) {
     if (qLower.includes('semua') || qLower.includes('all') || qLower.includes('reset')) {
       resetShoppingFilter();
@@ -548,8 +550,48 @@ function processUserQuery(query) {
       return;
     }
 
-    const cleanSearchTerm = query.replace(/cari|promo|deal|diskon|find|search|for|tentang|about|produk/gi, '').trim() || query;
-    const matched = filterShoppingDeals(cleanSearchTerm || query);
+    // Check for Sorting Requests (Termurah / Termahal)
+    const isSortCheapest = qLower.includes('termurah') || qLower.includes('cheapest') || qLower.includes('paling murah') || qLower.includes('harga terendah') || qLower.includes('lowest');
+    const isSortExpensive = qLower.includes('termahal') || qLower.includes('expensive') || qLower.includes('paling mahal') || qLower.includes('harga tertinggi') || qLower.includes('highest');
+
+    let matched = [];
+    let cleanSearchTerm = query;
+
+    if (isSortCheapest || isSortExpensive) {
+      const sortMode = isSortCheapest ? 'asc' : 'desc';
+      matched = filterShoppingDeals('', sortMode);
+      cleanSearchTerm = isSortCheapest 
+        ? (isID ? 'Urutan Harga Termurah ke Termahal' : 'Sorted by Lowest to Highest Price')
+        : (isID ? 'Urutan Harga Termahal ke Termurah' : 'Sorted by Highest to Lowest Price');
+
+      const topItem = matched[0];
+      const traceSteps = isID ? [
+        `Menganalisis Permintaan Pengurutan Harga: [${isSortCheapest ? 'Harga Termurah (ASC)' : 'Harga Termahal (DESC)'}]`,
+        `Memanggil Tool MCP: search_amazon_deals(sortBy: "price", order: "${sortMode}")`,
+        `Mengurutkan 11 Produk Prime dari $${matched[0].price.toFixed(2)} hingga $${matched[matched.length - 1].price.toFixed(2)}`,
+        'Menampilkan Grid Belanja Terurut Secara Real-Time'
+      ] : [
+        `Parsing Price Sorting Intent: [${isSortCheapest ? 'Lowest Price (ASC)' : 'Highest Price (DESC)'}]`,
+        `Calling MCP Tool: search_amazon_deals(sortBy: "price", order: "${sortMode}")`,
+        `Sorted 11 Prime Deals from $${matched[0].price.toFixed(2)} to $${matched[matched.length - 1].price.toFixed(2)}`,
+        'Displaying Sorted Shopping Grid in Real-Time'
+      ];
+
+      showReasoningTrace(traceSteps, () => {
+        const msg = isID
+          ? `<strong>Tool MCP [search_amazon_deals]:</strong> Berhasil mengurutkan katalog promo berdasarkan <strong>${isSortCheapest ? 'Harga Termurah' : 'Harga Termahal'}</strong>! Produk utama saat ini adalah <strong>${topItem.title}</strong> ($${topItem.price.toFixed(2)}).`
+          : `<strong>MCP Tool [search_amazon_deals]:</strong> Successfully sorted catalog by <strong>${isSortCheapest ? 'Lowest Price' : 'Highest Price'}</strong>! Top item is <strong>${topItem.title}</strong> ($${topItem.price.toFixed(2)}).`;
+        addMessage('alexa', 'Alexa+', msg);
+      });
+      return;
+    }
+
+    // Standard Search Filtering
+    cleanSearchTerm = query
+      .replace(/carikan saya|carikan|cari|tolong|tampilkan|promo|deal|diskon|find|search|show me|for|tentang|about|produk|barang|item/gi, '')
+      .trim();
+
+    matched = filterShoppingDeals(cleanSearchTerm || query);
 
     const traceSteps = isID ? [
       `Menganalisis Kueri Pencarian Katalog: [${cleanSearchTerm || query}]`,
@@ -1015,49 +1057,63 @@ function renderShoppingGrid(dealsList = state.deals, activeFilterLabel = null) {
   `).join('');
 }
 
-window.filterShoppingDeals = function(keyword) {
-  if (!keyword || !keyword.trim()) {
-    resetShoppingFilter();
-    return state.deals;
+window.filterShoppingDeals = function(keyword, sortMode = null) {
+  let matched = [...state.deals];
+
+  if (keyword && keyword.trim()) {
+    const kLower = keyword.toLowerCase().trim();
+    matched = state.deals.filter(d => {
+      const t = d.title.toLowerCase();
+      const c = (d.category || '').toLowerCase();
+      if (t.includes(kLower) || c.includes(kLower)) return true;
+      if (kLower.includes('gadget') || kLower.includes('tech') || kLower.includes('elektronik') || kLower.includes('device')) {
+        return c === 'shopping' || c === 'electronics' || c === 'utilities' || t.includes('echo') || t.includes('bose') || t.includes('watch') || t.includes('anker') || t.includes('kindle');
+      }
+      if (kLower.includes('apple') || kLower.includes('jam') || kLower.includes('watch')) {
+        return t.includes('apple') || t.includes('watch');
+      }
+      if (kLower.includes('sepatu') || kLower.includes('shoe') || kLower.includes('running') || kLower.includes('apparel')) {
+        return t.includes('running') || t.includes('shoe');
+      }
+      if (kLower.includes('kopi') || kLower.includes('coffee') || kLower.includes('starbucks')) {
+        return t.includes('coffee') || t.includes('starbucks');
+      }
+      if (kLower.includes('makanan') || kLower.includes('food') || kLower.includes('minyak') || kLower.includes('olive') || kLower.includes('groceries')) {
+        return c === 'groceries' || t.includes('olive') || t.includes('food') || t.includes('coffee');
+      }
+      if (kLower.includes('lampu') || kLower.includes('light') || kLower.includes('bulb') || kLower.includes('philips') || kLower.includes('thermostat') || kLower.includes('listrik') || kLower.includes('utilities')) {
+        return c === 'utilities' || t.includes('bulb') || t.includes('hue') || t.includes('thermostat');
+      }
+      if (kLower.includes('headphone') || kLower.includes('audio') || kLower.includes('bose') || kLower.includes('earphone')) {
+        return t.includes('bose') || t.includes('headphone');
+      }
+      if (kLower.includes('buku') || kLower.includes('book') || kLower.includes('kindle') || kLower.includes('reading')) {
+        return t.includes('kindle');
+      }
+      if (kLower.includes('power bank') || kLower.includes('anker') || kLower.includes('charger') || kLower.includes('baterai')) {
+        return t.includes('anker') || t.includes('power bank');
+      }
+      return false;
+    });
   }
 
-  const kLower = keyword.toLowerCase().trim();
-  const matched = state.deals.filter(d => {
-    const t = d.title.toLowerCase();
-    const c = (d.category || '').toLowerCase();
-    if (t.includes(kLower) || c.includes(kLower)) return true;
-    if (kLower.includes('gadget') || kLower.includes('tech') || kLower.includes('elektronik') || kLower.includes('device')) {
-      return c === 'shopping' || c === 'electronics' || c === 'utilities' || t.includes('echo') || t.includes('bose') || t.includes('watch') || t.includes('anker') || t.includes('kindle');
-    }
-    if (kLower.includes('apple') || kLower.includes('jam') || kLower.includes('watch')) {
-      return t.includes('apple') || t.includes('watch');
-    }
-    if (kLower.includes('sepatu') || kLower.includes('shoe') || kLower.includes('running') || kLower.includes('apparel')) {
-      return t.includes('running') || t.includes('shoe');
-    }
-    if (kLower.includes('kopi') || kLower.includes('coffee') || kLower.includes('starbucks')) {
-      return t.includes('coffee') || t.includes('starbucks');
-    }
-    if (kLower.includes('makanan') || kLower.includes('food') || kLower.includes('minyak') || kLower.includes('olive') || kLower.includes('groceries')) {
-      return c === 'groceries' || t.includes('olive') || t.includes('food') || t.includes('coffee');
-    }
-    if (kLower.includes('lampu') || kLower.includes('light') || kLower.includes('bulb') || kLower.includes('philips') || kLower.includes('thermostat') || kLower.includes('listrik') || kLower.includes('utilities')) {
-      return c === 'utilities' || t.includes('bulb') || t.includes('hue') || t.includes('thermostat');
-    }
-    if (kLower.includes('headphone') || kLower.includes('audio') || kLower.includes('bose') || kLower.includes('earphone')) {
-      return t.includes('bose') || t.includes('headphone');
-    }
-    if (kLower.includes('buku') || kLower.includes('book') || kLower.includes('kindle') || kLower.includes('reading')) {
-      return t.includes('kindle');
-    }
-    if (kLower.includes('power bank') || kLower.includes('anker') || kLower.includes('charger') || kLower.includes('baterai')) {
-      return t.includes('anker') || t.includes('power bank');
-    }
-    return false;
-  });
+  // Handle Price Sorting if requested
+  if (sortMode === 'asc') {
+    matched.sort((a, b) => a.price - b.price);
+  } else if (sortMode === 'desc') {
+    matched.sort((a, b) => b.price - a.price);
+  }
+
+  const isID = currentLang === 'ID';
+  let label = keyword;
+  if (sortMode === 'asc') {
+    label = isID ? 'Urutan Harga: Termurah → Termahal' : 'Sorted: Lowest → Highest Price';
+  } else if (sortMode === 'desc') {
+    label = isID ? 'Urutan Harga: Termahal → Termurah' : 'Sorted: Highest → Lowest Price';
+  }
 
   switchTab('shopping');
-  renderShoppingGrid(matched, keyword);
+  renderShoppingGrid(matched, label);
   return matched;
 };
 

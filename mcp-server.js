@@ -81,7 +81,10 @@ const MCP_TOOLS = [
       type: 'object',
       properties: {
         category: { type: 'string', description: 'Category filter (e.g. electronics, apparel, accessories, all)' },
-        maxPrice: { type: 'number', description: 'Optional maximum price ceiling' }
+        keyword: { type: 'string', description: 'Search keyword matching product titles or descriptions' },
+        maxPrice: { type: 'number', description: 'Optional maximum price ceiling' },
+        sortBy: { type: 'string', enum: ['price', 'discount', 'relevance'], description: 'Attribute to sort results by' },
+        order: { type: 'string', enum: ['asc', 'desc'], description: 'Sort direction: asc (lowest first) or desc (highest first)' }
       }
     }
   },
@@ -160,31 +163,35 @@ const MCP_RESOURCES = [
   }
 ];
 
-// MCP Prompts Templates (Spec 2025-11-25)
+// MCP Prompts Definitions (Spec 2025-11-25)
 const MCP_PROMPTS = [
   {
     name: 'financial_health_audit',
-    description: 'Autonomous financial health assessment prompt template for Alexa+ LLM reasoning',
+    description: 'Autonomous financial health evaluator: analyzes overall budget pacing and gives optimization recommendations',
     arguments: [
-      { name: 'user_persona', description: 'User spending risk profile (conservative, balanced, aggressive)', required: false }
+      { name: 'include_savings_goals', description: 'Whether to audit progress on savings reserve targets', required: false }
     ]
   },
   {
     name: 'amazon_deal_negotiator',
-    description: 'Prompt template to evaluate if an Amazon item is a true deal versus historical price trends',
+    description: 'Evaluates if a specific Amazon product deal is financially safe to purchase right now based on remaining category margin',
     arguments: [
-      { name: 'item_name', description: 'Product title to evaluate', required: true },
-      { name: 'current_deal_price', description: 'Listed deal price', required: true }
+      { name: 'item_name', description: 'Name of the Amazon item', required: true },
+      { name: 'current_deal_price', description: 'Current sale price in USD', required: true }
     ]
   }
 ];
 
-// MCP JSON-RPC Server Endpoint (MCP Spec 2025-11-25)
+// Express JSON-RPC Router for MCP
 app.post('/mcp/v1/rpc', (req, res) => {
-  const { jsonrpc, method, params, id } = req.body;
+  const { jsonrpc, id, method, params } = req.body;
 
   if (jsonrpc !== '2.0') {
-    return res.status(400).json({ jsonrpc: '2.0', error: { code: -32600, message: 'Invalid Request: Must be JSON-RPC 2.0' }, id });
+    return res.status(400).json({
+      jsonrpc: '2.0',
+      id: id || null,
+      error: { code: -32600, message: 'Invalid Request: MCP requires JSON-RPC 2.0' }
+    });
   }
 
   // 1. Handle MCP Protocol Initialize
@@ -337,9 +344,28 @@ app.post('/mcp/v1/rpc', (req, res) => {
 
     // Tool: search_amazon_deals
     if (name === 'search_amazon_deals') {
-      const filtered = args && args.category && args.category !== 'all'
-        ? amazonDeals.filter(d => d.category === args.category)
-        : amazonDeals;
+      let filtered = [...amazonDeals];
+
+      if (args && args.category && args.category !== 'all') {
+        filtered = filtered.filter(d => d.category === args.category);
+      }
+
+      if (args && args.keyword) {
+        const kw = args.keyword.toLowerCase();
+        filtered = filtered.filter(d => d.title.toLowerCase().includes(kw) || d.category.toLowerCase().includes(kw));
+      }
+
+      if (args && args.maxPrice) {
+        filtered = filtered.filter(d => d.price <= args.maxPrice);
+      }
+
+      if (args && args.sortBy === 'price') {
+        if (args.order === 'desc') {
+          filtered.sort((a, b) => b.price - a.price);
+        } else {
+          filtered.sort((a, b) => a.price - b.price);
+        }
+      }
 
       return res.json({
         jsonrpc: '2.0',
