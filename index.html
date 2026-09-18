@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VaultAlexa+ - Alexa+ Smart AI Personal Financial & Intelligent Shopping Agent powered by Model Context Protocol (MCP) for Amazon Developer Hackathon 2026">
+  <title>VaultAlexa+ | Alexa+ AI Financial Agent & Amazon Shopping Assistant</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="header-logo">
+        <div class="logo-v-icon">V</div>
+        <div>
+          <div class="logo-title">VaultAlexa+ AI</div>
+          <div class="logo-subtitle">AI Financial Agent & Amazon Shopping Assistant</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Search Bar -->
+    <div class="header-search">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      <input type="text" placeholder="Search..." class="search-input" id="global-search-input">
+    </div>
+
+    <!-- Right Header User Controls -->
+    <div class="header-right">
+      <div class="user-profile">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" alt="Sarah Jenkins" class="user-avatar">
+        <span class="user-name">Sarah Jenkins</span>
+      </div>
+      <div class="header-icon-btn">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div class="header-icon-btn notification-btn">
+        <i class="fa-solid fa-bell"></i>
+        <span class="notification-dot"></span>
+      </div>
+      <button class="theme-mode-btn" id="theme-toggle-btn">
+        <i class="fa-solid fa-moon" id="theme-icon"></i>
+        <span id="theme-text">Sun</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- App Main Content Container with Left Sidebar -->
+  <div class="app-body">
+
+    <!-- Left Sidebar Menu -->
+    <aside class="left-sidebar">
+      <nav class="sidebar-menu">
+        <a href="#" class="menu-item active">
+          <i class="fa-solid fa-border-all"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="menu-item">
+          <i class="fa-solid fa-wallet"></i>
+          <span>Finance</span>
+        </a>
+        <a href="#" class="menu-item">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>Shopping</span>
+        </a>
+        <a href="#" class="menu-item">
+          <i class="fa-solid fa-bullseye"></i>
+          <span>Goals</span>
+        </a>
+        <a href="#" class="menu-item">
+          <i class="fa-solid fa-chart-simple"></i>
+          <span>Insights</span>
+        </a>
+        <a href="#" class="menu-item">
+          <i class="fa-solid fa-gear"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Workspace Grid -->
+    <main class="main-workspace">
+
+      <!-- Column 1: Your Financial Overview & Category Breakdown -->
+      <section class="overview-column">
+        <h2 class="column-title">Your Financial Overview</h2>
+
+        <div class="financial-cards-grid">
+          <!-- Big Account Balance Card with SVG Trend Line -->
+          <div class="card balance-card">
+            <div class="card-label">Account Balance</div>
+            <div class="card-value-large">$24,560.80</div>
+            
+            <!-- SVG Trendline Chart -->
+            <div class="chart-svg-wrapper">
+              <svg viewBox="0 0 300 100" class="trend-svg" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
+                    <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,80 Q30,65 60,75 T120,50 T180,60 T240,40 T300,20 L300,100 L0,100 Z" fill="url(#chartGradient)"/>
+                <path d="M0,80 Q30,65 60,75 T120,50 T180,60 T240,40 T300,20" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Small Metrics Cards -->
+          <div class="side-metrics">
+            <div class="card small-metric-card">
+              <div class="card-label">Investment Value</div>
+              <div class="card-value-medium">$68,125.00</div>
+              <div class="trend-badge positive">+4.2%</div>
+            </div>
+
+            <div class="card small-metric-card">
+              <div class="card-label">Monthly Spending</div>
+              <div class="card-value-medium">$3,150.45</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Budget Category Breakdown Card -->
+        <div class="card category-breakdown-card">
+          <h3 class="card-subtitle">Budget Category Breakdown</h3>
+
+          <div class="cat-progress-list">
+            <div class="cat-progress-row">
+              <div class="cat-row-header">
+                <span class="cat-row-title">Groceries</span>
+                <span class="cat-row-pct blue">65%</span>
+                <span class="cat-row-amt">$520/$800</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill blue-fill" style="width: 65%;"></div>
+              </div>
+            </div>
+
+            <div class="cat-progress-row">
+              <div class="cat-row-header">
+                <span class="cat-row-title">Dining Out</span>
+                <span class="cat-row-pct green">88%</span>
+                <span class="cat-row-amt">$352/$400</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill green-fill" style="width: 88%;"></div>
+              </div>
+            </div>
+
+            <div class="cat-progress-row">
+              <div class="cat-row-header">
+                <span class="cat-row-title">Utilities</span>
+                <span class="cat-row-pct purple">40%</span>
+                <span class="cat-row-amt">$120/$300</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill purple-fill" style="width: 40%;"></div>
+              </div>
+            </div>
+
+            <div class="cat-progress-row">
+              <div class="cat-row-header">
+                <span class="cat-row-title">Shopping</span>
+                <span class="cat-row-pct blue">72%</span>
+                <span class="cat-row-amt">$432/$600</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill blue-fill" style="width: 72%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Column 2: Smart Amazon Deals -->
+      <section class="deals-column">
+        <div class="column-header">
+          <h2 class="column-title">Smart Amazon Deals</h2>
+          <button class="view-all-btn">View all</button>
+        </div>
+
+        <div class="deals-vertical-list" id="deals-list-container">
+          <!-- Deal Item 1 -->
+          <div class="card deal-item-card">
+            <span class="deal-discount-badge blue-badge">30% Off</span>
+            <div class="deal-item-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1543512214-318c7553f230?w=500&auto=format&fit=crop&q=60" alt="Amazon Echo Show 8">
+            </div>
+            <div class="deal-item-details">
+              <div class="deal-item-title">Amazon Echo Show 8</div>
+              <div class="deal-price-line">
+                <span class="deal-now-price">Deal: $99.99</span>
+                <span class="deal-was-price">Was $129.99</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deal Item 2 -->
+          <div class="card deal-item-card">
+            <span class="deal-discount-badge green-badge">15% Off</span>
+            <div class="deal-item-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60" alt="Running Shoes">
+            </div>
+            <div class="deal-item-details">
+              <div class="deal-item-title">Running Shoes</div>
+              <div class="deal-price-line">
+                <span class="deal-now-price">Deal: $65.50</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deal Item 3 -->
+          <div class="card deal-item-card">
+            <span class="deal-discount-badge purple-badge">15% Off</span>
+            <div class="deal-item-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60" alt="Bose Headphones">
+            </div>
+            <div class="deal-item-details">
+              <div class="deal-item-title">Bose Headphones</div>
+              <div class="deal-price-line">
+                <span class="deal-now-price">Deal: $219.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Column 3: Alexa+ AI Chat Panel -->
+      <aside class="chat-column">
+        <div class="card chat-card-container">
+          <!-- Chat Header -->
+          <div class="chat-card-header">
+            <div class="chat-header-title">
+              <div class="chat-v-icon">V</div>
+              <div>
+                <div class="chat-title-text">VaultAlexa+ AI</div>
+                <div class="chat-subtitle-text">Chat with Alexa+</div>
+              </div>
+            </div>
+            <div class="chat-header-actions">
+              <i class="fa-solid fa-ellipsis"></i>
+              <i class="fa-solid fa-xmark"></i>
+            </div>
+          </div>
+
+          <!-- Chat Conversation Scroll Area -->
+          <div class="chat-scroll-area" id="chat-messages-container">
+            <!-- User Message -->
+            <div class="chat-msg user-msg">
+              <div class="msg-sender-name">Sarah</div>
+              <div class="msg-bubble user-bubble">Find deals on tech items.</div>
+            </div>
+
+            <!-- Alexa Message -->
+            <div class="chat-msg alexa-msg">
+              <div class="msg-sender-name">Alexa+</div>
+              <div class="msg-bubble alexa-bubble">Here are tech deals for you...</div>
+            </div>
+          </div>
+
+          <!-- Voice Mic & Waveform Container (Standby by default, activates on click) -->
+          <div class="listening-section" id="listening-section">
+            <div class="listening-label" id="listening-label">Click mic to speak</div>
+            <button class="big-mic-button" id="btn-voice-input" title="Click to speak">
+              <i class="fa-solid fa-microphone"></i>
+            </button>
+            <div class="colorful-waveform" id="colorful-waveform">
+              <span class="bar bar1"></span>
+              <span class="bar bar2"></span>
+              <span class="bar bar3"></span>
+              <span class="bar bar4"></span>
+              <span class="bar bar5"></span>
+              <span class="bar bar6"></span>
+              <span class="bar bar7"></span>
+              <span class="bar bar8"></span>
+            </div>
+          </div>
+
+          <!-- Input Bar with Send Button Embedded -->
+          <form class="chat-form" id="chat-input-form">
+            <div class="input-capsule">
+              <input type="text" class="chat-text-input" id="user-input-text" placeholder="Type or speak to VaultAlexa+..." required autocomplete="off">
+              <button type="submit" class="chat-send-btn" id="btn-send-message">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </aside>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

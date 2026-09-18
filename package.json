@@ -1,0 +1,25 @@
+{
+  "name": "vault-alexa-mcp",
+  "version": "1.0.0",
+  "description": "Alexa+ Smart Personal Financial & Intelligent Shopping Agent powered by Model Context Protocol (MCP)",
+  "main": "mcp-server.js",
+  "scripts": {
+    "start": "node mcp-server.js",
+    "dev": "node mcp-server.js"
+  },
+  "keywords": [
+    "alexa-plus",
+    "mcp",
+    "model-context-protocol",
+    "amazon-hackathon",
+    "ai-agent",
+    "aws-bedrock",
+    "financial-agent"
+  ],
+  "author": "Hackathon Participant",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  }
+}
