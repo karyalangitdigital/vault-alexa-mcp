@@ -1799,7 +1799,7 @@ body.dark-mode .insight-box {
   height: 170px;
   border-radius: 18px;
   position: relative;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
   background: linear-gradient(135deg, #131921 0%, #232f3e 60%, #007185 100%);
   color: #ffffff;
@@ -1807,15 +1807,15 @@ body.dark-mode .insight-box {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 10px 24px rgba(19, 25, 33, 0.25), 0 2px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 153, 0, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Clean, modern soft shadow */
+  border: 1px solid rgba(255, 255, 255, 0.12); /* Subtle clean neutral border */
   overflow: hidden;
 }
 
 .prime-virtual-card:hover {
-  transform: translateY(-3px); /* Clean, flat subtle lift without tilting */
-  box-shadow: 0 16px 32px rgba(19, 25, 33, 0.35), 0 0 15px rgba(255, 153, 0, 0.2);
-  border-color: rgba(255, 153, 0, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .prime-virtual-card::before {
