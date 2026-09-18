@@ -14,7 +14,9 @@
       "env": {
         "PORT": "3000",
         "NODE_ENV": "production",
-        "MCP_PROTOCOL_VERSION": "2025-11-25"
+        "MCP_PROTOCOL_VERSION": "2025-11-25",
+        "AWS_REGION": "us-east-1",
+        "DYNAMODB_TABLE": "PrimeVaultLedger"
       },
       "transport": {
         "type": "http-jsonrpc",
