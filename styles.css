@@ -2,34 +2,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap');
 
 :root {
-  --bg-app: #f1f4f8;
+  --bg-app: #eaeded; /* Authentic Amazon Shopping background */
   --bg-card: #ffffff;
   
-  --primary-blue: #2563eb;
-  --primary-blue-light: #eff6ff;
-  --accent-green: #10b981;
-  --accent-purple: #8b5cf6;
-  --accent-amber: #f59e0b;
-  --accent-rose: #ef4444;
+  --amazon-navy: #131921;
+  --amazon-squid-ink: #232f3e;
+  --amazon-amber: #ff9900;
+  --amazon-orange: #f08804;
+  --amazon-blue: #007185;
+  --amazon-link: #007185;
   
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
+  --primary-blue: #007185;
+  --primary-blue-light: #e7f4f5;
+  --accent-green: #067d62;
+  --accent-purple: #795290;
+  --accent-amber: #ff9900;
+  --accent-rose: #b12704; /* Amazon price red/alert */
   
-  --border-light: #e2e8f0;
-  --radius-card: 16px;
-  --radius-pill: 24px;
+  --text-main: #0f1111;
+  --text-muted: #565959;
+  --text-light: #767676;
   
-  --font-main: 'Inter', sans-serif;
+  --border-light: #d5d9d9;
+  --radius-card: 12px;
+  --radius-pill: 20px;
+  
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display: 'Outfit', sans-serif;
 }
 
 body.dark-mode {
-  --bg-app: #0f172a;
-  --bg-card: #1e293b;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-light: #334155;
+  --bg-app: #131921;
+  --bg-card: #232f3e;
+  --text-main: #ffffff;
+  --text-muted: #cccccc;
+  --border-light: #3a4553;
+  --primary-blue-light: #1a384c;
 }
 
 * {
@@ -113,16 +121,17 @@ body.dark-mode .sidebar-toggle-btn:hover {
 .logo-v-icon {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, #2563eb, #3b82f6);
-  color: #ffffff;
+  background: linear-gradient(135deg, #232f3e, #131921);
+  color: var(--amazon-amber);
+  border: 1.5px solid var(--amazon-amber);
   font-weight: 800;
   font-size: 18px;
-  border-radius: 50%; /* Pure Circle */
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .logo-title {
@@ -155,9 +164,9 @@ body.dark-mode .sidebar-toggle-btn:hover {
 .search-input {
   width: 100%;
   height: 38px;
-  background: #f1f5f9;
+  background: #ffffff;
   border: 1px solid var(--border-light);
-  border-radius: 20px;
+  border-radius: 8px;
   padding: 0 16px 0 38px;
   font-size: 0.85rem;
   outline: none;
@@ -166,11 +175,12 @@ body.dark-mode .sidebar-toggle-btn:hover {
 }
 
 body.dark-mode .search-input {
-  background: #0f172a;
+  background: #131921;
 }
 
 .search-input:focus {
-  border-color: var(--primary-blue);
+  border-color: var(--amazon-orange);
+  box-shadow: 0 0 0 2px rgba(240, 136, 4, 0.25);
   background: var(--bg-card);
 }
 
@@ -1097,12 +1107,12 @@ body.dark-mode .shopping-img-box {
 .product-tag {
   font-size: 0.7rem;
   font-weight: 700;
-  color: #2563eb;
+  color: #007185;
   margin-bottom: 4px;
 }
 
 body.dark-mode .product-tag {
-  color: #60a5fa;
+  color: #56d0e3;
 }
 
 .shopping-title {
@@ -1126,11 +1136,11 @@ body.dark-mode .product-tag {
 }
 
 .btn-buy-alexa {
-  background: #2563eb;
-  color: #ffffff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 10px;
+  background: #ffd814;
+  color: #0f1111;
+  border: 1px solid #fcd200;
+  padding: 8px 14px;
+  border-radius: 20px;
   font-weight: 700;
   font-size: 0.8rem;
   cursor: pointer;
@@ -1138,11 +1148,14 @@ body.dark-mode .product-tag {
   align-items: center;
   justify-content: center;
   gap: 6px;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
   transition: all 0.2s ease;
 }
 
 .btn-buy-alexa:hover {
-  background: #1d4ed8;
+  background: #f7ca00;
+  border-color: #f2c200;
+  transform: translateY(-1px);
 }
 
 /* CHAT CARD CONTAINER & ALEXA SIMULATOR */
@@ -1772,14 +1785,14 @@ body.dark-mode .insight-box {
   transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
   transform-style: preserve-3d;
   cursor: pointer;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #2563eb 100%);
+  background: linear-gradient(135deg, #131921 0%, #232f3e 60%, #007185 100%);
   color: #ffffff;
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.22), 0 4px 10px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 28px rgba(19, 25, 33, 0.28), 0 4px 10px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 153, 0, 0.3);
   overflow: hidden;
 }
 
