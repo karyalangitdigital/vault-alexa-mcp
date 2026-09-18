@@ -586,7 +586,35 @@ function processUserQuery(query) {
       addMessage('alexa', 'Alexa+', `<strong>MCP Tool [get_financial_summary]:</strong> You have spent $${state.categories.groceries.spent} out of $${state.categories.groceries.limit} (${state.categories.groceries.percent}%). Buffer remaining: $${state.categories.groceries.limit - state.categories.groceries.spent}.`);
     });
 
-  } else if (qLower.includes('balance') || qLower.includes('budget') || qLower.includes('account')) {
+  } else if (qLower.includes('week') || qLower.includes('spend') || qLower.includes('allowance') || qLower.includes('can i spend')) {
+    const weeklySafeCapacity = ((state.categories.shopping.limit - state.categories.shopping.spent) + (state.categories.diningOut.limit - state.categories.diningOut.spent)) / 2;
+    const safeAmount = Math.max(0, weeklySafeCapacity).toFixed(2);
+
+    const traceSteps = [
+      'Intent: [Weekly Safe-to-Spend Computation]',
+      'Reading MCP Resource: vault://financial/overview.json',
+      'Calling Tool: get_financial_summary(interval: "weekly_projection")',
+      'Analyzing 12 days remaining cycle vs discretionary budgets'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
+      addMessage('alexa', 'Alexa+', `
+        <strong>MCP Tool [get_financial_summary]:</strong> Based on your monthly pacing (12 days left):
+        <div class="chat-order-card" style="border-color:#10b981;">
+          <div class="order-card-header" style="color:#059669;">
+            <i class="fa-solid fa-shield-halved"></i> Weekly Safe-to-Spend Allowance
+          </div>
+          <div style="font-size: 1.25rem; font-weight: 800; color: #10b981; margin: 4px 0;">
+            $${safeAmount} / week
+          </div>
+          <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.4;">
+            💡 <strong>Alexa+ Advice:</strong> You have plenty of room for groceries ($280 left), but dining out is at 88%. Keeping leisure spending under <strong>$${safeAmount}</strong> this week ensures you hit your <em>Vacation to Tokyo</em> savings goal!
+          </div>
+        </div>
+      `);
+    });
+
+  } else if (qLower.includes('balance') || qLower.includes('budget') || qLower.includes('account') || qLower.includes('how much')) {
     const traceSteps = [
       'Reading MCP Resource: vault://financial/overview.json',
       'Aggregating Liquid Checking & Investment Portfolio'
