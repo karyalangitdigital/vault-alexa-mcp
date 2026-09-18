@@ -416,7 +416,151 @@ function processUserQuery(query) {
   const qLower = query.toLowerCase();
   const isID = currentLang === 'ID';
 
-  // 1. Check for Bilateral Dynamic Negotiation Intent (Tawar / Nego)
+  // 1. Proactive Budget Guard: Runway & Deficit Risk Forecast (Amazon Forecast / Bedrock Reasoning)
+  if (qLower.includes('prediksi') || qLower.includes('forecast') || qLower.includes('runway') || qLower.includes('defisit') || qLower.includes('tagihan rutin') || qLower.includes('jatuh tempo')) {
+    const traceSteps = isID ? [
+      '🤖 [Multi-Agent Swarm] Kolaborasi 3 Sub-Agen Khusus Teraktivasi',
+      '🔍 [Sub-Agen 1: Risk & Forecast Analyst] Memanggil Tool: predict_monthly_runway(itemPrice: $210)',
+      '📊 [Sub-Agen 2: Wealth Manager] Mendeteksi 2 Tagihan Jatuh Tempo ($450) dalam 7 Hari',
+      '🛡️ [Sub-Agen 3: Safe-to-Spend Guard] Mensimulasikan Risiko Defisit Akhir Bulan'
+    ] : [
+      '🤖 [Multi-Agent Swarm] 3 Specialized Sub-Agents Engaged',
+      '🔍 [Sub-Agent 1: Risk & Forecast Analyst] Calling Tool: predict_monthly_runway(itemPrice: $210)',
+      '📊 [Sub-Agent 2: Wealth Manager] Detected 2 Pending Obligations ($450) Due in 7 Days',
+      '🛡️ [Sub-Agent 3: Safe-to-Spend Guard] Simulating Month-End Deficit Runway'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
+      const msg = isID ? `
+        <strong>Tool MCP [predict_monthly_runway & Multi-Agent Swarm]:</strong>
+        <div class="chat-order-card" style="border-color:#f59e0b;">
+          <div class="order-card-header" style="color:#d97706;">
+            <i class="fa-solid fa-chart-line"></i> Peringatan Proaktif: Risiko Defisit Akhir Bulan
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+            ⚠️ <strong>Analisis Prediksi AI (AWS Forecast):</strong><br>
+            Meskipun saldo Anda saat ini mencukupi, model kami mendeteksi <strong>2 tagihan rutin wajib ($450.00)</strong> yang akan jatuh tempo dalam 5-7 hari ke depan:<br>
+            • <em>Tagihan Listrik & Smart Home:</em> $180.00 (5 hari lagi)<br>
+            • <em>Premi Asuransi & Kesehatan:</em> $270.00 (7 hari lagi)<br><br>
+            💡 <strong>Saran Alexa+:</strong> Jika membeli barang sekarang, arus kas akhir bulan diproyeksikan <strong>defisit -$120.00</strong>. Disarankan menjadwalkan pembelian setelah tanggal gajian!
+          </div>
+        </div>
+      ` : `
+        <strong>MCP Tool [predict_monthly_runway & Multi-Agent Swarm]:</strong>
+        <div class="chat-order-card" style="border-color:#f59e0b;">
+          <div class="order-card-header" style="color:#d97706;">
+            <i class="fa-solid fa-chart-line"></i> Proactive Alert: Month-End Deficit Risk
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+            ⚠️ <strong>AI Predictive Analysis (AWS Forecast):</strong><br>
+            While your current checking balance is sufficient, our forecast model identified <strong>2 recurring obligations ($450.00)</strong> due in 5-7 days:<br>
+            • <em>Utilities & Smart Home Bill:</em> $180.00 (in 5 days)<br>
+            • <em>Health & Insurance Premium:</em> $270.00 (in 7 days)<br><br>
+            💡 <strong>Alexa+ Advice:</strong> Executing this purchase now triggers a projected month-end <strong>deficit of -$120.00</strong>. We advise rescheduling after your next payroll!
+          </div>
+        </div>
+      `;
+      addMessage('alexa', 'Alexa+', msg);
+    });
+    return;
+  }
+
+  // 2. Post-Purchase Care: Automated Dispute & Instant Escrow Refund
+  if (qLower.includes('rusak') || qLower.includes('cacat') || qLower.includes('salah kirim') || qLower.includes('komplain') || qLower.includes('dispute') || qLower.includes('refund') || qLower.includes('retur')) {
+    const disputeId = 'DISPUTE-AMZ-' + Math.floor(100000 + Math.random() * 900000);
+    const traceSteps = isID ? [
+      '🤖 [Multi-Agent Swarm: Post-Purchase Care Agent]',
+      '📦 Melacak Resi Terakhir: AMZ-668816 (Bose Headphones 700)',
+      '📝 Memanggil Tool: initiate_purchase_dispute(alasan: "BARANG_RUSAK_DI_JALAN")',
+      '⚡ Menerbitkan Tiket RMA Resmi & Menyiapkan Refund Instan $219.00'
+    ] : [
+      '🤖 [Multi-Agent Swarm: Post-Purchase Care Agent]',
+      '📦 Tracking Latest Dispatch: AMZ-668816 (Bose Headphones 700)',
+      '📝 Calling Tool: initiate_purchase_dispute(reason: "DAMAGED_ON_ARRIVAL")',
+      '⚡ Generating Amazon RMA Ticket & Queuing $219.00 Instant Refund'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
+      const msg = isID ? `
+        <strong>Tool MCP [initiate_purchase_dispute]:</strong>
+        <div class="chat-order-card" style="border-color:#ef4444;">
+          <div class="order-card-header" style="color:#dc2626;">
+            <i class="fa-solid fa-arrow-rotate-left"></i> Tiket Klaim & Pengembalian Dana Diterbitkan
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+            🎫 <strong>Nomor RMA Tiket:</strong> <span class="badge badge-success">${disputeId}</span><br>
+            📦 <strong>Barang:</strong> Bose Headphones 700 ($219.00)<br>
+            🚚 <strong>Label Retur Prime:</strong> Label pengembalian gratis telah dikirim ke email Anda.<br>
+            💵 <strong>Status Refund:</strong> <strong style="color:#10b981;">+$219.00 dikembalikan</strong> ke saldo Prime Vault Anda dalam 1x24 jam kerja.
+          </div>
+        </div>
+      ` : `
+        <strong>MCP Tool [initiate_purchase_dispute]:</strong>
+        <div class="chat-order-card" style="border-color:#ef4444;">
+          <div class="order-card-header" style="color:#dc2626;">
+            <i class="fa-solid fa-arrow-rotate-left"></i> Amazon RMA Claim & Refund Authorized
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+            🎫 <strong>RMA Ticket ID:</strong> <span class="badge badge-success">${disputeId}</span><br>
+            📦 <strong>Item:</strong> Bose Headphones 700 ($219.00)<br>
+            🚚 <strong>Prime Return Label:</strong> Prepaid shipping QR code dispatched to your email.<br>
+            💵 <strong>Refund Status:</strong> <strong style="color:#10b981;">+$219.00 escrow refund</strong> credited to Prime Vault within 24 hours.
+          </div>
+        </div>
+      `;
+      addMessage('alexa', 'Alexa+', msg);
+    });
+    return;
+  }
+
+  // 3. Smart Community & Peer Bill Split (Alexa Contacts Integration)
+  if (qLower.includes('kontak') || qLower.includes('peer') || qLower.includes('teman') || qLower.includes('notifikasi split') || (qLower.includes('bagi') && qLower.includes('michael'))) {
+    const traceSteps = isID ? [
+      '🤖 [Multi-Agent Swarm: Social Split Manager]',
+      '👥 Memindai Kontak Alexa Terdaftar: [Michael Jenkins, David Jenkins]',
+      '📲 Memanggil Tool: trigger_peer_split_request(total: $120.00, split: 3)',
+      '🔔 Mengirim Notifikasi Suara Alexa & Menautkan Settlement Tracker'
+    ] : [
+      '🤖 [Multi-Agent Swarm: Social Split Manager]',
+      '👥 Scanning Registered Alexa Household Contacts: [Michael, David]',
+      '📲 Calling Tool: trigger_peer_split_request(total: $120.00, split: 3)',
+      '🔔 Dispatched Alexa Voice Notification & Linked Settlement Tracker'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
+      const msg = isID ? `
+        <strong>Tool MCP [trigger_peer_split_request]:</strong>
+        <div class="chat-order-card" style="border-color:#8b5cf6;">
+          <div class="order-card-header" style="color:#7c3aed;">
+            <i class="fa-solid fa-users-viewfinder"></i> Permintaan Patungan Terkirim ke Kontak Alexa
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+            📢 <strong>Notifikasi Suara Terkirim:</strong><br>
+            • <strong>Michael Jenkins:</strong> Permintaan $40.00 terkirim ke Echo Dot miliknya (Menunggu konfirmasi)<br>
+            • <strong>David Jenkins:</strong> Permintaan $40.00 terkirim via Alexa App (Menunggu konfirmasi)<br><br>
+            💳 <em>Sistem akan otomatis mencatat penyelesaian buku kas saat mereka mengonfirmasi via suara.</em>
+          </div>
+        </div>
+      ` : `
+        <strong>MCP Tool [trigger_peer_split_request]:</strong>
+        <div class="chat-order-card" style="border-color:#8b5cf6;">
+          <div class="order-card-header" style="color:#7c3aed;">
+            <i class="fa-solid fa-users-viewfinder"></i> Peer Split Requests Dispatched via Alexa
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+            📢 <strong>Voice Notification Dispatches:</strong><br>
+            • <strong>Michael Jenkins:</strong> $40.00 request sent to his Echo Dot (Pending confirmation)<br>
+            • <strong>David Jenkins:</strong> $40.00 request sent via Alexa Mobile App (Pending confirmation)<br><br>
+            💳 <em>Ledger will auto-reconcile once family members authenticate via voice.</em>
+          </div>
+        </div>
+      `;
+      addMessage('alexa', 'Alexa+', msg);
+    });
+    return;
+  }
+
+  // 4. Check for Bilateral Dynamic Negotiation Intent (Tawar / Nego)
   if (qLower.includes('tawar') || qLower.includes('nego') || qLower.includes('voucher') || qLower.includes('diskon khusus') || qLower.includes('bargain')) {
     const traceSteps = isID ? [
       'Maksud: [Negosiasi Bilateral MCP Buyer-Seller]',
@@ -1793,6 +1937,21 @@ const DEFAULT_TOOL_ARGS = {
     itemTitle: "Bose Headphones 700",
     itemPrice: 219.00,
     targetGoalName: "Vacation to Tokyo"
+  },
+  predict_monthly_runway: {
+    plannedPurchaseAmount: 210.00,
+    itemTitle: "Bose Headphones 700",
+    daysRemainingInMonth: 12
+  },
+  initiate_purchase_dispute: {
+    orderId: "AMZ-668816",
+    itemTitle: "Bose Headphones 700",
+    reason: "DAMAGED_ON_ARRIVAL"
+  },
+  trigger_peer_split_request: {
+    expenseTitle: "Amazon Prime Family Plan",
+    totalAmount: 120.00,
+    targetContacts: ["Michael Jenkins", "David Jenkins"]
   }
 };
 
@@ -1921,6 +2080,56 @@ window.executeInspectorTool = function() {
       cooldownRecommended: itmP > 100 ? "24_HOURS" : "1_HOUR",
       behavioralGuard: "ACTIVE",
       advice: `Purchasing redirects funds equivalent to ${delayDays} days of savings toward "${goal}".`
+    };
+  } else if (toolName === 'predict_monthly_runway') {
+    const plannedAmt = parsedArgs.plannedPurchaseAmount || 210.00;
+    const upcomingBills = [
+      { bill: "Electricity & Smart Home", amount: 180.00, dueInDays: 5 },
+      { bill: "Insurance Premium", amount: 270.00, dueInDays: 7 }
+    ];
+    const totalBills = 450.00;
+    const projectedSurplus = state.categories.shopping.limit - state.categories.shopping.spent - plannedAmt - totalBills;
+    toolResultContent = {
+      status: projectedSurplus < 0 ? "DEFICIT_RISK_DETECTED" : "RUNWAY_SAFE",
+      subAgentExecutor: "Risk & Forecast Analyst (Amazon Forecast / Bedrock Nova)",
+      plannedPurchase: plannedAmt,
+      detectedPendingBills: upcomingBills,
+      totalUpcomingObligations: totalBills,
+      projectedMonthEndDeficit: projectedSurplus < 0 ? Math.abs(projectedSurplus) : 0,
+      riskLevel: projectedSurplus < 0 ? "HIGH" : "LOW",
+      recommendation: "Reschedule discretionary purchase after upcoming payroll cycle."
+    };
+  } else if (toolName === 'initiate_purchase_dispute') {
+    const disputeId = "DISPUTE-AMZ-" + Math.floor(100000 + Math.random() * 900000);
+    toolResultContent = {
+      status: "RMA_TICKET_GENERATED",
+      subAgentExecutor: "Post-Purchase Care Agent (Amazon Connect API)",
+      rmaTicketNumber: disputeId,
+      orderTrackingNumber: parsedArgs.orderId || "AMZ-668816",
+      item: parsedArgs.itemTitle || "Bose Headphones 700",
+      reason: parsedArgs.reason || "DAMAGED_ON_ARRIVAL",
+      prepaidReturnLabelGenerated: true,
+      escrowRefundAmount: 219.00,
+      resolutionAction: "INSTANT_ESCROW_REFUND_QUEUED"
+    };
+  } else if (toolName === 'trigger_peer_split_request') {
+    const contacts = parsedArgs.targetContacts || ["Michael Jenkins", "David Jenkins"];
+    const totalAmt = parsedArgs.totalAmount || 120.00;
+    const perMember = Number((totalAmt / (contacts.length + 1)).toFixed(2));
+    toolResultContent = {
+      status: "PEER_NOTIFICATIONS_DISPATCHED",
+      subAgentExecutor: "Social Split Manager (Alexa Household Messaging API)",
+      expenseTitle: parsedArgs.expenseTitle || "Amazon Prime Family Plan",
+      totalAmount: totalAmt,
+      splitShares: {
+        payerShare: perMember,
+        requestedPerPeer: perMember
+      },
+      notifiedContacts: contacts.map(c => ({
+        contact: c,
+        channel: "Echo Voice Notification & Alexa App Push",
+        status: "DISPATCHED_PENDING_SETTLEMENT"
+      }))
     };
   }
 

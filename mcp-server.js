@@ -164,6 +164,44 @@ const MCP_TOOLS = [
       },
       required: ['itemName', 'itemPrice']
     }
+  },
+  {
+    name: 'predict_monthly_runway',
+    description: 'Proactive AI Forecast: projects 30-day cashflow runway, detects upcoming recurring utility/insurance bills, and simulates month-end deficit risk before discretionary purchases',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        plannedPurchaseAmount: { type: 'number', description: 'Proposed discretionary expense amount in USD' },
+        daysRemainingInMonth: { type: 'number', description: 'Days left until next income replenishment' }
+      },
+      required: ['plannedPurchaseAmount']
+    }
+  },
+  {
+    name: 'initiate_purchase_dispute',
+    description: 'Full Lifecycle Post-Purchase Agent: automatically files Amazon Prime return merchandise authorization (RMA), generates dispute tracking tickets, and issues instant escrow refund requests',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        orderId: { type: 'string', description: 'Amazon Prime Order ID or tracking code' },
+        itemTitle: { type: 'string', description: 'Product title experiencing defect or delivery issue' },
+        reason: { type: 'string', description: 'Dispute rationale (e.g. DAMAGED_ON_ARRIVAL, WRONG_ITEM_SHIPPED, DEFECTIVE)' }
+      },
+      required: ['orderId', 'itemTitle', 'reason']
+    }
+  },
+  {
+    name: 'trigger_peer_split_request',
+    description: 'Smart Community Social Split: dispatches automated peer payment notifications across Alexa Household Contacts with real-time settlement tracking',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        expenseTitle: { type: 'string', description: 'Shared pool purchase title' },
+        totalAmount: { type: 'number', description: 'Total purchase amount in USD' },
+        targetContacts: { type: 'array', items: { type: 'string' }, description: 'Array of Alexa contact handles / family members' }
+      },
+      required: ['expenseTitle', 'totalAmount', 'targetContacts']
+    }
   }
 ];
 
@@ -576,6 +614,95 @@ app.post('/mcp/v1/rpc', (req, res) => {
                 targetDelayDays: delayDays,
                 cooldownRecommended: itemPrice > 100 ? '24_HOURS' : '1_HOUR',
                 advice: `Purchasing ${itemName} ($${itemPrice}) redirects funds equivalent to ${delayDays} days of savings toward "${goal}". A cool-down buffer is advised.`
+              }, null, 2)
+            }
+          ]
+        }
+      });
+    // Tool: predict_monthly_runway
+    if (name === 'predict_monthly_runway') {
+      const { plannedPurchaseAmount, daysRemainingInMonth } = args || {};
+      const upcomingBills = [
+        { title: 'Tagihan Listrik & Smart Home', amount: 180.00, dueDate: '5 hari lagi' },
+        { title: 'Premi Asuransi & Kesehatan', amount: 270.00, dueDate: '7 hari lagi' }
+      ];
+      const totalUpcomingBills = upcomingBills.reduce((acc, b) => acc + b.amount, 0);
+      const safeRunwaySurplus = userAccount.remainingBudget - plannedPurchaseAmount - totalUpcomingBills;
+      const isDeficitRisk = safeRunwaySurplus < 0;
+
+      return res.json({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                status: isDeficitRisk ? 'DEFICIT_RISK_DETECTED' : 'RUNWAY_SAFE',
+                purchaseAmount: plannedPurchaseAmount,
+                upcomingBillsDetected: upcomingBills,
+                totalPendingObligations: totalUpcomingBills,
+                projectedMonthEndSurplus: safeRunwaySurplus,
+                aiRecommendation: isDeficitRisk
+                  ? `Proactive Forecast: You have $450 in recurring bills due within 7 days. Purchasing this item now will trigger a month-end deficit of $${Math.abs(safeRunwaySurplus).toFixed(2)}. Suggest rescheduling purchase after next payroll.`
+                  : `Proactive Forecast: Safe cashflow runway confirmed. Post-purchase balance will satisfy all upcoming recurring obligations.`
+              }, null, 2)
+            }
+          ]
+        }
+      });
+    }
+
+    // Tool: initiate_purchase_dispute
+    if (name === 'initiate_purchase_dispute') {
+      const { orderId, itemTitle, reason } = args || {};
+      const disputeTicket = `DISPUTE-AMZ-${Math.floor(100000 + Math.random() * 900000)}`;
+
+      return res.json({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                status: 'RMA_TICKET_GENERATED',
+                disputeId: disputeTicket,
+                orderReference: orderId || 'AMZ-668816',
+                item: itemTitle || 'Bose Headphones 700',
+                disputeReason: reason || 'DAMAGED_ON_ARRIVAL',
+                carrierTrackingLinked: true,
+                resolutionAction: 'INSTANT_ESCROW_REFUND_QUEUED',
+                estimatedRefundProcessing: '1-2 business days',
+                message: `Post-Purchase Care Agent: Filed Amazon RMA ticket #${disputeTicket}. Return label generated and instant $219.00 escrow refund queued.`
+              }, null, 2)
+            }
+          ]
+        }
+      });
+    }
+
+    // Tool: trigger_peer_split_request
+    if (name === 'trigger_peer_split_request') {
+      const { expenseTitle, totalAmount, targetContacts } = args || {};
+      const contacts = targetContacts || ['Michael Jenkins', 'David Jenkins'];
+      const perPerson = totalAmount / (contacts.length + 1);
+
+      return res.json({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                status: 'PEER_NOTIFICATIONS_DISPATCHED',
+                expense: expenseTitle || 'Amazon Prime Family Subscription',
+                totalBill: totalAmount,
+                splitCount: contacts.length + 1,
+                perMemberShare: Number(perPerson.toFixed(2)),
+                notifiedMembers: contacts.map(name => ({ contact: name, channel: 'Alexa Voice Notification', status: 'DISPATCHED_PENDING_SETTLEMENT' })),
+                message: `Community Social Split: Dispatched Alexa voice invoice requests of $${perPerson.toFixed(2)} to ${contacts.join(', ')}.`
               }, null, 2)
             }
           ]
