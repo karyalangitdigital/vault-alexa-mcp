@@ -116,7 +116,7 @@ let state = {
 };
 
 // Bilingual Dictionaries
-let currentLang = 'ID'; // Default to Indonesian
+let currentLang = 'US'; // Default to English (US)
 
 const I18N_DICT = {
   ID: {
@@ -2403,7 +2403,7 @@ window.setUserRole = function(role) {
 // Initialize Application on Load
 renderShoppingGrid();
 updateUIOverview();
-applyLanguage('ID', false);
+applyLanguage('US', false);
 setMicActiveState(false);
 resetInspectorArgs();
 
