@@ -438,7 +438,12 @@ function addMessage(sender, name, text) {
   `;
 
   chatMessagesContainer.appendChild(msgDiv);
-  chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+  
+  // Smooth scroll to latest bottom message
+  requestAnimationFrame(() => {
+    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    msgDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
 
   if (sender === 'alexa') {
     playAlexaChime();
