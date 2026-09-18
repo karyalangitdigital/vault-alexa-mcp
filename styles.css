@@ -335,12 +335,12 @@ body.dark-mode .theme-mode-btn {
   position: absolute;
   top: 48px;
   right: 0;
-  width: 290px;
+  width: 340px; /* Expanded for spacious, elegant layout */
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  padding: 16px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.14);
+  padding: 18px;
   display: none;
   flex-direction: column;
   z-index: 200;
@@ -352,7 +352,7 @@ body.dark-mode .theme-mode-btn {
 }
 
 .header-popover-menu.group-popover {
-  width: 330px;
+  width: 350px;
 }
 
 @keyframes popoverFadeIn {
