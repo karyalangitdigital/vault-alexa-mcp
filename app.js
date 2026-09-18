@@ -412,6 +412,7 @@ window.transferFromSavings = function(amount) {
 
 // Process User Query with Autonomous MCP Reasoning (Bilingual Support)
 function processUserQuery(query) {
+  if (typeof window.openChatPanel === 'function') window.openChatPanel();
   addMessage('user', 'Sarah', query);
   const qLower = query.toLowerCase();
   const isID = currentLang === 'ID';
