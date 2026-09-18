@@ -208,9 +208,6 @@ const userInputText = document.getElementById('user-input-text');
 const btnVoiceInput = document.getElementById('btn-voice-input');
 const listeningSection = document.getElementById('listening-section');
 const listeningLabel = document.getElementById('listening-label');
-const themeToggleBtn = document.getElementById('theme-toggle-btn');
-const themeIcon = document.getElementById('theme-icon');
-const themeText = document.getElementById('theme-text');
 const leftSidebar = document.getElementById('left-sidebar');
 const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
 const fullShoppingGrid = document.getElementById('full-shopping-grid');
@@ -1677,22 +1674,9 @@ if (btnClearChat) {
   });
 }
 
-// Theme Switcher Logic
-let isDarkMode = false;
-if (themeToggleBtn) {
-  themeToggleBtn.addEventListener('click', () => {
-    isDarkMode = !isDarkMode;
-    if (isDarkMode) {
-      document.body.classList.add('dark-mode');
-      if (themeIcon) themeIcon.className = 'fa-solid fa-sun';
-      if (themeText) themeText.textContent = 'Sun';
-    } else {
-      document.body.classList.remove('dark-mode');
-      if (themeIcon) themeIcon.className = 'fa-solid fa-moon';
-      if (themeText) themeText.textContent = 'Moon';
-    }
-  });
-}
+// Ensure standard Amazon Light Theme
+document.body.classList.remove('dark-mode');
+
 
 // Mic State Handlers
 function setMicActiveState(active) {
