@@ -258,6 +258,32 @@ body.dark-mode .header-icon-btn {
   right: 6px;
 }
 
+.lang-switch-btn {
+  background: #f1f5f9;
+  border: 1px solid var(--border-light);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary-blue);
+  transition: all 0.2s ease;
+}
+
+.lang-switch-btn:hover {
+  background: var(--primary-blue-light);
+  transform: scale(1.04);
+}
+
+body.dark-mode .lang-switch-btn {
+  background: #334155;
+  color: #60a5fa;
+  border-color: #475569;
+}
+
 .theme-mode-btn {
   background: #f1f5f9;
   border: 1px solid var(--border-light);

@@ -364,119 +364,221 @@ function playAlexaChime() {
   } catch (e) {}
 }
 
-// Natural Female Voice Speech Synthesis
+// Bilingual Language State & Dictionaries
+let currentLang = 'ID'; // Default to Indonesian as requested by user
+
+const I18N_DICT = {
+  ID: {
+    langBtn: 'ID',
+    logoSub: 'Agen Keuangan AI & Asisten Belanja Amazon',
+    searchPlaceholder: 'Cari transaksi, promo, target tabungan...',
+    primeMemberTag: 'Kepala Keluarga Prime',
+    totalVaultLbl: 'Total Saldo',
+    creditScoreLbl: 'Skor Kredit',
+    activeGoalsLbl: 'Target Aktif',
+    menuProfileKYC: 'Profil Finansial & KYC',
+    menuSecurity: 'Keamanan & Passkey',
+    menuProtocol: 'Otorisasi Protokol MCP',
+    menuSignOut: 'Keluar dari Vault',
+    householdTitle: 'Keluarga Amazon',
+    householdSub: 'Anggaran Bersama & Kolaborasi',
+    inviteBtn: '+ Undang',
+    ownerRole: 'Pemilik Utama • Akses Penuh',
+    spouseRole: 'Pasangan • Kartu Bersama (Batas $2.000/bln)',
+    teenRole: 'Uang Saku Belanja (Batas $150/bln)',
+    poolSpentLbl: 'Anggaran Bersama Terpakai:',
+    navDashboard: 'Dashboard',
+    navFinance: 'Keuangan',
+    navShopping: 'Belanja',
+    navGoals: 'Target',
+    navInsights: 'Wawasan AI',
+    navSettings: 'Pengaturan',
+    overviewTitle: 'Ringkasan Keuangan Anda',
+    cardHolderLbl: 'PEMILIK KARTU',
+    cardVaultLbl: 'SALDO TERSEDIA',
+    accBalanceLbl: 'Saldo Rekening',
+    investValLbl: 'Nilai Investasi',
+    monthlySpendLbl: 'Pengeluaran Bulan Ini',
+    budgetBreakdownTitle: 'Rincian Kategori Anggaran',
+    catGroceries: 'Kebutuhan Pokok',
+    catDining: 'Makan di Luar',
+    catUtilities: 'Tagihan & Listrik',
+    catShopping: 'Belanja Santai',
+    smartDealsTitle: 'Promo Cerdas Amazon',
+    viewAllBtn: 'Lihat Semua',
+    simulateImpactBtn: 'Simulasi Dampak',
+    chatHeaderTitle: 'Obrolan dengan Alexa+',
+    chatInputPlaceholder: 'Ketik atau bicara ke VaultAlexa+...',
+    chipBudget: '📊 Sisa Anggaran',
+    chipDeals: '🛍️ Promo Teknologi',
+    chipSplit: '👥 Bagi Tagihan',
+    chipSniper: '🎯 Pemburu Diskon',
+    listeningActive: 'Mendengarkan... (Silakan Bicara)',
+    listeningStandby: 'Klik mic untuk bicara',
+    buyWithAlexa: 'Beli via Alexa+'
+  },
+  US: {
+    langBtn: 'US',
+    logoSub: 'AI Financial Agent & Amazon Shopping Assistant',
+    searchPlaceholder: 'Search transactions, deals, goals...',
+    primeMemberTag: 'Prime Family Head',
+    totalVaultLbl: 'Total Vault',
+    creditScoreLbl: 'Credit Score',
+    activeGoalsLbl: 'Active Goals',
+    menuProfileKYC: 'Financial Profile & KYC',
+    menuSecurity: 'Security & Passkeys',
+    menuProtocol: 'MCP Protocol Auth',
+    menuSignOut: 'Sign Out of Vault',
+    householdTitle: 'Amazon Household',
+    householdSub: 'Shared Budget & Collaborator Pool',
+    inviteBtn: '+ Invite',
+    ownerRole: 'Primary Owner • Full Access',
+    spouseRole: 'Spouse • Shared Card ($2,000/mo limit)',
+    teenRole: 'Shopping Allowance ($150/mo limit)',
+    poolSpentLbl: 'Household Pool Spent:',
+    navDashboard: 'Dashboard',
+    navFinance: 'Finance',
+    navShopping: 'Shopping',
+    navGoals: 'Goals',
+    navInsights: 'Insights',
+    navSettings: 'Settings',
+    overviewTitle: 'Your Financial Overview',
+    cardHolderLbl: 'CARD HOLDER',
+    cardVaultLbl: 'AVAILABLE VAULT',
+    accBalanceLbl: 'Account Balance',
+    investValLbl: 'Investment Value',
+    monthlySpendLbl: 'Monthly Spending',
+    budgetBreakdownTitle: 'Budget Category Breakdown',
+    catGroceries: 'Groceries',
+    catDining: 'Dining Out',
+    catUtilities: 'Utilities',
+    catShopping: 'Shopping',
+    smartDealsTitle: 'Smart Amazon Deals',
+    viewAllBtn: 'View all',
+    simulateImpactBtn: 'Simulate Impact',
+    chatHeaderTitle: 'Chat with Alexa+',
+    chatInputPlaceholder: 'Type or speak to VaultAlexa+...',
+    chipBudget: '📊 Budget',
+    chipDeals: '🛍️ Tech Deals',
+    chipSplit: '👥 Split Bill',
+    chipSniper: '🎯 Sniper',
+    listeningActive: 'Listening... (Speak Now)',
+    listeningStandby: 'Click mic to speak',
+    buyWithAlexa: 'Buy with Alexa+'
+  }
+};
+
+// Toggle Language Button
+const btnLangToggle = document.getElementById('btn-lang-toggle');
+const langCurrentLabel = document.getElementById('lang-current-label');
+
+if (btnLangToggle) {
+  btnLangToggle.addEventListener('click', () => {
+    currentLang = currentLang === 'ID' ? 'US' : 'ID';
+    applyLanguage(currentLang);
+  });
+}
+
+function applyLanguage(lang) {
+  const d = I18N_DICT[lang] || I18N_DICT.ID;
+  if (langCurrentLabel) langCurrentLabel.textContent = d.langBtn;
+
+  // Header
+  const subLogo = document.querySelector('.logo-subtitle');
+  if (subLogo) subLogo.textContent = d.logoSub;
+  const globalSearch = document.getElementById('global-search-input');
+  if (globalSearch) globalSearch.placeholder = d.searchPlaceholder;
+
+  // Sidebar Menu Items
+  const navMap = {
+    dashboard: d.navDashboard,
+    finance: d.navFinance,
+    shopping: d.navShopping,
+    goals: d.navGoals,
+    insights: d.navInsights,
+    settings: d.navSettings
+  };
+  document.querySelectorAll('.menu-item').forEach(item => {
+    const tabKey = item.getAttribute('data-tab');
+    const span = item.querySelector('span');
+    if (span && navMap[tabKey]) span.textContent = navMap[tabKey];
+  });
+
+  // Overview Titles
+  const overviewH2 = document.querySelector('.overview-column .column-title');
+  if (overviewH2) overviewH2.textContent = d.overviewTitle;
+
+  const cardLabels = document.querySelectorAll('.balance-card .card-label, .small-metric-card .card-label');
+  if (cardLabels[0]) cardLabels[0].textContent = d.accBalanceLbl;
+  if (cardLabels[1]) cardLabels[1].textContent = d.investValLbl;
+  if (cardLabels[2]) cardLabels[2].textContent = d.monthlySpendLbl;
+
+  const budgetH3 = document.querySelector('.category-breakdown-card .card-subtitle');
+  if (budgetH3) budgetH3.textContent = d.budgetBreakdownTitle;
+
+  const dealsH2 = document.querySelector('.dashboard-deals-section .column-title');
+  if (dealsH2) dealsH2.innerHTML = `<i class="fa-solid fa-bolt text-amber"></i> ${d.smartDealsTitle}`;
+
+  // Chips
+  const chips = document.querySelectorAll('.chip-item');
+  if (chips[0]) chips[0].textContent = d.chipBudget;
+  if (chips[1]) chips[1].textContent = d.chipDeals;
+  if (chips[2]) chips[2].textContent = d.chipSplit;
+  if (chips[3]) chips[3].textContent = d.chipSniper;
+
+  // Input Placeholder
+  if (userInputText) userInputText.placeholder = d.chatInputPlaceholder;
+
+  // Re-render categories with Indonesian/English labels
+  state.categories.groceries.title = d.catGroceries;
+  state.categories.diningOut.title = d.catDining;
+  state.categories.utilities.title = d.catUtilities;
+  state.categories.shopping.title = d.catShopping;
+  updateUIOverview();
+
+  // Welcome note in new language
+  if (lang === 'ID') {
+    addMessage('alexa', 'Alexa+', `🇮🇩 Bahasa berhasil diubah ke <strong>Bahasa Indonesia</strong>. Saya siap membantu memeriksa keamanan belanja, bagi tagihan, dan memantau target diskon Amazon Anda!`);
+  } else {
+    addMessage('alexa', 'Alexa+', `🇺🇸 Language switched to <strong>English (US)</strong>. Ready to assist with your financial safety checks, bill splitting, and Amazon deal hunting!`);
+  }
+}
+
+// Synthesize Natural Voice (Supports Indonesian 'id-ID' & English 'en-US')
 const synth = window.speechSynthesis;
 function speakAlexaVoice(text) {
   if (!synth) return;
   synth.cancel();
-  // Strip HTML and MCP code tags for smooth natural speech
   const cleanText = text.replace(/<[^>]*>/g, '').replace(/\[.*?\]/g, '');
   const utterance = new SpeechSynthesisUtterance(cleanText);
   utterance.rate = 1.05;
-  utterance.pitch = 1.1; // Friendly assistant pitch
+  utterance.pitch = 1.1;
 
-  // Pick female / English voice if available
   const voices = synth.getVoices();
-  const femaleVoice = voices.find(v => v.lang.includes('en') && (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Zira') || v.name.includes('Victoria')));
-  if (femaleVoice) {
-    utterance.voice = femaleVoice;
+  if (currentLang === 'ID') {
+    utterance.lang = 'id-ID';
+    const idVoice = voices.find(v => v.lang.includes('id') || v.lang.includes('ID') || v.name.includes('Indonesian') || v.name.includes('Gadis') || v.name.includes('Damayanti'));
+    if (idVoice) utterance.voice = idVoice;
+  } else {
+    utterance.lang = 'en-US';
+    const femaleVoice = voices.find(v => v.lang.includes('en') && (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Zira')));
+    if (femaleVoice) utterance.voice = femaleVoice;
   }
   synth.speak(utterance);
 }
 
-// Live Agent Reasoning Trace Visualizer
-function showReasoningTrace(steps, callback) {
-  const container = document.getElementById('agent-reasoning-container');
-  const statusBadge = document.getElementById('reasoning-status-badge');
-  const list = document.getElementById('reasoning-steps-list');
-
-  if (!container || !list) {
-    if (callback) callback();
-    return;
-  }
-
-  container.style.display = 'block';
-  statusBadge.textContent = 'Agent Reasoning...';
-  statusBadge.style.background = '#3b82f6';
-  list.innerHTML = '';
-
-  let currentStep = 0;
-  function renderNextStep() {
-    if (currentStep < steps.length) {
-      const stepItem = document.createElement('div');
-      stepItem.className = 'trace-step active';
-      stepItem.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${steps[currentStep]}</span>`;
-      list.appendChild(stepItem);
-
-      setTimeout(() => {
-        stepItem.className = 'trace-step done';
-        stepItem.innerHTML = `<i class="fa-solid fa-check"></i> <span>${steps[currentStep]}</span>`;
-        currentStep++;
-        renderNextStep();
-      }, 350);
-    } else {
-      statusBadge.textContent = 'MCP Executed';
-      statusBadge.style.background = '#10b981';
-      setTimeout(() => {
-        if (callback) callback();
-      }, 250);
-    }
-  }
-
-  renderNextStep();
-}
-
-// Add Chat Message
-function addMessage(sender, name, text) {
-  const msgDiv = document.createElement('div');
-  msgDiv.className = `chat-msg ${sender}-msg`;
-  const bubbleClass = sender === 'user' ? 'user-bubble' : 'alexa-bubble';
-
-  msgDiv.innerHTML = `
-    <div class="msg-sender-name">${name}</div>
-    <div class="msg-bubble ${bubbleClass}">${text}</div>
-  `;
-
-  chatMessagesContainer.appendChild(msgDiv);
-  
-  // Smooth scroll to latest bottom message
-  requestAnimationFrame(() => {
-    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-    msgDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  });
-
-  if (sender === 'alexa') {
-    playAlexaChime();
-    speakAlexaVoice(text);
-  }
-}
-
-// Quick Suggestion Chip Handler
-window.handleChipClick = function(queryText) {
-  processUserQuery(queryText);
-};
-
-// Vault Transfer Action Handler
-window.transferFromSavings = function(amount) {
-  state.accountBalance += amount;
-  state.categories.shopping.limit += amount;
-  state.categories.shopping.percent = Math.min(100, Math.round((state.categories.shopping.spent / state.categories.shopping.limit) * 100));
-  updateUIOverview();
-  addMessage('alexa', 'Alexa+', `✅ Successfully transferred <strong>+$${amount.toFixed(2)}</strong> from Vault Savings to Shopping Allowance. New category limit is $${state.categories.shopping.limit}.`);
-};
-
-// Process User Query with Autonomous MCP Tool Logic & Reasoning Flow
+// Process User Query with Autonomous MCP Tool Logic & Reasoning Flow (Bilingual Support)
 function processUserQuery(query) {
   addMessage('user', 'Sarah', query);
   const qLower = query.toLowerCase();
 
-  if (qLower.includes('buy') || qLower.includes('purchase')) {
-    // Extract actual price & item name from query or default
+  const isID = currentLang === 'ID';
+
+  if (qLower.includes('buy') || qLower.includes('beli') || qLower.includes('purchase') || qLower.includes('order')) {
     let matchedDeal = state.deals.find(d => qLower.includes(d.title.toLowerCase())) || state.deals[0];
     let buyPrice = matchedDeal.price;
 
-    // Check if user specified price directly (e.g. "Buy Running Shoes for $65.50")
-    const priceMatch = query.match(/\$([0-9.]+)/) || query.match(/for ([0-9.]+)/);
+    const priceMatch = query.match(/\$([0-9.]+)/) || query.match(/for ([0-9.]+)/) || query.match(/sebesar ([0-9.]+)/);
     if (priceMatch) {
       const parsedPrice = parseFloat(priceMatch[1]);
       if (!isNaN(parsedPrice) && parsedPrice > 0) buyPrice = parsedPrice;
@@ -484,7 +586,15 @@ function processUserQuery(query) {
 
     const isOverBudget = (state.categories.shopping.spent + buyPrice) > state.categories.shopping.limit;
 
-    const traceSteps = [
+    const traceSteps = isID ? [
+      `Memproses maksud: [Pembelian Amazon - ${matchedDeal.title}]`,
+      'Membaca Resource MCP: vault://financial/overview.json',
+      `Memanggil Tool: validate_purchase_safety(harga: $${buyPrice.toFixed(2)}, limit: $${state.categories.shopping.limit})`,
+      isOverBudget 
+        ? `⚠️ Peringatan: Batas anggaran belanja terlampaui $${((state.categories.shopping.spent + buyPrice) - state.categories.shopping.limit).toFixed(2)}`
+        : `Mengevaluasi batas aman 30 hari: Kapasitas aman tersedia`,
+      'Menyiapkan Pesanan 1-Click Prime Delivery'
+    ] : [
       `Parsing intent: [Amazon Purchase - ${matchedDeal.title}]`,
       'Reading MCP Resource: vault://financial/overview.json',
       `Calling Tool: validate_purchase_safety(price: $${buyPrice.toFixed(2)}, limit: $${state.categories.shopping.limit})`,
@@ -495,7 +605,6 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      // Deduct actual item price
       state.accountBalance -= buyPrice;
       state.monthlySpending += buyPrice;
       state.categories.shopping.spent += buyPrice;
@@ -504,7 +613,22 @@ function processUserQuery(query) {
 
       const trackingNum = 'AMZ-' + Math.floor(100000 + Math.random() * 900000);
 
-      let responseHTML = `
+      let responseHTML = isID ? `
+        <strong>Tool MCP [validate_purchase_safety]:</strong> Pesanan terverifikasi aman untuk <em>${matchedDeal.title}</em>. 
+        <div class="chat-order-card">
+          <div class="order-card-header">
+            <i class="fa-brands fa-amazon"></i> Pesanan Prime 1-Click Berhasil Dibuat
+          </div>
+          <div class="order-card-body">
+            <img src="${matchedDeal.image}" class="order-card-thumb" alt="${matchedDeal.title}">
+            <div class="order-card-details">
+              <div class="order-card-title">${matchedDeal.title}</div>
+              <div class="order-card-price">$${buyPrice.toFixed(2)}</div>
+              <div class="order-card-dispatch">🚚 Tiba Besok • No. Resi: ${trackingNum}</div>
+            </div>
+          </div>
+        </div>
+      ` : `
         <strong>MCP Tool [validate_purchase_safety]:</strong> Order verified for <em>${matchedDeal.title}</em>. 
         <div class="chat-order-card">
           <div class="order-card-header">
@@ -522,7 +646,19 @@ function processUserQuery(query) {
       `;
 
       if (isOverBudget) {
-        responseHTML += `
+        responseHTML += isID ? `
+          <div class="chat-warning-card">
+            <div class="warning-card-title">
+              <i class="fa-solid fa-triangle-exclamation"></i> Peringatan Batas Anggaran Terlampaui
+            </div>
+            <div class="warning-card-desc">
+              Kategori belanja Anda sekarang mencapai <strong>${state.categories.shopping.percent}%</strong> kapasitas ($${state.categories.shopping.spent.toFixed(2)} / $${state.categories.shopping.limit}).
+            </div>
+            <div class="warning-actions-row">
+              <button class="btn-warning-action primary" onclick="transferFromSavings(250)">+ Transfer $250 dari Tabungan</button>
+            </div>
+          </div>
+        ` : `
           <div class="chat-warning-card">
             <div class="warning-card-title">
               <i class="fa-solid fa-triangle-exclamation"></i> Budget Warning Threshold Reached
@@ -540,8 +676,13 @@ function processUserQuery(query) {
       addMessage('alexa', 'Alexa+', responseHTML);
     });
 
-  } else if (qLower.includes('track') || qLower.includes('price') || qLower.includes('drop') || qLower.includes('sniper')) {
-    const traceSteps = [
+  } else if (qLower.includes('track') || qLower.includes('pantau') || qLower.includes('price') || qLower.includes('harga') || qLower.includes('diskon') || qLower.includes('sniper')) {
+    const traceSteps = isID ? [
+      'Maksud: [Pengawas Penurunan Harga Promo Amazon]',
+      'Mengecek API Promo Amazon via Protokol MCP 2025-11-25',
+      'Memanggil Tool: track_price_drop_target(ambang: -20%)',
+      'Mendaftarkan Pemantau Latar Belakang'
+    ] : [
       'Intent: [Amazon Price Drop Notification Watchdog]',
       'Querying Amazon Deals API via MCP Spec 2025-11-25',
       'Calling Tool: track_price_drop_target(threshold: -20%)',
@@ -549,11 +690,19 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [track_price_drop_target]:</strong> Price Drop Sniper activated! Watching Amazon Echo Show & Bose Headphones. You'll be alerted when price drops by 20%.`);
+      const msg = isID
+        ? `<strong>Tool MCP [track_price_drop_target]:</strong> Fitur Pemburu Diskon (Sniper) aktif! Memantau Amazon Echo Show & Headphone Bose. Anda akan diberitahu otomatis saat diskon mencapai 20%.`
+        : `<strong>MCP Tool [track_price_drop_target]:</strong> Price Drop Sniper activated! Watching Amazon Echo Show & Bose Headphones. You'll be alerted when price drops by 20%.`;
+      addMessage('alexa', 'Alexa+', msg);
     });
 
-  } else if (qLower.includes('split') || qLower.includes('household') || qLower.includes('share') || qLower.includes('rent')) {
-    const traceSteps = [
+  } else if (qLower.includes('split') || qLower.includes('bagi') || qLower.includes('patungan') || qLower.includes('household') || qLower.includes('keluarga')) {
+    const traceSteps = isID ? [
+      'Membaca Resource MCP: vault://household/summary.json',
+      'Memanggil Tool: split_shared_expense(jumlah: $120.00, anggota: 3)',
+      'Membagi rata $40.00 ke Sarah, Michael, David',
+      'Memperbarui Buku Kas Bersama'
+    ] : [
       'Reading MCP Resource: vault://household/summary.json',
       'Calling Tool: split_shared_expense(amount: $120.00, members: 3)',
       'Distributing $40.00 each to Sarah, Michael, David',
@@ -561,36 +710,41 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [split_shared_expense]:</strong> Household expense of $120.00 split 3-ways with Michael & David ($40.00/person). Shared ledger updated.`);
+      const msg = isID
+        ? `<strong>Tool MCP [split_shared_expense]:</strong> Tagihan belanja $120.00 dibagi 3 orang bersama Michael & David ($40.00/orang). Buku kas keluarga berhasil diperbarui.`
+        : `<strong>MCP Tool [split_shared_expense]:</strong> Household expense of $120.00 split 3-ways with Michael & David ($40.00/person). Shared ledger updated.`;
+      addMessage('alexa', 'Alexa+', msg);
     });
 
-  } else if (qLower.includes('tech') || qLower.includes('deal') || qLower.includes('item') || qLower.includes('shopping')) {
-    const traceSteps = [
+  } else if (qLower.includes('tech') || qLower.includes('promo') || qLower.includes('deal') || qLower.includes('barang') || qLower.includes('shopping')) {
+    const traceSteps = isID ? [
+      'Memanggil Tool: search_amazon_deals(kategori: "Elektronik", diskon_min: 15)',
+      'Mencocokkan promo dengan sisa kuota belanja',
+      'Menampilkan Promo Pilihan Prime'
+    ] : [
       'Calling Tool: search_amazon_deals(category: "Electronics", discount_min: 15)',
       'Matching deals against remaining shopping allowance',
       'Displaying Top Curated Prime Deals'
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', '<strong>MCP Tool [search_amazon_deals]:</strong> Curated Prime deals found! Amazon Echo Show 8 ($99.99, 30% Off) & Bose 700 ($219.00). Switched to Shopping View.');
+      const msg = isID
+        ? '<strong>Tool MCP [search_amazon_deals]:</strong> Promo Prime terbaik ditemukan! Amazon Echo Show 8 ($99.99, Diskon 30%) & Bose 700 ($219.00). Beralih ke halaman Belanja.'
+        : '<strong>MCP Tool [search_amazon_deals]:</strong> Curated Prime deals found! Amazon Echo Show 8 ($99.99, 30% Off) & Bose 700 ($219.00). Switched to Shopping View.';
+      addMessage('alexa', 'Alexa+', msg);
       switchTab('shopping');
     });
 
-  } else if (qLower.includes('grocery') || qLower.includes('food')) {
-    const traceSteps = [
-      'Reading MCP Resource: vault://financial/overview.json',
-      'Analyzing Groceries Category Threshold'
-    ];
-
-    showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `<strong>MCP Tool [get_financial_summary]:</strong> You have spent $${state.categories.groceries.spent} out of $${state.categories.groceries.limit} (${state.categories.groceries.percent}%). Buffer remaining: $${state.categories.groceries.limit - state.categories.groceries.spent}.`);
-    });
-
-  } else if (qLower.includes('week') || qLower.includes('spend') || qLower.includes('allowance') || qLower.includes('can i spend')) {
+  } else if (qLower.includes('minggu') || qLower.includes('week') || qLower.includes('spend') || qLower.includes('belanja') || qLower.includes('sisa')) {
     const weeklySafeCapacity = ((state.categories.shopping.limit - state.categories.shopping.spent) + (state.categories.diningOut.limit - state.categories.diningOut.spent)) / 2;
     const safeAmount = Math.max(0, weeklySafeCapacity).toFixed(2);
 
-    const traceSteps = [
+    const traceSteps = isID ? [
+      'Maksud: [Kalkulasi Batas Belanja Aman Mingguan]',
+      'Membaca Resource MCP: vault://financial/overview.json',
+      'Memanggil Tool: get_financial_summary(interval: "proyeksi_mingguan")',
+      'Menganalisis siklus 12 hari sisa bulan vs anggaran santai'
+    ] : [
       'Intent: [Weekly Safe-to-Spend Computation]',
       'Reading MCP Resource: vault://financial/overview.json',
       'Calling Tool: get_financial_summary(interval: "weekly_projection")',
@@ -598,7 +752,20 @@ function processUserQuery(query) {
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `
+      const msg = isID ? `
+        <strong>Tool MCP [get_financial_summary]:</strong> Berdasarkan ritme pengeluaran Anda (12 hari tersisa):
+        <div class="chat-order-card" style="border-color:#10b981;">
+          <div class="order-card-header" style="color:#059669;">
+            <i class="fa-solid fa-shield-halved"></i> Batas Belanja Aman Mingguan
+          </div>
+          <div style="font-size: 1.25rem; font-weight: 800; color: #10b981; margin: 4px 0;">
+            $${safeAmount} / minggu
+          </div>
+          <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.4;">
+            💡 <strong>Saran Alexa+:</strong> Kebutuhan pokok masih sangat aman (sisa $280), tapi makan di luar sudah 88%. Menjaga pengeluaran hiburan di bawah <strong>$${safeAmount}</strong> minggu ini memastikan target tabungan <em>Liburan ke Tokyo</em> Anda tercapai!
+          </div>
+        </div>
+      ` : `
         <strong>MCP Tool [get_financial_summary]:</strong> Based on your monthly pacing (12 days left):
         <div class="chat-order-card" style="border-color:#10b981;">
           <div class="order-card-header" style="color:#059669;">
@@ -611,28 +778,42 @@ function processUserQuery(query) {
             💡 <strong>Alexa+ Advice:</strong> You have plenty of room for groceries ($280 left), but dining out is at 88%. Keeping leisure spending under <strong>$${safeAmount}</strong> this week ensures you hit your <em>Vacation to Tokyo</em> savings goal!
           </div>
         </div>
-      `);
+      `;
+      addMessage('alexa', 'Alexa+', msg);
     });
 
-  } else if (qLower.includes('balance') || qLower.includes('budget') || qLower.includes('account') || qLower.includes('how much')) {
-    const traceSteps = [
+  } else if (qLower.includes('balance') || qLower.includes('budget') || qLower.includes('saldo') || qLower.includes('uang')) {
+    const traceSteps = isID ? [
+      'Membaca Resource MCP: vault://financial/overview.json',
+      'Menggabungkan Rekening Giro & Portofolio Investasi'
+    ] : [
       'Reading MCP Resource: vault://financial/overview.json',
       'Aggregating Liquid Checking & Investment Portfolio'
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `<strong>MCP Resource [vault://financial/overview]:</strong> Account Balance: <strong>$${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})}</strong>. Investment Portfolio: <strong>$${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})}</strong> (+4.2%). Remaining monthly budget: <strong>$${(state.monthlySpending * 0.2).toFixed(2)}</strong>.`);
+      const msg = isID
+        ? `<strong>Resource MCP [vault://financial/overview]:</strong> Saldo Rekening: <strong>$${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})}</strong>. Portofolio Investasi: <strong>$${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})}</strong> (+4.2%). Sisa anggaran bulan ini: <strong>$${(state.monthlySpending * 0.2).toFixed(2)}</strong>.`
+        : `<strong>MCP Resource [vault://financial/overview]:</strong> Account Balance: <strong>$${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})}</strong>. Investment Portfolio: <strong>$${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})}</strong> (+4.2%). Remaining monthly budget: <strong>$${(state.monthlySpending * 0.2).toFixed(2)}</strong>.`;
+      addMessage('alexa', 'Alexa+', msg);
     });
 
   } else {
-    const traceSteps = [
+    const traceSteps = isID ? [
+      'Klasifikasi Maksud Otomatis (Protokol MCP 2025-11-25)',
+      'Memindai 6 Tools & 3 Resources Terdaftar',
+      'Diagnostik Kesehatan: Normal'
+    ] : [
       'Autonomous Intent Classifier (MCP Spec 2025-11-25)',
       'Scanning 6 Registered Tools & 3 Resources',
       'Health Diagnostics: Nominal'
     ];
 
     showReasoningTrace(traceSteps, () => {
-      addMessage('alexa', 'Alexa+', `<strong>MCP Protocol 2025-11-25:</strong> Analyzed query across 6 Tools & 3 Resources. Total monthly spending is $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All system parameters nominal.`);
+      const msg = isID
+        ? `<strong>Protokol MCP 2025-11-25:</strong> Permintaan dianalisis melalui 6 Tools & 3 Resources. Total pengeluaran bulan ini $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. Semua parameter normal.`
+        : `<strong>MCP Protocol 2025-11-25:</strong> Analyzed query across 6 Tools & 3 Resources. Total monthly spending is $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All system parameters nominal.`;
+      addMessage('alexa', 'Alexa+', msg);
     });
   }
 }
