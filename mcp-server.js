@@ -47,14 +47,19 @@ const userAccount = {
   ]
 };
 
-// Mock Amazon Deals Inventory
+// Mock Amazon Deals Inventory across All Budget Categories
 const amazonDeals = [
-  { id: 'az-01', title: 'Amazon Echo Show 8', price: 99.99, wasPrice: 129.99, discount: '30% Off', category: 'electronics', rating: 4.8 },
-  { id: 'az-02', title: 'Running Shoes Pro', price: 65.50, wasPrice: null, discount: '15% Off', category: 'apparel', rating: 4.7 },
-  { id: 'az-03', title: 'Bose Headphones 700', price: 219.00, wasPrice: null, discount: '15% Off', category: 'electronics', rating: 4.9 },
-  { id: 'az-04', title: 'Kindle Paperwhite 16GB', price: 119.99, wasPrice: 149.99, discount: '20% Off', category: 'electronics', rating: 4.9 },
-  { id: 'az-05', title: 'Apple Watch Series 9', price: 224.00, wasPrice: 249.00, discount: '10% Off', category: 'electronics', rating: 4.8 },
-  { id: 'az-06', title: 'Anker Power Bank 20K', price: 37.49, wasPrice: 49.99, discount: '25% Off', category: 'accessories', rating: 4.9 }
+  { id: 'az-01', title: 'Whole Foods Organic Olive Oil 1L', price: 19.99, wasPrice: 24.99, discount: '20% Off', category: 'groceries', rating: 4.9 },
+  { id: 'az-02', title: 'Starbucks French Roast Coffee 40oz', price: 24.90, wasPrice: 29.99, discount: '15% Off', category: 'groceries', rating: 4.8 },
+  { id: 'az-03', title: 'Gourmet Dining Prime Pass $50', price: 39.99, wasPrice: 50.00, discount: '20% Off', category: 'diningOut', rating: 4.9 },
+  { id: 'az-04', title: 'Philips Hue Smart LED Bulb 4-Pack', price: 49.99, wasPrice: 64.99, discount: '23% Off', category: 'utilities', rating: 4.8 },
+  { id: 'az-05', title: 'Amazon Smart Thermostat', price: 59.99, wasPrice: 79.99, discount: '25% Off', category: 'utilities', rating: 4.7 },
+  { id: 'az-06', title: 'Amazon Echo Show 8', price: 99.99, wasPrice: 129.99, discount: '30% Off', category: 'shopping', rating: 4.8 },
+  { id: 'az-07', title: 'Running Shoes Pro', price: 65.50, wasPrice: 89.00, discount: '25% Off', category: 'shopping', rating: 4.7 },
+  { id: 'az-08', title: 'Bose Headphones 700', price: 219.00, wasPrice: 279.00, discount: '20% Off', category: 'shopping', rating: 4.9 },
+  { id: 'az-09', title: 'Kindle Paperwhite 16GB', price: 119.99, wasPrice: 149.99, discount: '20% Off', category: 'shopping', rating: 4.9 },
+  { id: 'az-10', title: 'Apple Watch Series 9', price: 224.00, wasPrice: 249.00, discount: '10% Off', category: 'shopping', rating: 4.8 },
+  { id: 'az-11', title: 'Anker Power Bank 20K', price: 37.49, wasPrice: 49.99, discount: '25% Off', category: 'shopping', rating: 4.9 }
 ];
 
 // MCP Specification Tools Definitions (Spec 2025-11-25)

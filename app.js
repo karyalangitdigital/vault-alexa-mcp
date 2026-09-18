@@ -14,7 +14,53 @@ let state = {
   },
   deals: [
     { 
+      title: 'Whole Foods Organic Olive Oil 1L', 
+      category: 'groceries',
+      discount: '20% Off', 
+      price: 19.99, 
+      wasPrice: 24.99, 
+      badgeClass: 'green-badge', 
+      image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&auto=format&fit=crop&q=80' 
+    },
+    { 
+      title: 'Starbucks French Roast Coffee 40oz', 
+      category: 'groceries',
+      discount: '15% Off', 
+      price: 24.90, 
+      wasPrice: 29.99, 
+      badgeClass: 'purple-badge', 
+      image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500&auto=format&fit=crop&q=80' 
+    },
+    { 
+      title: 'Gourmet Dining Prime Pass $50', 
+      category: 'diningOut',
+      discount: '20% Off', 
+      price: 39.99, 
+      wasPrice: 50.00, 
+      badgeClass: 'blue-badge', 
+      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=80' 
+    },
+    { 
+      title: 'Philips Hue Smart LED Bulb 4-Pack', 
+      category: 'utilities',
+      discount: '23% Off', 
+      price: 49.99, 
+      wasPrice: 64.99, 
+      badgeClass: 'green-badge', 
+      image: 'https://images.unsplash.com/photo-1550985616-10810253b84d?w=500&auto=format&fit=crop&q=80' 
+    },
+    { 
+      title: 'Amazon Smart Thermostat', 
+      category: 'utilities',
+      discount: '25% Off', 
+      price: 59.99, 
+      wasPrice: 79.99, 
+      badgeClass: 'purple-badge', 
+      image: 'https://images.unsplash.com/photo-1558002038-1055907df827?w=500&auto=format&fit=crop&q=80' 
+    },
+    { 
       title: 'Amazon Echo Show 8', 
+      category: 'shopping',
       discount: '30% Off', 
       price: 99.99, 
       wasPrice: 129.99, 
@@ -23,22 +69,25 @@ let state = {
     },
     { 
       title: 'Running Shoes Pro', 
-      discount: '15% Off', 
+      category: 'shopping',
+      discount: '25% Off', 
       price: 65.50, 
-      wasPrice: null, 
+      wasPrice: 89.00, 
       badgeClass: 'green-badge', 
       image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=80' 
     },
     { 
       title: 'Bose Headphones 700', 
-      discount: '15% Off', 
+      category: 'shopping',
+      discount: '20% Off', 
       price: 219.00, 
-      wasPrice: null, 
+      wasPrice: 279.00, 
       badgeClass: 'purple-badge', 
       image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80' 
     },
     { 
       title: 'Kindle Paperwhite 16GB', 
+      category: 'shopping',
       discount: '20% Off', 
       price: 119.99, 
       wasPrice: 149.99, 
@@ -47,6 +96,7 @@ let state = {
     },
     { 
       title: 'Apple Watch Series 9', 
+      category: 'shopping',
       discount: '10% Off', 
       price: 224.00, 
       wasPrice: 249.00, 
@@ -55,6 +105,7 @@ let state = {
     },
     { 
       title: 'Anker Power Bank 20K', 
+      category: 'shopping',
       discount: '25% Off', 
       price: 37.49, 
       wasPrice: 49.99, 
@@ -318,6 +369,11 @@ function processUserQuery(query) {
     let matchedDeal = state.deals.find(d => {
       const dTitle = d.title.toLowerCase();
       if (qLower.includes(dTitle)) return true;
+      if (dTitle.includes('olive') && (qLower.includes('olive') || qLower.includes('minyak') || qLower.includes('oil'))) return true;
+      if (dTitle.includes('coffee') && (qLower.includes('coffee') || qLower.includes('kopi') || qLower.includes('starbucks'))) return true;
+      if (dTitle.includes('dining') && (qLower.includes('dining') || qLower.includes('makan') || qLower.includes('restoran') || qLower.includes('pass'))) return true;
+      if (dTitle.includes('bulb') && (qLower.includes('bulb') || qLower.includes('lampu') || qLower.includes('philips') || qLower.includes('hue') || qLower.includes('led'))) return true;
+      if (dTitle.includes('thermostat') && (qLower.includes('thermostat') || qLower.includes('termostat') || qLower.includes('suhu'))) return true;
       if (dTitle.includes('running') && (qLower.includes('running') || qLower.includes('shoe') || qLower.includes('sepatu'))) return true;
       if (dTitle.includes('echo') && (qLower.includes('echo') || qLower.includes('show') || qLower.includes('alexa'))) return true;
       if (dTitle.includes('bose') && (qLower.includes('bose') || qLower.includes('headphone') || qLower.includes('earphone'))) return true;
@@ -325,11 +381,13 @@ function processUserQuery(query) {
       if (dTitle.includes('watch') && (qLower.includes('watch') || qLower.includes('apple') || qLower.includes('jam'))) return true;
       if (dTitle.includes('anker') && (qLower.includes('anker') || qLower.includes('power bank') || qLower.includes('charger'))) return true;
       
-      // Word token matching
       const words = dTitle.split(' ').filter(w => w.length > 3);
       return words.some(w => qLower.includes(w));
     }) || state.deals[0];
+    
     let buyPrice = matchedDeal.price;
+    const catKey = matchedDeal.category || 'shopping';
+    const catObj = state.categories[catKey] || state.categories.shopping;
 
     const priceMatch = query.match(/\$([0-9.]+)/) || query.match(/for ([0-9.]+)/) || query.match(/sebesar ([0-9.]+)/);
     if (priceMatch) {
@@ -337,31 +395,31 @@ function processUserQuery(query) {
       if (!isNaN(parsedPrice) && parsedPrice > 0) buyPrice = parsedPrice;
     }
 
-    const isOverBudget = (state.categories.shopping.spent + buyPrice) > state.categories.shopping.limit;
+    const isOverBudget = (catObj.spent + buyPrice) > catObj.limit;
 
     const traceSteps = isID ? [
       `Memproses maksud: [Pembelian Amazon - ${matchedDeal.title}]`,
-      'Membaca Resource MCP: vault://financial/overview.json',
-      `Memanggil Tool: validate_purchase_safety(harga: $${buyPrice.toFixed(2)}, limit: $${state.categories.shopping.limit})`,
+      `Membaca Resource MCP: vault://financial/overview.json (Kategori: ${catObj.title})`,
+      `Memanggil Tool: validate_purchase_safety(harga: $${buyPrice.toFixed(2)}, batas_kategori: $${catObj.limit})`,
       isOverBudget 
-        ? `⚠️ Peringatan: Batas anggaran belanja terlampaui $${((state.categories.shopping.spent + buyPrice) - state.categories.shopping.limit).toFixed(2)}`
-        : `Mengevaluasi batas aman 30 hari: Kapasitas aman tersedia`,
+        ? `⚠️ Peringatan: Batas anggaran ${catObj.title} terlampaui $${((catObj.spent + buyPrice) - catObj.limit).toFixed(2)}`
+        : `Mengevaluasi batas aman 30 hari: Kapasitas aman tersedia di ${catObj.title}`,
       'Menyiapkan Pesanan 1-Click Prime Delivery'
     ] : [
       `Parsing intent: [Amazon Purchase - ${matchedDeal.title}]`,
-      'Reading MCP Resource: vault://financial/overview.json',
-      `Calling Tool: validate_purchase_safety(price: $${buyPrice.toFixed(2)}, limit: $${state.categories.shopping.limit})`,
+      `Reading MCP Resource: vault://financial/overview.json (Category: ${catObj.title})`,
+      `Calling Tool: validate_purchase_safety(price: $${buyPrice.toFixed(2)}, category_limit: $${catObj.limit})`,
       isOverBudget 
-        ? `⚠️ Warning: Shopping budget limit exceeded by $${((state.categories.shopping.spent + buyPrice) - state.categories.shopping.limit).toFixed(2)}`
-        : `Evaluating 30-day budget margin: Safe buffer remaining`,
+        ? `⚠️ Warning: ${catObj.title} budget limit exceeded by $${((catObj.spent + buyPrice) - catObj.limit).toFixed(2)}`
+        : `Evaluating 30-day budget margin: Safe buffer remaining in ${catObj.title}`,
       'Generating 1-Click Prime Order Dispatch'
     ];
 
     showReasoningTrace(traceSteps, () => {
       state.accountBalance -= buyPrice;
       state.monthlySpending += buyPrice;
-      state.categories.shopping.spent += buyPrice;
-      state.categories.shopping.percent = Math.min(100, Math.round((state.categories.shopping.spent / state.categories.shopping.limit) * 100));
+      catObj.spent += buyPrice;
+      catObj.percent = Math.min(100, Math.round((catObj.spent / catObj.limit) * 100));
       updateUIOverview();
 
       const trackingNum = 'AMZ-' + Math.floor(100000 + Math.random() * 900000);
@@ -376,7 +434,7 @@ function processUserQuery(query) {
             <img src="${matchedDeal.image}" class="order-card-thumb" alt="${matchedDeal.title}">
             <div class="order-card-details">
               <div class="order-card-title">${matchedDeal.title}</div>
-              <div class="order-card-price">$${buyPrice.toFixed(2)}</div>
+              <div class="order-card-price">$${buyPrice.toFixed(2)} • (${catObj.title})</div>
               <div class="order-card-dispatch">🚚 Tiba Besok • No. Resi: ${trackingNum}</div>
             </div>
           </div>
@@ -391,7 +449,7 @@ function processUserQuery(query) {
             <img src="${matchedDeal.image}" class="order-card-thumb" alt="${matchedDeal.title}">
             <div class="order-card-details">
               <div class="order-card-title">${matchedDeal.title}</div>
-              <div class="order-card-price">$${buyPrice.toFixed(2)}</div>
+              <div class="order-card-price">$${buyPrice.toFixed(2)} • (${catObj.title})</div>
               <div class="order-card-dispatch">🚚 Arriving Tomorrow • Tracking: ${trackingNum}</div>
             </div>
           </div>
@@ -405,7 +463,7 @@ function processUserQuery(query) {
               <i class="fa-solid fa-triangle-exclamation"></i> Peringatan Batas Anggaran Terlampaui
             </div>
             <div class="warning-card-desc">
-              Kategori belanja Anda sekarang mencapai <strong>${state.categories.shopping.percent}%</strong> kapasitas ($${state.categories.shopping.spent.toFixed(2)} / $${state.categories.shopping.limit}).
+              Kategori <strong>${catObj.title}</strong> sekarang mencapai <strong>${catObj.percent}%</strong> kapasitas ($${catObj.spent.toFixed(2)} / $${catObj.limit}).
             </div>
             <div class="warning-actions-row">
               <button class="btn-warning-action primary" onclick="transferFromSavings(250)">+ Transfer $250 dari Tabungan</button>
@@ -417,7 +475,7 @@ function processUserQuery(query) {
               <i class="fa-solid fa-triangle-exclamation"></i> Budget Warning Threshold Reached
             </div>
             <div class="warning-card-desc">
-              Your shopping category is now at <strong>${state.categories.shopping.percent}%</strong> capacity ($${state.categories.shopping.spent.toFixed(2)} / $${state.categories.shopping.limit}).
+              Your <strong>${catObj.title}</strong> category is now at <strong>${catObj.percent}%</strong> capacity ($${catObj.spent.toFixed(2)} / $${catObj.limit}).
             </div>
             <div class="warning-actions-row">
               <button class="btn-warning-action primary" onclick="transferFromSavings(250)">+ Transfer $250 from Savings</button>
