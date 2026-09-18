@@ -203,7 +203,33 @@
 
             <!-- Column 1: Your Financial Overview & Category Breakdown -->
             <section class="overview-column">
-              <h2 class="column-title">Your Financial Overview</h2>
+              <div class="column-header">
+                <h2 class="column-title">Your Financial Overview</h2>
+                <span class="live-pulse-badge"><span class="pulse-dot"></span> Real-Time MCP Sync</span>
+              </div>
+
+              <!-- Interactive 3D Prime Vault Card Simulator -->
+              <div class="prime-card-container">
+                <div class="prime-virtual-card" id="prime-virtual-card" title="Click to flip card">
+                  <div class="card-face card-front">
+                    <div class="card-top-row">
+                      <div class="card-chip"><i class="fa-solid fa-microchip"></i></div>
+                      <div class="card-brand"><i class="fa-brands fa-amazon"></i> Prime Vault</div>
+                    </div>
+                    <div class="card-number-display">•••• •••• •••• 8842</div>
+                    <div class="card-bottom-row">
+                      <div>
+                        <div class="card-holder-lbl">CARD HOLDER</div>
+                        <div class="card-holder-name">SARAH JENKINS</div>
+                      </div>
+                      <div>
+                        <div class="card-holder-lbl">AVAILABLE VAULT</div>
+                        <div class="card-balance-val" id="card-live-balance">$24,560.80</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div class="financial-cards-grid">
                 <!-- Big Account Balance Card with SVG Trend Line -->
@@ -294,7 +320,7 @@
 
             </section>
 
-            <!-- Column 2: Smart Amazon Deals -->
+            <!-- Column 2: Smart Amazon Deals with Impact Simulator -->
             <section class="deals-column">
               <div class="column-header">
                 <h2 class="column-title">Smart Amazon Deals</h2>
@@ -314,6 +340,11 @@
                       <span class="deal-now-price">Deal: $99.99</span>
                       <span class="deal-was-price">Was $129.99</span>
                     </div>
+                    <div class="deal-btn-group">
+                      <button class="btn-simulate-deal" onclick="simulateDealImpact('Amazon Echo Show 8', 99.99, 129.99)">
+                        <i class="fa-solid fa-chart-line"></i> Simulate Impact
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -328,6 +359,11 @@
                     <div class="deal-price-line">
                       <span class="deal-now-price">Deal: $65.50</span>
                     </div>
+                    <div class="deal-btn-group">
+                      <button class="btn-simulate-deal" onclick="simulateDealImpact('Running Shoes', 65.50, 77.00)">
+                        <i class="fa-solid fa-chart-line"></i> Simulate Impact
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -341,6 +377,11 @@
                     <div class="deal-item-title">Bose Headphones</div>
                     <div class="deal-price-line">
                       <span class="deal-now-price">Deal: $219.00</span>
+                    </div>
+                    <div class="deal-btn-group">
+                      <button class="btn-simulate-deal" onclick="simulateDealImpact('Bose Headphones', 219.00, 259.00)">
+                        <i class="fa-solid fa-chart-line"></i> Simulate Impact
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -554,6 +595,15 @@
             </div>
           </div>
 
+          <!-- Live Agent Reasoning & MCP Execution Trace -->
+          <div class="agent-reasoning-container" id="agent-reasoning-container" style="display: none;">
+            <div class="reasoning-header">
+              <span class="reasoning-title"><i class="fa-solid fa-brain text-purple"></i> Agent Reasoning Trace</span>
+              <span class="reasoning-status" id="reasoning-status-badge">Processing...</span>
+            </div>
+            <div class="reasoning-steps-list" id="reasoning-steps-list"></div>
+          </div>
+
           <!-- Input Bar with Send Button Embedded -->
           <form class="chat-form" id="chat-input-form">
             <div class="input-capsule">
@@ -569,6 +619,25 @@
 
     </main>
 
+  </div>
+
+  <!-- Interactive Financial Impact Simulator Modal -->
+  <div class="custom-modal-backdrop" id="impact-simulator-modal">
+    <div class="custom-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i class="fa-solid fa-chart-pie text-blue modal-icon"></i>
+          <div>
+            <h3 class="modal-title">AI Predictive Financial Health Simulator</h3>
+            <p class="modal-sub">Powered by MCP Resource <code>vault://financial/overview</code></p>
+          </div>
+        </div>
+        <button class="btn-close-modal" id="btn-close-impact-modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" id="impact-modal-body">
+        <!-- Injected via JS -->
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>

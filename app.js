@@ -264,10 +264,32 @@ if (formAddExpense) {
   });
 }
 
-// Update UI Values
+// Card Live Flip Interaction
+const primeVirtualCard = document.getElementById('prime-virtual-card');
+if (primeVirtualCard) {
+  let isFlipped = false;
+  primeVirtualCard.addEventListener('click', () => {
+    isFlipped = !isFlipped;
+    primeVirtualCard.style.transform = isFlipped ? 'rotateY(180deg) translateY(-4px)' : '';
+  });
+}
+
+// Update UI Values with Animated Rolling Counters
 function updateUIOverview() {
-  document.getElementById('dash-account-balance').textContent = `$${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
-  document.getElementById('dash-monthly-spending').textContent = `$${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  const balanceStr = `$${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  const spentStr = `$${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+  const balanceEl = document.getElementById('dash-account-balance');
+  const cardBalanceEl = document.getElementById('card-live-balance');
+  const spendEl = document.getElementById('dash-monthly-spending');
+
+  if (balanceEl) balanceEl.textContent = balanceStr;
+  if (cardBalanceEl) {
+    cardBalanceEl.textContent = balanceStr;
+    cardBalanceEl.style.color = '#10b981';
+    setTimeout(() => { cardBalanceEl.style.color = '#38bdf8'; }, 600);
+  }
+  if (spendEl) spendEl.textContent = spentStr;
 
   const catContainer = document.getElementById('cat-progress-container');
   if (catContainer) {
@@ -298,6 +320,8 @@ if (btnClearChat) {
         <div class="msg-bubble alexa-bubble">Chat history cleared. How can I assist with your finances or Amazon deals?</div>
       </div>
     `;
+    const traceBox = document.getElementById('agent-reasoning-container');
+    if (traceBox) traceBox.style.display = 'none';
   });
 }
 
@@ -340,15 +364,66 @@ function playAlexaChime() {
   } catch (e) {}
 }
 
-// Speech Synthesis
+// Natural Female Voice Speech Synthesis
 const synth = window.speechSynthesis;
-function speakText(text) {
+function speakAlexaVoice(text) {
   if (!synth) return;
   synth.cancel();
-  const cleanText = text.replace(/<[^>]*>/g, '');
+  // Strip HTML and MCP code tags for smooth natural speech
+  const cleanText = text.replace(/<[^>]*>/g, '').replace(/\[.*?\]/g, '');
   const utterance = new SpeechSynthesisUtterance(cleanText);
-  utterance.rate = 1.0;
+  utterance.rate = 1.05;
+  utterance.pitch = 1.1; // Friendly assistant pitch
+
+  // Pick female / English voice if available
+  const voices = synth.getVoices();
+  const femaleVoice = voices.find(v => v.lang.includes('en') && (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Zira') || v.name.includes('Victoria')));
+  if (femaleVoice) {
+    utterance.voice = femaleVoice;
+  }
   synth.speak(utterance);
+}
+
+// Live Agent Reasoning Trace Visualizer
+function showReasoningTrace(steps, callback) {
+  const container = document.getElementById('agent-reasoning-container');
+  const statusBadge = document.getElementById('reasoning-status-badge');
+  const list = document.getElementById('reasoning-steps-list');
+
+  if (!container || !list) {
+    if (callback) callback();
+    return;
+  }
+
+  container.style.display = 'block';
+  statusBadge.textContent = 'Agent Reasoning...';
+  statusBadge.style.background = '#3b82f6';
+  list.innerHTML = '';
+
+  let currentStep = 0;
+  function renderNextStep() {
+    if (currentStep < steps.length) {
+      const stepItem = document.createElement('div');
+      stepItem.className = 'trace-step active';
+      stepItem.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${steps[currentStep]}</span>`;
+      list.appendChild(stepItem);
+
+      setTimeout(() => {
+        stepItem.className = 'trace-step done';
+        stepItem.innerHTML = `<i class="fa-solid fa-check"></i> <span>${steps[currentStep]}</span>`;
+        currentStep++;
+        renderNextStep();
+      }, 350);
+    } else {
+      statusBadge.textContent = 'MCP Executed';
+      statusBadge.style.background = '#10b981';
+      setTimeout(() => {
+        if (callback) callback();
+      }, 250);
+    }
+  }
+
+  renderNextStep();
 }
 
 // Add Chat Message
@@ -367,33 +442,103 @@ function addMessage(sender, name, text) {
 
   if (sender === 'alexa') {
     playAlexaChime();
-    speakText(text);
+    speakAlexaVoice(text);
   }
 }
 
-// Process User Query with Autonomous MCP Tool Logic
+// Process User Query with Autonomous MCP Tool Logic & Reasoning Flow
 function processUserQuery(query) {
   addMessage('user', 'Sarah', query);
   const qLower = query.toLowerCase();
 
-  setTimeout(() => {
-    if (qLower.includes('buy') || qLower.includes('purchase')) {
-      addMessage('alexa', 'Alexa+', `🛡️ <strong>MCP Tool [validate_purchase_safety]:</strong> Validating order with your remaining shopping allowance. Safe capacity verified! Purchase order initiated with 1-Click Prime Delivery.`);
-    } else if (qLower.includes('track') || qLower.includes('price') || qLower.includes('drop')) {
+  if (qLower.includes('buy') || qLower.includes('purchase')) {
+    const traceSteps = [
+      'Parsing natural language intent: [Amazon Purchase Request]',
+      'Reading MCP Resource: vault://financial/overview.json',
+      'Calling Tool: validate_purchase_safety(item_price, user_allowance)',
+      'Evaluating 30-day budget margin: Buffer Capacity Safe ($420.50 remaining)',
+      'Generating 1-Click Prime Order Dispatch'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
+      // Deduct sample price & update UI Live!
+      const buyPrice = 99.99;
+      state.accountBalance -= buyPrice;
+      state.monthlySpending += buyPrice;
+      state.categories.shopping.spent += buyPrice;
+      state.categories.shopping.percent = Math.min(100, Math.round((state.categories.shopping.spent / state.categories.shopping.limit) * 100));
+      updateUIOverview();
+
+      addMessage('alexa', 'Alexa+', `🛡️ <strong>MCP Tool [validate_purchase_safety]:</strong> Validating order with remaining shopping allowance. Safe capacity verified ($${buyPrice.toFixed(2)} deducted). Purchase order initiated with 1-Click Prime Delivery!`);
+    });
+
+  } else if (qLower.includes('track') || qLower.includes('price') || qLower.includes('drop')) {
+    const traceSteps = [
+      'Intent: [Amazon Price Drop Notification Watchdog]',
+      'Querying Amazon Deals API via MCP Spec 2025-11-25',
+      'Calling Tool: track_price_drop_target(threshold: -20%)',
+      'Registering Background Price Drop Watcher'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
       addMessage('alexa', 'Alexa+', `🎯 <strong>MCP Tool [track_price_drop_target]:</strong> Price Drop Sniper activated for targeted Amazon product! Target set at -20% discount threshold.`);
-    } else if (qLower.includes('split') || qLower.includes('household') || qLower.includes('share')) {
+    });
+
+  } else if (qLower.includes('split') || qLower.includes('household') || qLower.includes('share')) {
+    const traceSteps = [
+      'Reading MCP Resource: vault://household/summary.json',
+      'Calling Tool: split_shared_expense(amount: $120.00, members: 3)',
+      'Distributing $40.00 each to Sarah, Michael, David',
+      'Synchronizing Shared Pool Ledger'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
       addMessage('alexa', 'Alexa+', `👥 <strong>MCP Tool [split_shared_expense]:</strong> Household expense split 50/50 with Michael Jenkins. Updated shared pool ledger.`);
-    } else if (qLower.includes('tech') || qLower.includes('deal') || qLower.includes('item')) {
+    });
+
+  } else if (qLower.includes('tech') || qLower.includes('deal') || qLower.includes('item')) {
+    const traceSteps = [
+      'Calling Tool: search_amazon_deals(category: "Electronics", discount_min: 15)',
+      'Matching deals against remaining shopping allowance',
+      'Displaying Top Curated Prime Deals'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
       addMessage('alexa', 'Alexa+', '🛍️ <strong>MCP Tool [search_amazon_deals]:</strong> Found top verified deals! Amazon Echo Show 8 ($99.99, 30% Off) & Bose 700 ($219.00).');
       switchTab('shopping');
-    } else if (qLower.includes('grocery') || qLower.includes('food')) {
+    });
+
+  } else if (qLower.includes('grocery') || qLower.includes('food')) {
+    const traceSteps = [
+      'Reading MCP Resource: vault://financial/overview.json',
+      'Analyzing Groceries Category Threshold'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
       addMessage('alexa', 'Alexa+', `🥦 <strong>MCP Tool [get_financial_summary]:</strong> You have spent $${state.categories.groceries.spent} out of $${state.categories.groceries.limit} (${state.categories.groceries.percent}%). Buffer remaining: $${state.categories.groceries.limit - state.categories.groceries.spent}.`);
-    } else if (qLower.includes('balance') || qLower.includes('account')) {
+    });
+
+  } else if (qLower.includes('balance') || qLower.includes('account')) {
+    const traceSteps = [
+      'Reading MCP Resource: vault://financial/overview.json',
+      'Aggregating Liquid Checking & Investment Portfolio'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
       addMessage('alexa', 'Alexa+', `💳 <strong>MCP Resource [vault://financial/overview]:</strong> Account Balance is $${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})}. Investment Value: $${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})} (+4.2%).`);
-    } else {
+    });
+
+  } else {
+    const traceSteps = [
+      'Autonomous Intent Classifier (MCP Spec 2025-11-25)',
+      'Scanning 6 Registered Tools & 3 Resources',
+      'Health Diagnostics: Nominal'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
       addMessage('alexa', 'Alexa+', `⚡ <strong>MCP Protocol 2025-11-25:</strong> Analyzed request via 6 Autonomous Tools & 3 Resources. Total monthly spending is $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All categories healthy.`);
-    }
-  }, 600);
+    });
+  }
 }
 
 // Form Submission
@@ -410,7 +555,7 @@ function setMicActiveState(active) {
   if (active) {
     if (listeningSection) listeningSection.classList.add('is-listening');
     if (btnVoiceInput) btnVoiceInput.classList.add('active-listening');
-    if (listeningLabel) listeningLabel.textContent = 'Listening...';
+    if (listeningLabel) listeningLabel.textContent = 'Listening... (Speak Now)';
   } else {
     if (listeningSection) listeningSection.classList.remove('is-listening');
     if (btnVoiceInput) btnVoiceInput.classList.remove('active-listening');
@@ -418,16 +563,21 @@ function setMicActiveState(active) {
   }
 }
 
-// Speech Recognition for Mic
+// Live Speech Recognition for Mic
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = new SpeechRecognition();
   recognition.lang = 'en-US';
+  recognition.interimResults = false;
 
   btnVoiceInput.addEventListener('click', () => {
-    setMicActiveState(true);
-    playAlexaChime();
-    recognition.start();
+    try {
+      setMicActiveState(true);
+      playAlexaChime();
+      recognition.start();
+    } catch (err) {
+      setMicActiveState(false);
+    }
   });
 
   recognition.onresult = (event) => {
@@ -454,5 +604,70 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   });
 }
 
+// AI Predictive Deal Financial Impact Simulator
+window.simulateDealImpact = function(title, dealPrice, wasPrice) {
+  const modal = document.getElementById('impact-simulator-modal');
+  const modalBody = document.getElementById('impact-modal-body');
+  if (!modal || !modalBody) return;
+
+  const savings = wasPrice ? (wasPrice - dealPrice).toFixed(2) : (dealPrice * 0.2).toFixed(2);
+  const remainingAllowance = Math.max(0, state.categories.shopping.limit - (state.categories.shopping.spent + dealPrice)).toFixed(2);
+  const projected3MonthSavings = (dealPrice * 0.15).toFixed(2);
+
+  modalBody.innerHTML = `
+    <div class="impact-metric-grid">
+      <div class="impact-card">
+        <div class="impact-card-val text-green">+$${savings}</div>
+        <div class="impact-card-lbl">Instant Savings (Prime Deal)</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-card-val text-blue">$${remainingAllowance}</div>
+        <div class="impact-card-lbl">Remaining Shopping Buffer</div>
+      </div>
+    </div>
+
+    <div class="impact-recommendation-box">
+      <p>🤖 <strong>MCP Agent Health Verdict for ${title}:</strong></p>
+      <p style="margin-top:6px; color:var(--text-muted);">
+        Purchasing this item today utilizes <strong>${((dealPrice / state.categories.shopping.limit) * 100).toFixed(1)}%</strong> of your monthly shopping budget. 
+        Your 3-month savings projection with Prime price locks saves an estimated <strong>+$${projected3MonthSavings}</strong> in compounding interest.
+      </p>
+    </div>
+
+    <div style="margin-top: 18px; display:flex; gap:10px;">
+      <button class="btn-primary-action" style="width:100%;" onclick="buyAmazonDeal('${title}', ${dealPrice}); closeImpactModal();">
+        <i class="fa-solid fa-cart-shopping"></i> Approve 1-Click Purchase
+      </button>
+    </div>
+  `;
+
+  modal.classList.add('show');
+};
+
+function closeImpactModal() {
+  const modal = document.getElementById('impact-simulator-modal');
+  if (modal) modal.classList.remove('show');
+}
+
+const btnCloseImpactModal = document.getElementById('btn-close-impact-modal');
+if (btnCloseImpactModal) {
+  btnCloseImpactModal.addEventListener('click', closeImpactModal);
+}
+
+const impactModalBackdrop = document.getElementById('impact-simulator-modal');
+if (impactModalBackdrop) {
+  impactModalBackdrop.addEventListener('click', (e) => {
+    if (e.target === impactModalBackdrop) closeImpactModal();
+  });
+}
+
+// Initialize Voice Voices on Load
+if (synth) {
+  synth.onvoiceschanged = () => {
+    synth.getVoices();
+  };
+}
+
 // Default state is Standby
 setMicActiveState(false);
+
