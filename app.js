@@ -553,11 +553,17 @@ chatInputForm.addEventListener('submit', (e) => {
 // Mic State Handlers (Standby vs Active Listening)
 function setMicActiveState(active) {
   if (active) {
-    if (listeningSection) listeningSection.classList.add('is-listening');
+    if (listeningSection) {
+      listeningSection.style.display = 'flex';
+      listeningSection.classList.add('is-listening');
+    }
     if (btnVoiceInput) btnVoiceInput.classList.add('active-listening');
     if (listeningLabel) listeningLabel.textContent = 'Listening... (Speak Now)';
   } else {
-    if (listeningSection) listeningSection.classList.remove('is-listening');
+    if (listeningSection) {
+      listeningSection.style.display = 'none';
+      listeningSection.classList.remove('is-listening');
+    }
     if (btnVoiceInput) btnVoiceInput.classList.remove('active-listening');
     if (listeningLabel) listeningLabel.textContent = 'Click mic to speak';
   }

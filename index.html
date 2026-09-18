@@ -577,12 +577,18 @@
             </div>
           </div>
 
-          <!-- Voice Mic & Waveform Container (Standby by default, activates on click) -->
-          <div class="listening-section" id="listening-section">
-            <div class="listening-label" id="listening-label">Click mic to speak</div>
-            <button class="big-mic-button" id="btn-voice-input" title="Click to speak">
-              <i class="fa-solid fa-microphone"></i>
-            </button>
+          <!-- Live Agent Reasoning & MCP Execution Trace -->
+          <div class="agent-reasoning-container" id="agent-reasoning-container" style="display: none;">
+            <div class="reasoning-header">
+              <span class="reasoning-title"><i class="fa-solid fa-brain text-purple"></i> Agent Reasoning Trace</span>
+              <span class="reasoning-status" id="reasoning-status-badge">Processing...</span>
+            </div>
+            <div class="reasoning-steps-list" id="reasoning-steps-list"></div>
+          </div>
+
+          <!-- Listening State Banner (Minimalist Waveform Indicator) -->
+          <div class="listening-section" id="listening-section" style="display: none;">
+            <div class="listening-label" id="listening-label">Listening... (Speak Now)</div>
             <div class="colorful-waveform" id="colorful-waveform">
               <span class="bar bar1"></span>
               <span class="bar bar2"></span>
@@ -595,19 +601,15 @@
             </div>
           </div>
 
-          <!-- Live Agent Reasoning & MCP Execution Trace -->
-          <div class="agent-reasoning-container" id="agent-reasoning-container" style="display: none;">
-            <div class="reasoning-header">
-              <span class="reasoning-title"><i class="fa-solid fa-brain text-purple"></i> Agent Reasoning Trace</span>
-              <span class="reasoning-status" id="reasoning-status-badge">Processing...</span>
-            </div>
-            <div class="reasoning-steps-list" id="reasoning-steps-list"></div>
-          </div>
-
-          <!-- Input Bar with Send Button Embedded -->
+          <!-- Input Bar with Mic on Left & Send Button on Right -->
           <form class="chat-form" id="chat-input-form">
             <div class="input-capsule">
+              <!-- Mic Button on the Left -->
+              <button type="button" class="capsule-mic-btn" id="btn-voice-input" title="Click to speak with Alexa+">
+                <i class="fa-solid fa-microphone"></i>
+              </button>
               <input type="text" class="chat-text-input" id="user-input-text" placeholder="Type or speak to VaultAlexa+..." required autocomplete="off">
+              <!-- Send Button on the Right -->
               <button type="submit" class="chat-send-btn" id="btn-send-message" title="Send Message">
                 <i class="fa-solid fa-paper-plane"></i>
               </button>
