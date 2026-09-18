@@ -1,8 +1,6 @@
 /**
- * VaultAlexa+ Controller Logic - Full Interactive Features, Popovers, & Verified Clean Product Assets
+ * VaultAlexa+ Controller Logic - Full Interactive Features, Bilingual ID/US, Popovers, & Verified Clean Product Assets
  */
-
-const SERVER_URL = 'http://localhost:3000/mcp/v1/rpc';
 
 let state = {
   accountBalance: 24560.80,
@@ -66,6 +64,70 @@ let state = {
   ]
 };
 
+// Bilingual Dictionaries
+let currentLang = 'ID'; // Default to Indonesian
+
+const I18N_DICT = {
+  ID: {
+    langBtn: 'ID',
+    logoSub: 'Agen Keuangan AI & Asisten Belanja Amazon',
+    searchPlaceholder: 'Cari transaksi, promo, target tabungan...',
+    navDashboard: 'Dashboard',
+    navFinance: 'Keuangan',
+    navShopping: 'Belanja',
+    navGoals: 'Target',
+    navInsights: 'Wawasan AI',
+    navSettings: 'Pengaturan',
+    overviewTitle: 'Ringkasan Keuangan Anda',
+    accBalanceLbl: 'Saldo Rekening',
+    investValLbl: 'Nilai Investasi',
+    monthlySpendLbl: 'Pengeluaran Bulan Ini',
+    budgetBreakdownTitle: 'Rincian Kategori Anggaran',
+    catGroceries: 'Kebutuhan Pokok',
+    catDining: 'Makan di Luar',
+    catUtilities: 'Tagihan & Listrik',
+    catShopping: 'Belanja Santai',
+    smartDealsTitle: 'Promo Cerdas Amazon',
+    chatTitle: 'Obrolan dengan Alexa+',
+    chatInputPlaceholder: 'Ketik atau bicara ke VaultAlexa+...',
+    chipBudget: '📊 Sisa Anggaran',
+    chipDeals: '🛍️ Promo Teknologi',
+    chipSplit: '👥 Bagi Tagihan',
+    chipSniper: '🎯 Pemburu Diskon',
+    listeningActive: 'Mendengarkan... (Silakan Bicara)',
+    listeningStandby: 'Klik mic untuk bicara'
+  },
+  US: {
+    langBtn: 'US',
+    logoSub: 'AI Financial Agent & Amazon Shopping Assistant',
+    searchPlaceholder: 'Search transactions, deals, goals...',
+    navDashboard: 'Dashboard',
+    navFinance: 'Finance',
+    navShopping: 'Shopping',
+    navGoals: 'Goals',
+    navInsights: 'Insights',
+    navSettings: 'Settings',
+    overviewTitle: 'Your Financial Overview',
+    accBalanceLbl: 'Account Balance',
+    investValLbl: 'Investment Value',
+    monthlySpendLbl: 'Monthly Spending',
+    budgetBreakdownTitle: 'Budget Category Breakdown',
+    catGroceries: 'Groceries',
+    catDining: 'Dining Out',
+    catUtilities: 'Utilities',
+    catShopping: 'Shopping',
+    smartDealsTitle: 'Smart Amazon Deals',
+    chatTitle: 'Chat with Alexa+',
+    chatInputPlaceholder: 'Type or speak to VaultAlexa+...',
+    chipBudget: '📊 Budget',
+    chipDeals: '🛍️ Tech Deals',
+    chipSplit: '👥 Split Bill',
+    chipSniper: '🎯 Sniper',
+    listeningActive: 'Listening... (Speak Now)',
+    listeningStandby: 'Click mic to speak'
+  }
+};
+
 // DOM Elements
 const chatMessagesContainer = document.getElementById('chat-messages-container');
 const chatInputForm = document.getElementById('chat-input-form');
@@ -83,6 +145,8 @@ const formAddExpense = document.getElementById('form-add-expense');
 const transactionLedgerList = document.getElementById('transaction-ledger-list');
 const btnClearChat = document.getElementById('btn-clear-chat');
 const btnSwitchToShopping = document.getElementById('btn-switch-to-shopping');
+const btnLangToggle = document.getElementById('btn-lang-toggle');
+const langCurrentLabel = document.getElementById('lang-current-label');
 
 // Header Dropdowns & Popovers
 const btnUserProfile = document.getElementById('btn-user-profile');
@@ -93,254 +157,49 @@ const btnNotificationAlert = document.getElementById('btn-notification-alert');
 const btnInviteMember = document.getElementById('btn-invite-member');
 const btnMockLogout = document.getElementById('btn-mock-logout');
 
-// Profile Popover Toggle
-if (btnUserProfile && profilePopover) {
-  btnUserProfile.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (groupPopover) groupPopover.classList.remove('active');
-    profilePopover.classList.toggle('active');
-  });
-}
+// Core Message Dispatcher
+function addMessage(sender, senderName, htmlContent) {
+  if (!chatMessagesContainer) return;
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `chat-msg ${sender}-msg`;
+  msgDiv.innerHTML = `
+    <div class="msg-sender-name">${senderName}</div>
+    <div class="msg-bubble ${sender}-bubble">${htmlContent}</div>
+  `;
+  chatMessagesContainer.appendChild(msgDiv);
+  chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 
-// Group Sharing Popover Toggle
-if (btnGroupShare && groupPopover) {
-  btnGroupShare.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (profilePopover) profilePopover.classList.remove('active');
-    groupPopover.classList.toggle('active');
-  });
-}
-
-// Close Popovers when clicking outside
-document.addEventListener('click', (e) => {
-  if (profilePopover && !profilePopover.contains(e.target) && !btnUserProfile.contains(e.target)) {
-    profilePopover.classList.remove('active');
+  if (sender === 'alexa') {
+    speakAlexaVoice(htmlContent);
   }
-  if (groupPopover && !groupPopover.contains(e.target) && !btnGroupShare.contains(e.target)) {
-    groupPopover.classList.remove('active');
-  }
-});
-
-// Invite Member Action
-if (btnInviteMember) {
-  btnInviteMember.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const name = prompt("Enter Household Member Name to invite to shared budget:");
-    if (name && name.trim()) {
-      addMessage('alexa', 'Alexa+', `👥 Invited <strong>${name.trim()}</strong> to your Amazon Household Shared Budget Pool with $500/mo spending allowance.`);
-      groupPopover.classList.remove('active');
-    }
-  });
 }
 
-// Mock Logout Action
-if (btnMockLogout) {
-  btnMockLogout.addEventListener('click', (e) => {
-    e.stopPropagation();
-    profilePopover.classList.remove('active');
-    addMessage('alexa', 'Alexa+', `🔒 Vault Session Locked for Sarah Jenkins. Passkey biometrics required for re-authentication.`);
-  });
-}
+// Live Speech Synthesizer
+const synth = window.speechSynthesis;
+function speakAlexaVoice(text) {
+  if (!synth) return;
+  try {
+    synth.cancel();
+    const cleanText = text.replace(/<[^>]*>/g, '').replace(/\[.*?\]/g, '');
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 1.05;
+    utterance.pitch = 1.1;
 
-// Notification Alert Action
-if (btnNotificationAlert) {
-  btnNotificationAlert.addEventListener('click', () => {
-    addMessage('alexa', 'Alexa+', `🔔 <strong>3 Unread Vault Alerts:</strong><br>• Dining Out budget reached 88% limit.<br>• Echo Show 8 price dropped by 30%.<br>• MCP Protocol RPC connection status: Active.`);
-  });
-}
-
-// Sidebar Toggle Functionality
-if (sidebarToggleBtn && leftSidebar) {
-  sidebarToggleBtn.addEventListener('click', () => {
-    leftSidebar.classList.toggle('is-collapsed');
-  });
-}
-
-// Tab Navigation Logic
-const menuItems = document.querySelectorAll('.menu-item');
-const tabViews = document.querySelectorAll('.tab-view');
-
-window.switchTab = function(tabId) {
-  menuItems.forEach(item => {
-    if (item.getAttribute('data-tab') === tabId) {
-      item.classList.add('active');
+    const voices = synth.getVoices();
+    if (currentLang === 'ID') {
+      utterance.lang = 'id-ID';
+      const idVoice = voices.find(v => v.lang && (v.lang.includes('id') || v.lang.includes('ID') || v.name.includes('Indonesian') || v.name.includes('Gadis') || v.name.includes('Damayanti')));
+      if (idVoice) utterance.voice = idVoice;
     } else {
-      item.classList.remove('active');
+      utterance.lang = 'en-US';
+      const femaleVoice = voices.find(v => v.lang && v.lang.includes('en') && (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Zira')));
+      if (femaleVoice) utterance.voice = femaleVoice;
     }
-  });
-
-  tabViews.forEach(view => {
-    if (view.id === `view-${tabId}`) {
-      view.classList.add('active');
-    } else {
-      view.classList.remove('active');
-    }
-  });
-
-  if (profilePopover) profilePopover.classList.remove('active');
-  if (groupPopover) groupPopover.classList.remove('active');
-};
-
-menuItems.forEach(item => {
-  item.addEventListener('click', () => {
-    const tabId = item.getAttribute('data-tab');
-    switchTab(tabId);
-  });
-});
-
-if (btnSwitchToShopping) {
-  btnSwitchToShopping.addEventListener('click', () => switchTab('shopping'));
+    synth.speak(utterance);
+  } catch (e) {}
 }
 
-// Render Shopping Deals (Uniform Clean Cards)
-function renderShoppingGrid() {
-  if (!fullShoppingGrid) return;
-  fullShoppingGrid.innerHTML = state.deals.map(deal => `
-    <div class="card shopping-product-card">
-      <span class="deal-discount-badge ${deal.badgeClass}">${deal.discount}</span>
-      <div class="shopping-img-box">
-        <img src="${deal.image}" alt="${deal.title}" loading="lazy">
-      </div>
-      <div class="shopping-card-body">
-        <div class="product-tag"><i class="fa-brands fa-amazon"></i> Prime Delivery</div>
-        <div class="shopping-title">${deal.title}</div>
-        <div class="shopping-price-row">
-          <span class="deal-now-price">Deal: $${deal.price.toFixed(2)}</span>
-          ${deal.wasPrice ? `<span class="deal-was-price">Was $${deal.wasPrice.toFixed(2)}</span>` : ''}
-        </div>
-        <button class="btn-buy-alexa" onclick="buyAmazonDeal('${deal.title}', ${deal.price})">
-          <i class="fa-solid fa-cart-shopping"></i> Buy with Alexa+
-        </button>
-      </div>
-    </div>
-  `).join('');
-}
-renderShoppingGrid();
-
-// Global Amazon Buy Handler
-window.buyAmazonDeal = function(title, price) {
-  const q = `Buy ${title} for $${price}`;
-  processUserQuery(q);
-};
-
-// Add Expense Form Handler (MCP Sync)
-if (formAddExpense) {
-  formAddExpense.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const categoryKey = document.getElementById('expense-category').value;
-    const amount = parseFloat(document.getElementById('expense-amount').value);
-    const desc = document.getElementById('expense-desc').value.trim();
-
-    if (isNaN(amount) || amount <= 0) return;
-
-    // Mutate state
-    state.monthlySpending += amount;
-    state.accountBalance -= amount;
-    
-    if (state.categories[categoryKey]) {
-      state.categories[categoryKey].spent += amount;
-      state.categories[categoryKey].percent = Math.min(100, Math.round((state.categories[categoryKey].spent / state.categories[categoryKey].limit) * 100));
-    }
-
-    updateUIOverview();
-
-    // Add to ledger
-    const li = document.createElement('li');
-    li.className = 'trans-item';
-    li.innerHTML = `
-      <div class="trans-info">
-        <span class="trans-title">${desc}</span>
-        <span class="trans-date">${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • ${categoryKey}</span>
-      </div>
-      <span class="trans-amt negative">-$${amount.toFixed(2)}</span>
-    `;
-    transactionLedgerList.prepend(li);
-
-    // Reset form
-    formAddExpense.reset();
-
-    // Trigger AI notification message
-    addMessage('alexa', 'Alexa+', `✅ Logged expense of <strong>$${amount.toFixed(2)}</strong> for <em>${desc}</em> via MCP Protocol tool <code>log_transaction</code>. Updated remaining budget.`);
-  });
-}
-
-// Card Live Flip Interaction
-const primeVirtualCard = document.getElementById('prime-virtual-card');
-if (primeVirtualCard) {
-  let isFlipped = false;
-  primeVirtualCard.addEventListener('click', () => {
-    isFlipped = !isFlipped;
-    primeVirtualCard.style.transform = isFlipped ? 'rotateY(180deg) translateY(-4px)' : '';
-  });
-}
-
-// Update UI Values with Animated Rolling Counters
-function updateUIOverview() {
-  const balanceStr = `$${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
-  const spentStr = `$${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
-
-  const balanceEl = document.getElementById('dash-account-balance');
-  const cardBalanceEl = document.getElementById('card-live-balance');
-  const spendEl = document.getElementById('dash-monthly-spending');
-
-  if (balanceEl) balanceEl.textContent = balanceStr;
-  if (cardBalanceEl) {
-    cardBalanceEl.textContent = balanceStr;
-    cardBalanceEl.style.color = '#10b981';
-    setTimeout(() => { cardBalanceEl.style.color = '#38bdf8'; }, 600);
-  }
-  if (spendEl) spendEl.textContent = spentStr;
-
-  const catContainer = document.getElementById('cat-progress-container');
-  if (catContainer) {
-    catContainer.innerHTML = Object.keys(state.categories).map(k => {
-      const c = state.categories[k];
-      return `
-        <div class="cat-progress-row">
-          <div class="cat-row-header">
-            <span class="cat-row-title">${c.title}</span>
-            <span class="cat-row-pct ${c.class}">${c.percent}%</span>
-            <span class="cat-row-amt">$${c.spent}/$${c.limit}</span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill ${c.class}-fill" style="width: ${c.percent}%;"></div>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-}
-
-// Clear Chat
-if (btnClearChat) {
-  btnClearChat.addEventListener('click', () => {
-    chatMessagesContainer.innerHTML = `
-      <div class="chat-msg alexa-msg">
-        <div class="msg-sender-name">Alexa+</div>
-        <div class="msg-bubble alexa-bubble">Chat history cleared. How can I assist with your finances or Amazon deals?</div>
-      </div>
-    `;
-    const traceBox = document.getElementById('agent-reasoning-container');
-    if (traceBox) traceBox.style.display = 'none';
-  });
-}
-
-// Theme Switcher Logic
-let isDarkMode = false;
-themeToggleBtn.addEventListener('click', () => {
-  isDarkMode = !isDarkMode;
-  if (isDarkMode) {
-    document.body.classList.add('dark-mode');
-    themeIcon.className = 'fa-solid fa-sun';
-    themeText.textContent = 'Sun';
-  } else {
-    document.body.classList.remove('dark-mode');
-    themeIcon.className = 'fa-solid fa-moon';
-    themeText.textContent = 'Moon';
-  }
-});
-
-// Synthesize Alexa Tone Chime
+// Alexa Sound Chime
 function playAlexaChime() {
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -364,214 +223,73 @@ function playAlexaChime() {
   } catch (e) {}
 }
 
-// Bilingual Language State & Dictionaries
-let currentLang = 'ID'; // Default to Indonesian as requested by user
-
-const I18N_DICT = {
-  ID: {
-    langBtn: 'ID',
-    logoSub: 'Agen Keuangan AI & Asisten Belanja Amazon',
-    searchPlaceholder: 'Cari transaksi, promo, target tabungan...',
-    primeMemberTag: 'Kepala Keluarga Prime',
-    totalVaultLbl: 'Total Saldo',
-    creditScoreLbl: 'Skor Kredit',
-    activeGoalsLbl: 'Target Aktif',
-    menuProfileKYC: 'Profil Finansial & KYC',
-    menuSecurity: 'Keamanan & Passkey',
-    menuProtocol: 'Otorisasi Protokol MCP',
-    menuSignOut: 'Keluar dari Vault',
-    householdTitle: 'Keluarga Amazon',
-    householdSub: 'Anggaran Bersama & Kolaborasi',
-    inviteBtn: '+ Undang',
-    ownerRole: 'Pemilik Utama • Akses Penuh',
-    spouseRole: 'Pasangan • Kartu Bersama (Batas $2.000/bln)',
-    teenRole: 'Uang Saku Belanja (Batas $150/bln)',
-    poolSpentLbl: 'Anggaran Bersama Terpakai:',
-    navDashboard: 'Dashboard',
-    navFinance: 'Keuangan',
-    navShopping: 'Belanja',
-    navGoals: 'Target',
-    navInsights: 'Wawasan AI',
-    navSettings: 'Pengaturan',
-    overviewTitle: 'Ringkasan Keuangan Anda',
-    cardHolderLbl: 'PEMILIK KARTU',
-    cardVaultLbl: 'SALDO TERSEDIA',
-    accBalanceLbl: 'Saldo Rekening',
-    investValLbl: 'Nilai Investasi',
-    monthlySpendLbl: 'Pengeluaran Bulan Ini',
-    budgetBreakdownTitle: 'Rincian Kategori Anggaran',
-    catGroceries: 'Kebutuhan Pokok',
-    catDining: 'Makan di Luar',
-    catUtilities: 'Tagihan & Listrik',
-    catShopping: 'Belanja Santai',
-    smartDealsTitle: 'Promo Cerdas Amazon',
-    viewAllBtn: 'Lihat Semua',
-    simulateImpactBtn: 'Simulasi Dampak',
-    chatHeaderTitle: 'Obrolan dengan Alexa+',
-    chatInputPlaceholder: 'Ketik atau bicara ke VaultAlexa+...',
-    chipBudget: '📊 Sisa Anggaran',
-    chipDeals: '🛍️ Promo Teknologi',
-    chipSplit: '👥 Bagi Tagihan',
-    chipSniper: '🎯 Pemburu Diskon',
-    listeningActive: 'Mendengarkan... (Silakan Bicara)',
-    listeningStandby: 'Klik mic untuk bicara',
-    buyWithAlexa: 'Beli via Alexa+'
-  },
-  US: {
-    langBtn: 'US',
-    logoSub: 'AI Financial Agent & Amazon Shopping Assistant',
-    searchPlaceholder: 'Search transactions, deals, goals...',
-    primeMemberTag: 'Prime Family Head',
-    totalVaultLbl: 'Total Vault',
-    creditScoreLbl: 'Credit Score',
-    activeGoalsLbl: 'Active Goals',
-    menuProfileKYC: 'Financial Profile & KYC',
-    menuSecurity: 'Security & Passkeys',
-    menuProtocol: 'MCP Protocol Auth',
-    menuSignOut: 'Sign Out of Vault',
-    householdTitle: 'Amazon Household',
-    householdSub: 'Shared Budget & Collaborator Pool',
-    inviteBtn: '+ Invite',
-    ownerRole: 'Primary Owner • Full Access',
-    spouseRole: 'Spouse • Shared Card ($2,000/mo limit)',
-    teenRole: 'Shopping Allowance ($150/mo limit)',
-    poolSpentLbl: 'Household Pool Spent:',
-    navDashboard: 'Dashboard',
-    navFinance: 'Finance',
-    navShopping: 'Shopping',
-    navGoals: 'Goals',
-    navInsights: 'Insights',
-    navSettings: 'Settings',
-    overviewTitle: 'Your Financial Overview',
-    cardHolderLbl: 'CARD HOLDER',
-    cardVaultLbl: 'AVAILABLE VAULT',
-    accBalanceLbl: 'Account Balance',
-    investValLbl: 'Investment Value',
-    monthlySpendLbl: 'Monthly Spending',
-    budgetBreakdownTitle: 'Budget Category Breakdown',
-    catGroceries: 'Groceries',
-    catDining: 'Dining Out',
-    catUtilities: 'Utilities',
-    catShopping: 'Shopping',
-    smartDealsTitle: 'Smart Amazon Deals',
-    viewAllBtn: 'View all',
-    simulateImpactBtn: 'Simulate Impact',
-    chatHeaderTitle: 'Chat with Alexa+',
-    chatInputPlaceholder: 'Type or speak to VaultAlexa+...',
-    chipBudget: '📊 Budget',
-    chipDeals: '🛍️ Tech Deals',
-    chipSplit: '👥 Split Bill',
-    chipSniper: '🎯 Sniper',
-    listeningActive: 'Listening... (Speak Now)',
-    listeningStandby: 'Click mic to speak',
-    buyWithAlexa: 'Buy with Alexa+'
+// Animated Reasoning Trace
+function showReasoningTrace(steps, onComplete) {
+  const container = document.getElementById('agent-reasoning-container');
+  const stepsList = document.getElementById('reasoning-steps-list');
+  const statusBadge = document.getElementById('reasoning-status-badge');
+  if (!container || !stepsList) {
+    if (onComplete) onComplete();
+    return;
   }
+
+  container.style.display = 'block';
+  stepsList.innerHTML = '';
+  if (statusBadge) {
+    statusBadge.textContent = currentLang === 'ID' ? 'Memproses MCP...' : 'Processing MCP...';
+    statusBadge.className = 'reasoning-status text-blue';
+  }
+
+  let index = 0;
+  function showNextStep() {
+    if (index < steps.length) {
+      const stepItem = document.createElement('div');
+      stepItem.className = 'reasoning-step-item';
+      stepItem.innerHTML = `
+        <i class="fa-solid fa-circle-check text-green"></i>
+        <span>${steps[index]}</span>
+      `;
+      stepsList.appendChild(stepItem);
+      if (chatMessagesContainer) {
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+      }
+      index++;
+      setTimeout(showNextStep, 400);
+    } else {
+      if (statusBadge) {
+        statusBadge.textContent = currentLang === 'ID' ? 'Selesai ✓' : 'Complete ✓';
+        statusBadge.className = 'reasoning-status text-green';
+      }
+      setTimeout(() => {
+        if (onComplete) onComplete();
+      }, 350);
+    }
+  }
+  showNextStep();
+}
+
+// Global Quick Action Chips Handler
+window.handleChipClick = function(text) {
+  processUserQuery(text);
 };
 
-// Toggle Language Button
-const btnLangToggle = document.getElementById('btn-lang-toggle');
-const langCurrentLabel = document.getElementById('lang-current-label');
-
-if (btnLangToggle) {
-  btnLangToggle.addEventListener('click', () => {
-    currentLang = currentLang === 'ID' ? 'US' : 'ID';
-    applyLanguage(currentLang);
-  });
-}
-
-function applyLanguage(lang) {
-  const d = I18N_DICT[lang] || I18N_DICT.ID;
-  if (langCurrentLabel) langCurrentLabel.textContent = d.langBtn;
-
-  // Header
-  const subLogo = document.querySelector('.logo-subtitle');
-  if (subLogo) subLogo.textContent = d.logoSub;
-  const globalSearch = document.getElementById('global-search-input');
-  if (globalSearch) globalSearch.placeholder = d.searchPlaceholder;
-
-  // Sidebar Menu Items
-  const navMap = {
-    dashboard: d.navDashboard,
-    finance: d.navFinance,
-    shopping: d.navShopping,
-    goals: d.navGoals,
-    insights: d.navInsights,
-    settings: d.navSettings
-  };
-  document.querySelectorAll('.menu-item').forEach(item => {
-    const tabKey = item.getAttribute('data-tab');
-    const span = item.querySelector('span');
-    if (span && navMap[tabKey]) span.textContent = navMap[tabKey];
-  });
-
-  // Overview Titles
-  const overviewH2 = document.querySelector('.overview-column .column-title');
-  if (overviewH2) overviewH2.textContent = d.overviewTitle;
-
-  const cardLabels = document.querySelectorAll('.balance-card .card-label, .small-metric-card .card-label');
-  if (cardLabels[0]) cardLabels[0].textContent = d.accBalanceLbl;
-  if (cardLabels[1]) cardLabels[1].textContent = d.investValLbl;
-  if (cardLabels[2]) cardLabels[2].textContent = d.monthlySpendLbl;
-
-  const budgetH3 = document.querySelector('.category-breakdown-card .card-subtitle');
-  if (budgetH3) budgetH3.textContent = d.budgetBreakdownTitle;
-
-  const dealsH2 = document.querySelector('.dashboard-deals-section .column-title');
-  if (dealsH2) dealsH2.innerHTML = `<i class="fa-solid fa-bolt text-amber"></i> ${d.smartDealsTitle}`;
-
-  // Chips
-  const chips = document.querySelectorAll('.chip-item');
-  if (chips[0]) chips[0].textContent = d.chipBudget;
-  if (chips[1]) chips[1].textContent = d.chipDeals;
-  if (chips[2]) chips[2].textContent = d.chipSplit;
-  if (chips[3]) chips[3].textContent = d.chipSniper;
-
-  // Input Placeholder
-  if (userInputText) userInputText.placeholder = d.chatInputPlaceholder;
-
-  // Re-render categories with Indonesian/English labels
-  state.categories.groceries.title = d.catGroceries;
-  state.categories.diningOut.title = d.catDining;
-  state.categories.utilities.title = d.catUtilities;
-  state.categories.shopping.title = d.catShopping;
+// Global Savings Transfer Handler
+window.transferFromSavings = function(amount) {
+  state.accountBalance += amount;
+  state.categories.shopping.limit += amount;
+  state.categories.shopping.percent = Math.min(100, Math.round((state.categories.shopping.spent / state.categories.shopping.limit) * 100));
   updateUIOverview();
+  const isID = currentLang === 'ID';
+  const msg = isID
+    ? `💰 Berhasil mentransfer <strong>$${amount}</strong> dari rekening tabungan ke batas belanja. Batas belanja baru sekarang <strong>$${state.categories.shopping.limit}</strong>.`
+    : `💰 Successfully transferred <strong>$${amount}</strong> from savings to shopping limit. New shopping limit is <strong>$${state.categories.shopping.limit}</strong>.`;
+  addMessage('alexa', 'Alexa+', msg);
+};
 
-  // Welcome note in new language
-  if (lang === 'ID') {
-    addMessage('alexa', 'Alexa+', `🇮🇩 Bahasa berhasil diubah ke <strong>Bahasa Indonesia</strong>. Saya siap membantu memeriksa keamanan belanja, bagi tagihan, dan memantau target diskon Amazon Anda!`);
-  } else {
-    addMessage('alexa', 'Alexa+', `🇺🇸 Language switched to <strong>English (US)</strong>. Ready to assist with your financial safety checks, bill splitting, and Amazon deal hunting!`);
-  }
-}
-
-// Synthesize Natural Voice (Supports Indonesian 'id-ID' & English 'en-US')
-const synth = window.speechSynthesis;
-function speakAlexaVoice(text) {
-  if (!synth) return;
-  synth.cancel();
-  const cleanText = text.replace(/<[^>]*>/g, '').replace(/\[.*?\]/g, '');
-  const utterance = new SpeechSynthesisUtterance(cleanText);
-  utterance.rate = 1.05;
-  utterance.pitch = 1.1;
-
-  const voices = synth.getVoices();
-  if (currentLang === 'ID') {
-    utterance.lang = 'id-ID';
-    const idVoice = voices.find(v => v.lang.includes('id') || v.lang.includes('ID') || v.name.includes('Indonesian') || v.name.includes('Gadis') || v.name.includes('Damayanti'));
-    if (idVoice) utterance.voice = idVoice;
-  } else {
-    utterance.lang = 'en-US';
-    const femaleVoice = voices.find(v => v.lang.includes('en') && (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Zira')));
-    if (femaleVoice) utterance.voice = femaleVoice;
-  }
-  synth.speak(utterance);
-}
-
-// Process User Query with Autonomous MCP Tool Logic & Reasoning Flow (Bilingual Support)
+// Process User Query with Autonomous MCP Reasoning (Bilingual Support)
 function processUserQuery(query) {
   addMessage('user', 'Sarah', query);
   const qLower = query.toLowerCase();
-
   const isID = currentLang === 'ID';
 
   if (qLower.includes('buy') || qLower.includes('beli') || qLower.includes('purchase') || qLower.includes('order')) {
@@ -819,15 +537,356 @@ function processUserQuery(query) {
 }
 
 // Form Submission
-chatInputForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const text = userInputText.value.trim();
-  if (!text) return;
-  userInputText.value = '';
-  processUserQuery(text);
+if (chatInputForm) {
+  chatInputForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!userInputText) return;
+    const text = userInputText.value.trim();
+    if (!text) return;
+    userInputText.value = '';
+    processUserQuery(text);
+  });
+}
+
+// Apply Language Function
+function applyLanguage(lang, announce = true) {
+  currentLang = lang;
+  const d = I18N_DICT[lang] || I18N_DICT.ID;
+  if (langCurrentLabel) langCurrentLabel.textContent = d.langBtn;
+
+  // Header
+  const subLogo = document.querySelector('.logo-subtitle');
+  if (subLogo) subLogo.textContent = d.logoSub;
+  const globalSearch = document.getElementById('global-search-input');
+  if (globalSearch) globalSearch.placeholder = d.searchPlaceholder;
+
+  // Sidebar Menu Items
+  const navMap = {
+    dashboard: d.navDashboard,
+    finance: d.navFinance,
+    shopping: d.navShopping,
+    goals: d.navGoals,
+    insights: d.navInsights,
+    settings: d.navSettings
+  };
+  document.querySelectorAll('.menu-item').forEach(item => {
+    const tabKey = item.getAttribute('data-tab');
+    const span = item.querySelector('span');
+    if (span && navMap[tabKey]) span.textContent = navMap[tabKey];
+  });
+
+  // Overview Titles
+  const overviewH2 = document.querySelector('.overview-column .column-title');
+  if (overviewH2) overviewH2.textContent = d.overviewTitle;
+
+  const cardLabels = document.querySelectorAll('.balance-card .card-label, .small-metric-card .card-label');
+  if (cardLabels[0]) cardLabels[0].textContent = d.accBalanceLbl;
+  if (cardLabels[1]) cardLabels[1].textContent = d.investValLbl;
+  if (cardLabels[2]) cardLabels[2].textContent = d.monthlySpendLbl;
+
+  const budgetH3 = document.querySelector('.category-breakdown-card .card-subtitle');
+  if (budgetH3) budgetH3.textContent = d.budgetBreakdownTitle;
+
+  const dealsH2 = document.querySelector('.dashboard-deals-section .column-title');
+  if (dealsH2) dealsH2.innerHTML = `<i class="fa-solid fa-bolt text-amber"></i> ${d.smartDealsTitle}`;
+
+  // Chips
+  const chips = document.querySelectorAll('.chip-item');
+  if (chips[0]) {
+    chips[0].textContent = d.chipBudget;
+    chips[0].onclick = () => handleChipClick(lang === 'ID' ? 'Berapa sisa uang belanja minggu ini?' : 'What is my remaining budget?');
+  }
+  if (chips[1]) {
+    chips[1].textContent = d.chipDeals;
+    chips[1].onclick = () => handleChipClick(lang === 'ID' ? 'Cari promo barang teknologi' : 'Find deals on tech items.');
+  }
+  if (chips[2]) {
+    chips[2].textContent = d.chipSplit;
+    chips[2].onclick = () => handleChipClick(lang === 'ID' ? 'Bagi tagihan 120 dengan keluarga' : 'Split 120 with household for groceries');
+  }
+  if (chips[3]) {
+    chips[3].textContent = d.chipSniper;
+    chips[3].onclick = () => handleChipClick(lang === 'ID' ? 'Pantau diskon harga Echo Show' : 'Track price drop for Echo Show');
+  }
+
+  // Input Placeholder
+  if (userInputText) userInputText.placeholder = d.chatInputPlaceholder;
+
+  // Categories
+  state.categories.groceries.title = d.catGroceries;
+  state.categories.diningOut.title = d.catDining;
+  state.categories.utilities.title = d.catUtilities;
+  state.categories.shopping.title = d.catShopping;
+  updateUIOverview();
+
+  // Welcome note in new language
+  if (announce) {
+    if (lang === 'ID') {
+      addMessage('alexa', 'Alexa+', `🇮🇩 Bahasa berhasil diubah ke <strong>Bahasa Indonesia</strong>. Saya siap membantu memeriksa keamanan belanja, bagi tagihan, dan memantau target diskon Amazon Anda!`);
+    } else {
+      addMessage('alexa', 'Alexa+', `🇺🇸 Language switched to <strong>English (US)</strong>. Ready to assist with your financial safety checks, bill splitting, and Amazon deal hunting!`);
+    }
+  }
+}
+
+// Toggle Language Button
+if (btnLangToggle) {
+  btnLangToggle.addEventListener('click', () => {
+    const newLang = currentLang === 'ID' ? 'US' : 'ID';
+    applyLanguage(newLang, true);
+  });
+}
+
+// Update UI Values with Animated Counters
+function updateUIOverview() {
+  const balanceStr = `$${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  const spentStr = `$${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+  const balanceEl = document.getElementById('dash-account-balance');
+  const cardBalanceEl = document.getElementById('card-live-balance');
+  const spendEl = document.getElementById('dash-monthly-spending');
+
+  if (balanceEl) balanceEl.textContent = balanceStr;
+  if (cardBalanceEl) {
+    cardBalanceEl.textContent = balanceStr;
+    cardBalanceEl.style.color = '#10b981';
+    setTimeout(() => { cardBalanceEl.style.color = '#38bdf8'; }, 600);
+  }
+  if (spendEl) spendEl.textContent = spentStr;
+
+  const catContainer = document.getElementById('cat-progress-container');
+  if (catContainer) {
+    catContainer.innerHTML = Object.keys(state.categories).map(k => {
+      const c = state.categories[k];
+      return `
+        <div class="cat-progress-row">
+          <div class="cat-row-header">
+            <span class="cat-row-title">${c.title}</span>
+            <span class="cat-row-pct ${c.class}">${c.percent}%</span>
+            <span class="cat-row-amt">$${c.spent}/$${c.limit}</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill ${c.class}-fill" style="width: ${c.percent}%;"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+// Render Shopping Grid
+function renderShoppingGrid() {
+  if (!fullShoppingGrid) return;
+  fullShoppingGrid.innerHTML = state.deals.map(deal => `
+    <div class="card shopping-product-card">
+      <span class="deal-discount-badge ${deal.badgeClass}">${deal.discount}</span>
+      <div class="shopping-img-box">
+        <img src="${deal.image}" alt="${deal.title}" loading="lazy">
+      </div>
+      <div class="shopping-card-body">
+        <div class="product-tag"><i class="fa-brands fa-amazon"></i> Prime Delivery</div>
+        <div class="shopping-title">${deal.title}</div>
+        <div class="shopping-price-row">
+          <span class="deal-now-price">Deal: $${deal.price.toFixed(2)}</span>
+          ${deal.wasPrice ? `<span class="deal-was-price">Was $${deal.wasPrice.toFixed(2)}</span>` : ''}
+        </div>
+        <button class="btn-buy-alexa" onclick="buyAmazonDeal('${deal.title}', ${deal.price})">
+          <i class="fa-solid fa-cart-shopping"></i> Beli via Alexa+
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Global Amazon Buy Handler
+window.buyAmazonDeal = function(title, price) {
+  const q = currentLang === 'ID' ? `Beli ${title} seharga $${price}` : `Buy ${title} for $${price}`;
+  processUserQuery(q);
+};
+
+// Tab Navigation Logic
+const menuItems = document.querySelectorAll('.menu-item');
+const tabViews = document.querySelectorAll('.tab-view');
+
+window.switchTab = function(tabId) {
+  menuItems.forEach(item => {
+    if (item.getAttribute('data-tab') === tabId) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
+  tabViews.forEach(view => {
+    if (view.id === `view-${tabId}`) {
+      view.classList.add('active');
+    } else {
+      view.classList.remove('active');
+    }
+  });
+
+  if (profilePopover) profilePopover.classList.remove('active');
+  if (groupPopover) groupPopover.classList.remove('active');
+};
+
+menuItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const tabId = item.getAttribute('data-tab');
+    switchTab(tabId);
+  });
 });
 
-// Mic State Handlers (Standby vs Active Listening)
+if (btnSwitchToShopping) {
+  btnSwitchToShopping.addEventListener('click', () => switchTab('shopping'));
+}
+
+// Profile & Popovers
+if (btnUserProfile && profilePopover) {
+  btnUserProfile.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (groupPopover) groupPopover.classList.remove('active');
+    profilePopover.classList.toggle('active');
+  });
+}
+
+if (btnGroupShare && groupPopover) {
+  btnGroupShare.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (profilePopover) profilePopover.classList.remove('active');
+    groupPopover.classList.toggle('active');
+  });
+}
+
+document.addEventListener('click', (e) => {
+  if (profilePopover && !profilePopover.contains(e.target) && !btnUserProfile.contains(e.target)) {
+    profilePopover.classList.remove('active');
+  }
+  if (groupPopover && !groupPopover.contains(e.target) && !btnGroupShare.contains(e.target)) {
+    groupPopover.classList.remove('active');
+  }
+});
+
+if (btnInviteMember) {
+  btnInviteMember.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const name = prompt(currentLang === 'ID' ? "Masukkan nama anggota keluarga untuk diundang ke anggaran bersama:" : "Enter Household Member Name to invite to shared budget:");
+    if (name && name.trim()) {
+      addMessage('alexa', 'Alexa+', `👥 Invited <strong>${name.trim()}</strong> to your Amazon Household Shared Budget Pool with $500/mo spending allowance.`);
+      groupPopover.classList.remove('active');
+    }
+  });
+}
+
+if (btnMockLogout) {
+  btnMockLogout.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (profilePopover) profilePopover.classList.remove('active');
+    addMessage('alexa', 'Alexa+', `🔒 Vault Session Locked for Sarah Jenkins. Passkey biometrics required for re-authentication.`);
+  });
+}
+
+if (btnNotificationAlert) {
+  btnNotificationAlert.addEventListener('click', () => {
+    const isID = currentLang === 'ID';
+    const notifMsg = isID
+      ? `🔔 <strong>3 Notifikasi Vault Belum Dibaca:</strong><br>• Anggaran Makan di Luar telah mencapai batas 88%.<br>• Harga Echo Show 8 turun sebesar 30%.<br>• Status koneksi RPC Protokol MCP: Aktif & Normal.`
+      : `🔔 <strong>3 Unread Vault Alerts:</strong><br>• Dining Out budget reached 88% limit.<br>• Echo Show 8 price dropped by 30%.<br>• MCP Protocol RPC connection status: Active.`;
+    addMessage('alexa', 'Alexa+', notifMsg);
+  });
+}
+
+if (sidebarToggleBtn && leftSidebar) {
+  sidebarToggleBtn.addEventListener('click', () => {
+    leftSidebar.classList.toggle('is-collapsed');
+  });
+}
+
+// Add Expense Form Handler (MCP Sync)
+if (formAddExpense) {
+  formAddExpense.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const categoryKey = document.getElementById('expense-category').value;
+    const amount = parseFloat(document.getElementById('expense-amount').value);
+    const desc = document.getElementById('expense-desc').value.trim();
+
+    if (isNaN(amount) || amount <= 0) return;
+
+    state.monthlySpending += amount;
+    state.accountBalance -= amount;
+    
+    if (state.categories[categoryKey]) {
+      state.categories[categoryKey].spent += amount;
+      state.categories[categoryKey].percent = Math.min(100, Math.round((state.categories[categoryKey].spent / state.categories[categoryKey].limit) * 100));
+    }
+
+    updateUIOverview();
+
+    if (transactionLedgerList) {
+      const li = document.createElement('li');
+      li.className = 'trans-item';
+      li.innerHTML = `
+        <div class="trans-info">
+          <span class="trans-title">${desc}</span>
+          <span class="trans-date">${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • ${categoryKey}</span>
+        </div>
+        <span class="trans-amt negative">-$${amount.toFixed(2)}</span>
+      `;
+      transactionLedgerList.prepend(li);
+    }
+
+    formAddExpense.reset();
+
+    const isID = currentLang === 'ID';
+    const logMsg = isID
+      ? `✅ Mencatat pengeluaran <strong>$${amount.toFixed(2)}</strong> untuk <em>${desc}</em> via Tool MCP <code>log_transaction</code>. Sisa anggaran diperbarui.`
+      : `✅ Logged expense of <strong>$${amount.toFixed(2)}</strong> for <em>${desc}</em> via MCP Protocol tool <code>log_transaction</code>. Updated remaining budget.`;
+    addMessage('alexa', 'Alexa+', logMsg);
+  });
+}
+
+// 3D Card Flip
+const primeVirtualCard = document.getElementById('prime-virtual-card');
+if (primeVirtualCard) {
+  let isFlipped = false;
+  primeVirtualCard.addEventListener('click', () => {
+    isFlipped = !isFlipped;
+    primeVirtualCard.style.transform = isFlipped ? 'rotateY(180deg) translateY(-4px)' : '';
+  });
+}
+
+// Clear Chat
+if (btnClearChat) {
+  btnClearChat.addEventListener('click', () => {
+    const isID = currentLang === 'ID';
+    chatMessagesContainer.innerHTML = `
+      <div class="chat-msg alexa-msg">
+        <div class="msg-sender-name">Alexa+</div>
+        <div class="msg-bubble alexa-bubble">${isID ? 'Riwayat percakapan dibersihkan. Ada yang bisa saya bantu dengan keuangan atau promo Amazon Anda?' : 'Chat history cleared. How can I assist with your finances or Amazon deals?'}</div>
+      </div>
+    `;
+    const traceBox = document.getElementById('agent-reasoning-container');
+    if (traceBox) traceBox.style.display = 'none';
+  });
+}
+
+// Theme Switcher Logic
+let isDarkMode = false;
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', () => {
+    isDarkMode = !isDarkMode;
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+      if (themeIcon) themeIcon.className = 'fa-solid fa-sun';
+      if (themeText) themeText.textContent = 'Sun';
+    } else {
+      document.body.classList.remove('dark-mode');
+      if (themeIcon) themeIcon.className = 'fa-solid fa-moon';
+      if (themeText) themeText.textContent = 'Moon';
+    }
+  });
+}
+
+// Mic State Handlers
 function setMicActiveState(active) {
   if (active) {
     if (listeningSection) {
@@ -835,59 +894,56 @@ function setMicActiveState(active) {
       listeningSection.classList.add('is-listening');
     }
     if (btnVoiceInput) btnVoiceInput.classList.add('active-listening');
-    if (listeningLabel) listeningLabel.textContent = 'Listening... (Speak Now)';
+    if (listeningLabel) listeningLabel.textContent = currentLang === 'ID' ? 'Mendengarkan... (Silakan Bicara)' : 'Listening... (Speak Now)';
   } else {
     if (listeningSection) {
       listeningSection.style.display = 'none';
       listeningSection.classList.remove('is-listening');
     }
     if (btnVoiceInput) btnVoiceInput.classList.remove('active-listening');
-    if (listeningLabel) listeningLabel.textContent = 'Click mic to speak';
+    if (listeningLabel) listeningLabel.textContent = currentLang === 'ID' ? 'Klik mic untuk bicara' : 'Click mic to speak';
   }
 }
 
-// Live Speech Recognition for Mic
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new SpeechRecognition();
-  recognition.lang = 'en-US';
-  recognition.interimResults = false;
+if (btnVoiceInput) {
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = currentLang === 'ID' ? 'id-ID' : 'en-US';
+    recognition.interimResults = false;
 
-  btnVoiceInput.addEventListener('click', () => {
-    try {
+    btnVoiceInput.addEventListener('click', () => {
+      try {
+        setMicActiveState(true);
+        playAlexaChime();
+        recognition.lang = currentLang === 'ID' ? 'id-ID' : 'en-US';
+        recognition.start();
+      } catch (err) {
+        setMicActiveState(false);
+      }
+    });
+
+    recognition.onresult = (event) => {
+      setMicActiveState(false);
+      const transcript = event.results[0][0].transcript;
+      processUserQuery(transcript);
+    };
+
+    recognition.onerror = () => { setMicActiveState(false); };
+    recognition.onend = () => { setMicActiveState(false); };
+  } else {
+    btnVoiceInput.addEventListener('click', () => {
       setMicActiveState(true);
       playAlexaChime();
-      recognition.start();
-    } catch (err) {
-      setMicActiveState(false);
-    }
-  });
-
-  recognition.onresult = (event) => {
-    setMicActiveState(false);
-    const transcript = event.results[0][0].transcript;
-    processUserQuery(transcript);
-  };
-
-  recognition.onerror = () => {
-    setMicActiveState(false);
-  };
-
-  recognition.onend = () => {
-    setMicActiveState(false);
-  };
-} else {
-  btnVoiceInput.addEventListener('click', () => {
-    setMicActiveState(true);
-    playAlexaChime();
-    setTimeout(() => {
-      setMicActiveState(false);
-      processUserQuery('Find deals on tech items.');
-    }, 2000);
-  });
+      setTimeout(() => {
+        setMicActiveState(false);
+        processUserQuery(currentLang === 'ID' ? 'Cari promo barang teknologi' : 'Find deals on tech items.');
+      }, 1800);
+    });
+  }
 }
 
-// AI Predictive Deal Financial Impact Simulator
+// Deal Impact Simulator
 window.simulateDealImpact = function(title, dealPrice, wasPrice) {
   const modal = document.getElementById('impact-simulator-modal');
   const modalBody = document.getElementById('impact-modal-body');
@@ -896,30 +952,33 @@ window.simulateDealImpact = function(title, dealPrice, wasPrice) {
   const savings = wasPrice ? (wasPrice - dealPrice).toFixed(2) : (dealPrice * 0.2).toFixed(2);
   const remainingAllowance = Math.max(0, state.categories.shopping.limit - (state.categories.shopping.spent + dealPrice)).toFixed(2);
   const projected3MonthSavings = (dealPrice * 0.15).toFixed(2);
+  const isID = currentLang === 'ID';
 
   modalBody.innerHTML = `
     <div class="impact-metric-grid">
       <div class="impact-card">
         <div class="impact-card-val text-green">+$${savings}</div>
-        <div class="impact-card-lbl">Instant Savings (Prime Deal)</div>
+        <div class="impact-card-lbl">${isID ? 'Hemat Instan (Diskon Prime)' : 'Instant Savings (Prime Deal)'}</div>
       </div>
       <div class="impact-card">
         <div class="impact-card-val text-blue">$${remainingAllowance}</div>
-        <div class="impact-card-lbl">Remaining Shopping Buffer</div>
+        <div class="impact-card-lbl">${isID ? 'Sisa Batas Belanja Aman' : 'Remaining Shopping Buffer'}</div>
       </div>
     </div>
 
     <div class="impact-recommendation-box">
-      <p>🤖 <strong>MCP Agent Health Verdict for ${title}:</strong></p>
+      <p>🤖 <strong>${isID ? 'Evaluasi Kesehatan Anggaran MCP untuk' : 'MCP Agent Health Verdict for'} ${title}:</strong></p>
       <p style="margin-top:6px; color:var(--text-muted);">
-        Purchasing this item today utilizes <strong>${((dealPrice / state.categories.shopping.limit) * 100).toFixed(1)}%</strong> of your monthly shopping budget. 
-        Your 3-month savings projection with Prime price locks saves an estimated <strong>+$${projected3MonthSavings}</strong> in compounding interest.
+        ${isID 
+          ? `Membeli item ini menggunakan <strong>${((dealPrice / state.categories.shopping.limit) * 100).toFixed(1)}%</strong> dari anggaran belanja bulanan Anda. Proyeksi penghematan 3 bulan dengan penguncian harga Prime diperkirakan menghemat <strong>+$${projected3MonthSavings}</strong>.`
+          : `Purchasing this item utilizes <strong>${((dealPrice / state.categories.shopping.limit) * 100).toFixed(1)}%</strong> of your monthly shopping budget. 3-month savings projection with Prime price locks saves an estimated <strong>+$${projected3MonthSavings}</strong>.`
+        }
       </p>
     </div>
 
     <div style="margin-top: 18px; display:flex; gap:10px;">
       <button class="btn-primary-action" style="width:100%;" onclick="buyAmazonDeal('${title}', ${dealPrice}); closeImpactModal();">
-        <i class="fa-solid fa-cart-shopping"></i> Approve 1-Click Purchase
+        <i class="fa-solid fa-cart-shopping"></i> ${isID ? 'Setujui Pembelian 1-Click' : 'Approve 1-Click Purchase'}
       </button>
     </div>
   `;
@@ -927,34 +986,24 @@ window.simulateDealImpact = function(title, dealPrice, wasPrice) {
   modal.classList.add('show');
 };
 
-function closeImpactModal() {
+window.closeImpactModal = function() {
   const modal = document.getElementById('impact-simulator-modal');
   if (modal) modal.classList.remove('show');
-}
+};
 
 const btnCloseImpactModal = document.getElementById('btn-close-impact-modal');
 if (btnCloseImpactModal) {
-  btnCloseImpactModal.addEventListener('click', closeImpactModal);
+  btnCloseImpactModal.addEventListener('click', window.closeImpactModal);
 }
 
 const impactModalBackdrop = document.getElementById('impact-simulator-modal');
 if (impactModalBackdrop) {
   impactModalBackdrop.addEventListener('click', (e) => {
-    if (e.target === impactModalBackdrop) closeImpactModal();
+    if (e.target === impactModalBackdrop) window.closeImpactModal();
   });
 }
 
-// Initialize Voice Voices on Load
-if (synth) {
-  synth.onvoiceschanged = () => {
-    synth.getVoices();
-  };
-}
-
-// Default state is Standby
-setMicActiveState(false);
-
-// Interactive Draggable Splitter Handle (Resize Agent Panel)
+// Resizable Chat Panel Splitter
 const chatResizerHandle = document.getElementById('chat-resizer-handle');
 const chatColumn = document.getElementById('chat-column');
 
@@ -974,7 +1023,6 @@ if (chatResizerHandle && chatColumn) {
 
   window.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
-    // Dragging to the left expands the chat column, dragging right shrinks it
     const deltaX = startX - e.clientX;
     const newWidth = Math.min(650, Math.max(280, startWidth + deltaX));
     chatColumn.style.width = `${newWidth}px`;
@@ -988,7 +1036,6 @@ if (chatResizerHandle && chatColumn) {
     }
   });
 
-  // Touch Support for Mobile / Touchscreens
   chatResizerHandle.addEventListener('touchstart', (e) => {
     if (e.touches.length === 1) {
       isDragging = true;
@@ -1015,4 +1062,8 @@ if (chatResizerHandle && chatColumn) {
   });
 }
 
-
+// Initialize Application on Load
+renderShoppingGrid();
+updateUIOverview();
+applyLanguage('ID', false);
+setMicActiveState(false);
