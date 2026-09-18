@@ -115,7 +115,24 @@ body.dark-mode .sidebar-toggle-btn:hover {
 .header-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+}
+
+.logo-v-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--amazon-amber);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.chat-logo-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--amazon-amber);
 }
 
 .logo-v-icon {
