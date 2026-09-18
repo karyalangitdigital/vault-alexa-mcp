@@ -1,5 +1,5 @@
 /**
- * VaultAlexa+ Controller Logic - Interactive Features & Sidebar Toggle
+ * VaultAlexa+ Controller Logic - Full Interactive Features, Popovers, & MCP Tools
  */
 
 const SERVER_URL = 'http://localhost:3000/mcp/v1/rpc';
@@ -42,6 +42,71 @@ const transactionLedgerList = document.getElementById('transaction-ledger-list')
 const btnClearChat = document.getElementById('btn-clear-chat');
 const btnSwitchToShopping = document.getElementById('btn-switch-to-shopping');
 
+// Header Dropdowns & Popovers
+const btnUserProfile = document.getElementById('btn-user-profile');
+const profilePopover = document.getElementById('profile-popover');
+const btnGroupShare = document.getElementById('btn-group-share');
+const groupPopover = document.getElementById('group-popover');
+const btnNotificationAlert = document.getElementById('btn-notification-alert');
+const btnInviteMember = document.getElementById('btn-invite-member');
+const btnMockLogout = document.getElementById('btn-mock-logout');
+
+// Profile Popover Toggle
+if (btnUserProfile && profilePopover) {
+  btnUserProfile.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (groupPopover) groupPopover.classList.remove('active');
+    profilePopover.classList.toggle('active');
+  });
+}
+
+// Group Sharing Popover Toggle
+if (btnGroupShare && groupPopover) {
+  btnGroupShare.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (profilePopover) profilePopover.classList.remove('active');
+    groupPopover.classList.toggle('active');
+  });
+}
+
+// Close Popovers when clicking outside
+document.addEventListener('click', (e) => {
+  if (profilePopover && !profilePopover.contains(e.target) && !btnUserProfile.contains(e.target)) {
+    profilePopover.classList.remove('active');
+  }
+  if (groupPopover && !groupPopover.contains(e.target) && !btnGroupShare.contains(e.target)) {
+    groupPopover.classList.remove('active');
+  }
+});
+
+// Invite Member Action
+if (btnInviteMember) {
+  btnInviteMember.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const name = prompt("Enter Household Member Name to invite to shared budget:");
+    if (name && name.trim()) {
+      addMessage('alexa', 'Alexa+', `👥 Invited <strong>${name.trim()}</strong> to your Amazon Household Shared Budget Pool with $500/mo spending allowance.`);
+      groupPopover.classList.remove('active');
+    }
+  });
+}
+
+// Mock Logout Action
+if (btnMockLogout) {
+  btnMockLogout.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profilePopover.classList.remove('active');
+    addMessage('alexa', 'Alexa+', `🔒 Vault Session Locked for Sarah Jenkins. Passkey biometrics required for re-authentication.`);
+  });
+}
+
+// Notification Alert Action
+if (btnNotificationAlert) {
+  btnNotificationAlert.addEventListener('click', () => {
+    addMessage('alexa', 'Alexa+', `🔔 <strong>3 Unread Vault Alerts:</strong><br>• Dining Out budget reached 88% limit.<br>• Echo Show 8 price dropped by 30%.<br>• MCP Protocol RPC connection status: Active.`);
+  });
+}
+
 // Sidebar Toggle Functionality
 if (sidebarToggleBtn && leftSidebar) {
   sidebarToggleBtn.addEventListener('click', () => {
@@ -53,7 +118,7 @@ if (sidebarToggleBtn && leftSidebar) {
 const menuItems = document.querySelectorAll('.menu-item');
 const tabViews = document.querySelectorAll('.tab-view');
 
-function switchTab(tabId) {
+window.switchTab = function(tabId) {
   menuItems.forEach(item => {
     if (item.getAttribute('data-tab') === tabId) {
       item.classList.add('active');
@@ -69,7 +134,10 @@ function switchTab(tabId) {
       view.classList.remove('active');
     }
   });
-}
+
+  if (profilePopover) profilePopover.classList.remove('active');
+  if (groupPopover) groupPopover.classList.remove('active');
+};
 
 menuItems.forEach(item => {
   item.addEventListener('click', () => {

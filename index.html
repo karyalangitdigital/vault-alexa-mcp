@@ -10,7 +10,7 @@
 </head>
 <body>
 
-  <!-- Top Navigation Header with Toggleable Sidebar Menu Icon -->
+  <!-- Top Navigation Header with Interactive Popovers -->
   <header class="app-header">
     <div class="header-left">
       <!-- Sidebar Hamburger Toggle Button -->
@@ -34,17 +34,123 @@
 
     <!-- Right Header User Controls -->
     <div class="header-right">
-      <div class="user-profile">
-        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" alt="Sarah Jenkins" class="user-avatar">
-        <span class="user-name">Sarah Jenkins</span>
+      <!-- User Profile Dropdown Button -->
+      <div class="profile-dropdown-wrapper">
+        <div class="user-profile" id="btn-user-profile" title="Account & Identity Menu">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" alt="Sarah Jenkins" class="user-avatar">
+          <span class="user-name">Sarah Jenkins</span>
+          <i class="fa-solid fa-chevron-down profile-arrow"></i>
+        </div>
+
+        <!-- Professional Profile Menu Modal / Dropdown -->
+        <div class="header-popover-menu" id="profile-popover">
+          <div class="popover-header">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" alt="Sarah Jenkins" class="popover-avatar">
+            <div>
+              <div class="popover-name">Sarah Jenkins</div>
+              <div class="popover-email">sarah.jenkins@amazon.dev</div>
+              <span class="prime-member-tag"><i class="fa-brands fa-amazon"></i> Prime Family Head</span>
+            </div>
+          </div>
+          <div class="popover-divider"></div>
+          <div class="popover-metrics">
+            <div class="pop-metric-item">
+              <span class="pop-metric-val">$24,560</span>
+              <span class="pop-metric-lbl">Total Vault</span>
+            </div>
+            <div class="pop-metric-item">
+              <span class="pop-metric-val">870</span>
+              <span class="pop-metric-lbl">Credit Score</span>
+            </div>
+            <div class="pop-metric-item">
+              <span class="pop-metric-val">3</span>
+              <span class="pop-metric-lbl">Active Goals</span>
+            </div>
+          </div>
+          <div class="popover-divider"></div>
+          <div class="popover-action-list">
+            <button class="popover-action-item" onclick="switchTab('finance')">
+              <i class="fa-solid fa-wallet text-blue"></i>
+              <span>Financial Profile & KYC</span>
+            </button>
+            <button class="popover-action-item" onclick="switchTab('settings')">
+              <i class="fa-solid fa-user-shield text-green"></i>
+              <span>Security & Passkeys</span>
+            </button>
+            <button class="popover-action-item" onclick="switchTab('insights')">
+              <i class="fa-solid fa-robot text-purple"></i>
+              <span>MCP Protocol Auth</span>
+            </button>
+            <button class="popover-action-item text-danger" id="btn-mock-logout">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              <span>Sign Out of Vault</span>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="header-icon-btn" title="Community & Collaborators">
-        <i class="fa-solid fa-users"></i>
+
+      <!-- Household & Group Sharing Button -->
+      <div class="group-dropdown-wrapper">
+        <div class="header-icon-btn" id="btn-group-share" title="Amazon Household & Multi-User Sharing">
+          <i class="fa-solid fa-users"></i>
+        </div>
+
+        <!-- Professional Household & Shared Budget Modal / Dropdown -->
+        <div class="header-popover-menu group-popover" id="group-popover">
+          <div class="popover-title-row">
+            <div>
+              <div class="popover-title-main">Amazon Household</div>
+              <div class="popover-title-sub">Shared Budget & Collaborator Pool</div>
+            </div>
+            <button class="btn-invite-member" id="btn-invite-member">+ Invite</button>
+          </div>
+          <div class="popover-divider"></div>
+          <div class="household-members-list">
+            <div class="member-row">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" class="member-avatar" alt="Sarah">
+              <div class="member-meta">
+                <div class="member-name">Sarah Jenkins (You)</div>
+                <div class="member-role">Primary Owner • Full Access</div>
+              </div>
+              <span class="badge-role owner">Owner</span>
+            </div>
+            <div class="member-row">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80" class="member-avatar" alt="Michael">
+              <div class="member-meta">
+                <div class="member-name">Michael Jenkins</div>
+                <div class="member-role">Spouse • Shared Card ($2,000/mo limit)</div>
+              </div>
+              <span class="badge-role editor">Editor</span>
+            </div>
+            <div class="member-row">
+              <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&auto=format&fit=crop&q=80" class="member-avatar" alt="David">
+              <div class="member-meta">
+                <div class="member-name">David (Teen Sub-Account)</div>
+                <div class="member-role">Shopping Allowance ($150/mo limit)</div>
+              </div>
+              <span class="badge-role viewer">Restricted</span>
+            </div>
+          </div>
+          <div class="popover-divider"></div>
+          <div class="shared-budget-summary">
+            <div class="shared-budget-text">
+              <span>Household Pool Spent: <strong>$1,850 / $4,000</strong></span>
+              <span class="text-blue">46%</span>
+            </div>
+            <div class="progress-track margin-t-small">
+              <div class="progress-fill blue-fill" style="width: 46%;"></div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Notification Alert Button -->
       <div class="header-icon-btn notification-btn" id="btn-notification-alert" title="Notifications">
         <i class="fa-solid fa-bell"></i>
         <span class="notification-dot"></span>
       </div>
+
+      <!-- Light / Dark Theme Button -->
       <button class="theme-mode-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
         <i class="fa-solid fa-moon" id="theme-icon"></i>
         <span id="theme-text">Sun</span>
