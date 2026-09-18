@@ -1440,6 +1440,35 @@ if (impactModalBackdrop) {
 // Resizable Chat Panel Splitter
 const chatResizerHandle = document.getElementById('chat-resizer-handle');
 const chatColumn = document.getElementById('chat-column');
+const btnCloseChat = document.getElementById('btn-close-chat');
+const floatingChatLauncher = document.getElementById('floating-chat-launcher');
+
+// Function to close/minimize chat panel and show floating chatbot bubble
+window.closeChatPanel = function() {
+  if (chatColumn) chatColumn.classList.add('is-closed');
+  if (chatResizerHandle) chatResizerHandle.classList.add('is-hidden');
+  if (floatingChatLauncher) floatingChatLauncher.classList.add('is-visible');
+};
+
+// Function to open/restore chat panel and hide floating chatbot bubble
+window.openChatPanel = function() {
+  if (chatColumn) chatColumn.classList.remove('is-closed');
+  if (chatResizerHandle) chatResizerHandle.classList.remove('is-hidden');
+  if (floatingChatLauncher) floatingChatLauncher.classList.remove('is-visible');
+};
+
+if (btnCloseChat) {
+  btnCloseChat.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeChatPanel();
+  });
+}
+
+if (floatingChatLauncher) {
+  floatingChatLauncher.addEventListener('click', () => {
+    openChatPanel();
+  });
+}
 
 if (chatResizerHandle && chatColumn) {
   let isDragging = false;

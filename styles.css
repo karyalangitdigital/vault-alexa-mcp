@@ -780,6 +780,103 @@ body.resizing-active {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin 0.3s ease, transform 0.3s ease;
+}
+
+/* Minimized / Closed State */
+.chat-column.is-closed {
+  width: 0 !important;
+  min-width: 0 !important;
+  opacity: 0;
+  pointer-events: none;
+  margin: 0 !important;
+  transform: translateX(30px);
+}
+
+.chat-resizer-handle.is-hidden {
+  display: none !important;
+}
+
+/* MODERN FLOATING CHATBOT LAUNCHER BUBBLE */
+.floating-chat-launcher {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #131921;
+  border: 2px solid var(--amazon-amber);
+  cursor: pointer;
+  display: none; /* Shown when chat is closed */
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 16px rgba(255, 153, 0, 0.4);
+  z-index: 999;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: floatLauncherIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.floating-chat-launcher.is-visible {
+  display: flex;
+}
+
+.floating-chat-launcher:hover {
+  transform: scale(1.1) translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4), 0 0 24px rgba(255, 153, 0, 0.6);
+}
+
+.floating-launcher-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.floating-pulse-ring {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--amazon-amber);
+  animation: launcherPulse 2.2s infinite ease-out;
+  pointer-events: none;
+}
+
+.floating-badge-alert {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+}
+
+@keyframes launcherPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  70% { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+@keyframes floatLauncherIn {
+  from {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
 }
 
 /* Card Standard */
