@@ -2528,6 +2528,14 @@ body.dark-mode .impact-card {
   line-height: 1.4;
   resize: vertical;
   outline: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mcp-code-editor::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .inspector-action-row {
@@ -2565,6 +2573,14 @@ body.dark-mode .impact-card {
   padding: 14px;
   overflow-y: auto;
   max-height: 250px;
+  scrollbar-width: none; /* Hide for Firefox */
+  -ms-overflow-style: none; /* Hide for IE/Edge */
+}
+
+.mcp-response-box::-webkit-scrollbar {
+  display: none; /* Hide default thick browser scrollbar */
+  width: 0;
+  height: 0;
 }
 
 .mcp-response-box pre {
@@ -2621,6 +2637,14 @@ body.dark-mode .impact-card {
   font-size: 0.76rem;
   color: #93c5fd;
   overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mcp-config-preview::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 /* ROLE SWITCHER STYLES (PREMIUM DUAL-CARD SEGMENT) */
