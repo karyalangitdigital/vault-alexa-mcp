@@ -1603,6 +1603,8 @@ if (btnNotificationAlert) {
 if (sidebarToggleBtn && leftSidebar) {
   sidebarToggleBtn.addEventListener('click', () => {
     leftSidebar.classList.toggle('is-collapsed');
+    const headerLeft = document.getElementById('header-left');
+    if (headerLeft) headerLeft.classList.toggle('is-collapsed');
   });
 }
 
