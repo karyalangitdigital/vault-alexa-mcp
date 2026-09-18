@@ -527,23 +527,47 @@ function processUserQuery(query) {
       addMessage('alexa', 'Alexa+', msg);
     });
 
-  } else if (qLower.includes('tech') || qLower.includes('promo') || qLower.includes('deal') || qLower.includes('barang') || qLower.includes('shopping')) {
+  } else if (
+    qLower.includes('tech') || qLower.includes('promo') || qLower.includes('deal') || 
+    qLower.includes('barang') || qLower.includes('shopping') || qLower.includes('apple') || 
+    qLower.includes('gadget') || qLower.includes('sepatu') || qLower.includes('shoe') || 
+    qLower.includes('kopi') || qLower.includes('coffee') || qLower.includes('headphone') || 
+    qLower.includes('bose') || qLower.includes('kindle') || qLower.includes('lampu') || 
+    qLower.includes('bulb') || qLower.includes('minyak') || qLower.includes('olive') || 
+    qLower.includes('makan') || qLower.includes('dining') || qLower.includes('watch') || 
+    qLower.includes('anker') || qLower.includes('thermostat') || qLower.includes('cari') ||
+    qLower.includes('diskon') || qLower.includes('tampilkan') || qLower.includes('semua')
+  ) {
+    if (qLower.includes('semua') || qLower.includes('all') || qLower.includes('reset')) {
+      resetShoppingFilter();
+      switchTab('shopping');
+      const msg = isID
+        ? '<strong>Tool MCP [search_amazon_deals]:</strong> Menampilkan seluruh katalog promo Amazon (11 produk terverifikasi Prime).'
+        : '<strong>MCP Tool [search_amazon_deals]:</strong> Displaying full Amazon Prime deals catalog (11 verified items).';
+      addMessage('alexa', 'Alexa+', msg);
+      return;
+    }
+
+    const cleanSearchTerm = query.replace(/cari|promo|deal|diskon|find|search|for|tentang|about|produk/gi, '').trim() || query;
+    const matched = filterShoppingDeals(cleanSearchTerm || query);
+
     const traceSteps = isID ? [
-      'Memanggil Tool: search_amazon_deals(kategori: "Elektronik", diskon_min: 15)',
-      'Mencocokkan promo dengan sisa kuota belanja',
-      'Menampilkan Promo Pilihan Prime'
+      `Menganalisis Kueri Pencarian Katalog: [${cleanSearchTerm || query}]`,
+      `Memanggil Tool MCP: search_amazon_deals(filter: "${cleanSearchTerm || query}")`,
+      `Menemukan ${matched.length} Produk Promo Prime yang Cocok`,
+      'Menyaring Grid Belanja Secara Real-Time'
     ] : [
-      'Calling Tool: search_amazon_deals(category: "Electronics", discount_min: 15)',
-      'Matching deals against remaining shopping allowance',
-      'Displaying Top Curated Prime Deals'
+      `Parsing Catalog Search Query: [${cleanSearchTerm || query}]`,
+      `Calling MCP Tool: search_amazon_deals(filter: "${cleanSearchTerm || query}")`,
+      `Matched ${matched.length} Curated Prime Deals`,
+      'Filtering Shopping Grid in Real-Time'
     ];
 
     showReasoningTrace(traceSteps, () => {
       const msg = isID
-        ? '<strong>Tool MCP [search_amazon_deals]:</strong> Promo Prime terbaik ditemukan! Amazon Echo Show 8 ($99.99, Diskon 30%) & Bose 700 ($219.00). Beralih ke halaman Belanja.'
-        : '<strong>MCP Tool [search_amazon_deals]:</strong> Curated Prime deals found! Amazon Echo Show 8 ($99.99, 30% Off) & Bose 700 ($219.00). Switched to Shopping View.';
+        ? `<strong>Tool MCP [search_amazon_deals]:</strong> Ditemukan <strong>${matched.length} produk</strong> terkait <em>"${cleanSearchTerm || query}"</em>! Grid belanja telah disaring otomatis untuk Anda.`
+        : `<strong>MCP Tool [search_amazon_deals]:</strong> Found <strong>${matched.length} product(s)</strong> matching <em>"${cleanSearchTerm || query}"</em>! Shopping grid filtered dynamically.`;
       addMessage('alexa', 'Alexa+', msg);
-      switchTab('shopping');
     });
 
   } else if (qLower.includes('minggu') || qLower.includes('week') || qLower.includes('spend') || qLower.includes('belanja') || qLower.includes('sisa')) {
@@ -932,10 +956,39 @@ function updateUIOverview() {
   }
 }
 
-// Render Shopping Grid
-function renderShoppingGrid() {
+// Render Shopping Grid (Supports Dynamic Filter)
+function renderShoppingGrid(dealsList = state.deals, activeFilterLabel = null) {
   if (!fullShoppingGrid) return;
-  fullShoppingGrid.innerHTML = state.deals.map(deal => `
+  const isSeller = window.currentUserRole === 'seller';
+  const isID = currentLang === 'ID';
+
+  if (!dealsList || dealsList.length === 0) {
+    fullShoppingGrid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: var(--bg-card); border-radius: 12px; border: 1px dashed var(--border-light);">
+        <i class="fa-solid fa-magnifying-glass" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 10px;"></i>
+        <h3 style="font-size: 1rem; color: var(--text-main);">${isID ? 'Tidak ada produk yang cocok' : 'No matching products found'}</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">${isID ? 'Coba cari kata kunci lain seperti: "apple", "gadget", "sepatu", "kopi", "lampu".' : 'Try searching other terms like: "apple", "gadget", "shoes", "coffee", "bulb".'}</p>
+        <button class="btn-primary-action" style="margin-top: 14px; padding: 6px 14px; font-size: 0.78rem;" onclick="resetShoppingFilter()">${isID ? 'Tampilkan Semua Produk' : 'Show All Products'}</button>
+      </div>
+    `;
+    return;
+  }
+
+  let filterHeaderHtml = '';
+  if (activeFilterLabel) {
+    filterHeaderHtml = `
+      <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.2); border-radius: 10px; padding: 10px 14px; margin-bottom: 6px;">
+        <span style="font-size: 0.82rem; font-weight: 700; color: var(--amazon-blue);">
+          <i class="fa-solid fa-filter"></i> ${isID ? 'Hasil Pencarian AI:' : 'AI Search Results:'} <em>"${activeFilterLabel}"</em> (${dealsList.length} ${isID ? 'produk' : 'products'})
+        </span>
+        <button style="background: transparent; border: none; font-size: 0.75rem; color: var(--amazon-blue); font-weight: 700; cursor: pointer; text-decoration: underline;" onclick="resetShoppingFilter()">
+          ${isID ? '✕ Reset Filter' : '✕ Reset Filter'}
+        </button>
+      </div>
+    `;
+  }
+
+  fullShoppingGrid.innerHTML = filterHeaderHtml + dealsList.map(deal => `
     <div class="card shopping-product-card">
       <span class="deal-discount-badge ${deal.badgeClass}">${deal.discount}</span>
       <div class="shopping-img-box">
@@ -948,12 +1001,79 @@ function renderShoppingGrid() {
           <span class="deal-now-price">Deal: $${deal.price.toFixed(2)}</span>
           ${deal.wasPrice ? `<span class="deal-was-price">Was $${deal.wasPrice.toFixed(2)}</span>` : ''}
         </div>
-        <button class="btn-buy-alexa" onclick="buyAmazonDeal('${deal.title}', ${deal.price})">
-          <i class="fa-solid fa-cart-shopping"></i> Beli via Alexa+
-        </button>
+        ${isSeller ? `
+          <button class="btn-buy-alexa" onclick="processUserQuery('${isID ? `Rekomendasikan diskon Prime terbaik untuk ${deal.title}` : `Recommend optimal Prime discount for ${deal.title}`}')">
+            <i class="fa-solid fa-sliders"></i> ${isID ? 'Atur Promo Prime' : 'Optimize Prime Deal'}
+          </button>
+        ` : `
+          <button class="btn-buy-alexa" onclick="buyAmazonDeal('${deal.title}', ${deal.price})">
+            <i class="fa-solid fa-cart-shopping"></i> ${isID ? 'Beli via Alexa+' : 'Buy with Alexa+'}
+          </button>
+        `}
       </div>
     </div>
   `).join('');
+}
+
+window.filterShoppingDeals = function(keyword) {
+  if (!keyword || !keyword.trim()) {
+    resetShoppingFilter();
+    return state.deals;
+  }
+
+  const kLower = keyword.toLowerCase().trim();
+  const matched = state.deals.filter(d => {
+    const t = d.title.toLowerCase();
+    const c = (d.category || '').toLowerCase();
+    if (t.includes(kLower) || c.includes(kLower)) return true;
+    if (kLower.includes('gadget') || kLower.includes('tech') || kLower.includes('elektronik') || kLower.includes('device')) {
+      return c === 'shopping' || c === 'electronics' || c === 'utilities' || t.includes('echo') || t.includes('bose') || t.includes('watch') || t.includes('anker') || t.includes('kindle');
+    }
+    if (kLower.includes('apple') || kLower.includes('jam') || kLower.includes('watch')) {
+      return t.includes('apple') || t.includes('watch');
+    }
+    if (kLower.includes('sepatu') || kLower.includes('shoe') || kLower.includes('running') || kLower.includes('apparel')) {
+      return t.includes('running') || t.includes('shoe');
+    }
+    if (kLower.includes('kopi') || kLower.includes('coffee') || kLower.includes('starbucks')) {
+      return t.includes('coffee') || t.includes('starbucks');
+    }
+    if (kLower.includes('makanan') || kLower.includes('food') || kLower.includes('minyak') || kLower.includes('olive') || kLower.includes('groceries')) {
+      return c === 'groceries' || t.includes('olive') || t.includes('food') || t.includes('coffee');
+    }
+    if (kLower.includes('lampu') || kLower.includes('light') || kLower.includes('bulb') || kLower.includes('philips') || kLower.includes('thermostat') || kLower.includes('listrik') || kLower.includes('utilities')) {
+      return c === 'utilities' || t.includes('bulb') || t.includes('hue') || t.includes('thermostat');
+    }
+    if (kLower.includes('headphone') || kLower.includes('audio') || kLower.includes('bose') || kLower.includes('earphone')) {
+      return t.includes('bose') || t.includes('headphone');
+    }
+    if (kLower.includes('buku') || kLower.includes('book') || kLower.includes('kindle') || kLower.includes('reading')) {
+      return t.includes('kindle');
+    }
+    if (kLower.includes('power bank') || kLower.includes('anker') || kLower.includes('charger') || kLower.includes('baterai')) {
+      return t.includes('anker') || t.includes('power bank');
+    }
+    return false;
+  });
+
+  switchTab('shopping');
+  renderShoppingGrid(matched, keyword);
+  return matched;
+};
+
+window.resetShoppingFilter = function() {
+  renderShoppingGrid(state.deals);
+};
+
+// Global Search Input Binding
+const globalSearchInput = document.getElementById('global-search-input');
+if (globalSearchInput) {
+  globalSearchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const q = globalSearchInput.value.trim();
+      if (q) processUserQuery(q);
+    }
+  });
 }
 
 // Global Amazon Buy Handler
