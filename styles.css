@@ -1,8 +1,8 @@
-/* VaultAlexa+ Design System - Full Responsive & Active Menu Navigation */
+/* VaultAlexa+ Design System - Exact 3-Column Desktop Alignment */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap');
 
 :root {
-  --bg-app: #eef2f5;
+  --bg-app: #f1f4f8;
   --bg-card: #ffffff;
   
   --primary-blue: #2563eb;
@@ -65,16 +65,6 @@ body {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.mobile-menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 20px;
-  color: var(--text-main);
-  cursor: pointer;
 }
 
 .header-logo {
@@ -219,18 +209,18 @@ body.dark-mode .theme-mode-btn {
   color: #ffffff;
 }
 
-/* APP BODY LAYOUT */
+/* APP BODY & SIDEBAR */
 .app-body {
   display: flex;
   flex: 1;
 }
 
 .left-sidebar {
-  width: 200px;
+  width: 190px;
   background: var(--bg-card);
   border-right: 1px solid var(--border-light);
-  padding: 20px 14px;
-  transition: all 0.3s ease;
+  padding: 20px 12px;
+  flex-shrink: 0;
 }
 
 .sidebar-menu {
@@ -243,7 +233,7 @@ body.dark-mode .theme-mode-btn {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
+  padding: 12px 14px;
   border-radius: 12px;
   background: transparent;
   border: none;
@@ -271,10 +261,18 @@ body.dark-mode .menu-item.active {
   color: #60a5fa;
 }
 
-/* MAIN WORKSPACE & TAB VIEWS */
-.main-workspace {
+/* MAIN 3-COLUMN WORKSPACE LAYOUT */
+.main-workspace-layout {
   flex: 1;
+  display: flex;
+  gap: 20px;
   padding: 24px;
+  align-items: stretch;
+}
+
+.center-views-container {
+  flex: 1;
+  min-width: 0;
 }
 
 .tab-view {
@@ -285,13 +283,22 @@ body.dark-mode .menu-item.active {
   display: block;
 }
 
-.dashboard-grid-container {
+/* DASHBOARD 2-COLUMN INNER WRAPPER (Col 1: Financial Overview + Col 2: Smart Amazon Deals) */
+.dashboard-columns-wrapper {
   display: grid;
-  grid-template-columns: 1fr 280px 360px;
+  grid-template-columns: 1fr 280px;
   gap: 20px;
 }
 
-/* Cards Standard */
+/* RIGHT FIXED CHAT COLUMN (Col 3) */
+.chat-column {
+  width: 360px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card Standard */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border-light);
@@ -322,7 +329,7 @@ body.dark-mode .menu-item.active {
   margin-bottom: 16px;
 }
 
-/* OVERVIEW COLUMN */
+/* FINANCIAL OVERVIEW COLUMN */
 .overview-column {
   display: flex;
   flex-direction: column;
@@ -551,12 +558,7 @@ body.dark-mode .deal-item-img-wrapper {
   text-decoration: line-through;
 }
 
-/* CHAT COLUMN & ALEXA SIMULATOR */
-.chat-column {
-  display: flex;
-  flex-direction: column;
-}
-
+/* CHAT CARD CONTAINER & ALEXA SIMULATOR */
 .chat-card-container {
   height: 100%;
   display: flex;
@@ -612,7 +614,8 @@ body.dark-mode .deal-item-img-wrapper {
 
 .chat-scroll-area {
   flex: 1;
-  max-height: 420px;
+  min-height: 220px;
+  max-height: 380px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -815,16 +818,10 @@ body.dark-mode .input-capsule {
   gap: 20px;
 }
 
-.tab-grid-3col {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
 .shopping-deals-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
 }
 
 /* Custom Forms & Inputs */
@@ -861,7 +858,7 @@ body.dark-mode .custom-input {
   background: #2563eb;
   color: #ffffff;
   border: none;
-  padding: 12px 16px;
+  padding: 10px 16px;
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
@@ -1009,51 +1006,21 @@ body.dark-mode .insight-box {
   cursor: pointer;
 }
 
-/* RESPONSIVE DESIGN FOR DESKTOP & MOBILE */
+/* RESPONSIVE DESIGN */
 @media (max-width: 1200px) {
-  .dashboard-grid-container {
-    grid-template-columns: 1fr 340px;
+  .dashboard-columns-wrapper {
+    grid-template-columns: 1fr;
   }
   .deals-column {
     display: none;
   }
 }
 
-@media (max-width: 900px) {
-  .mobile-menu-toggle {
-    display: block;
+@media (max-width: 992px) {
+  .main-workspace-layout {
+    flex-direction: column;
   }
-
-  .app-body {
-    position: relative;
-  }
-
-  .left-sidebar {
-    position: absolute;
-    left: -220px;
-    top: 0;
-    bottom: 0;
-    z-index: 99;
-    box-shadow: 4px 0 12px rgba(0,0,0,0.1);
-  }
-
-  .left-sidebar.mobile-open {
-    left: 0;
-  }
-
-  .dashboard-grid-container {
-    grid-template-columns: 1fr;
-  }
-
-  .tab-grid-2col, .tab-grid-3col {
-    grid-template-columns: 1fr;
-  }
-
-  .header-search {
-    width: 200px;
-  }
-
-  .user-name {
-    display: none;
+  .chat-column {
+    width: 100%;
   }
 }
