@@ -663,6 +663,20 @@
 
           </div>
 
+          <!-- Live Agent Reasoning & MCP Execution Trace (Moved here for Developer / Judge Deep Inspection) -->
+          <div class="card agent-reasoning-container" id="agent-reasoning-container" style="margin-top: 14px; margin-bottom: 14px;">
+            <div class="reasoning-header">
+              <span class="reasoning-title"><i class="fa-solid fa-brain" style="color:#8b5cf6;"></i> Live Agent Reasoning Trace & MCP Execution Log</span>
+              <span class="reasoning-status" id="reasoning-status-badge">Standby ✓</span>
+            </div>
+            <div class="reasoning-steps-list" id="reasoning-steps-list">
+              <div class="reasoning-step-item" style="color:var(--text-muted); font-size:0.75rem;">
+                <i class="fa-solid fa-circle-info" style="color:#007185;"></i>
+                <span>Protokol MCP siap. Kirim perintah di chat atau jalankan tool untuk melihat jejak eksekusi otonom.</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Bottom Section: 1-Click MCP Config Exporter -->
           <div class="card mcp-config-exporter-card">
             <div class="exporter-header">
@@ -724,13 +738,19 @@
             </div>
           </div>
 
-          <!-- Live Agent Reasoning & MCP Execution Trace -->
-          <div class="agent-reasoning-container" id="agent-reasoning-container" style="display: none;">
-            <div class="reasoning-header">
-              <span class="reasoning-title"><i class="fa-solid fa-brain text-purple"></i> Agent Reasoning Trace</span>
-              <span class="reasoning-status" id="reasoning-status-badge">Processing...</span>
+          <!-- Typing Indicator (Alexa+ sedang mengetik...) -->
+          <div class="typing-indicator-bubble" id="typing-indicator" style="display: none;">
+            <div class="typing-avatar-wrap">
+              <img src="alexa_plus_logo.jpg" alt="Alexa+" class="typing-logo-img">
             </div>
-            <div class="reasoning-steps-list" id="reasoning-steps-list"></div>
+            <div class="typing-text-wrap">
+              <span class="typing-label">Alexa+ sedang mengetik</span>
+              <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
           </div>
 
           <!-- Listening State Banner (Minimalist Waveform Indicator) -->

@@ -296,46 +296,60 @@ function playAlexaChime() {
   } catch (e) {}
 }
 
-// Animated Reasoning Trace
+// Animated Reasoning Trace & Chat Typing Indicator
 function showReasoningTrace(steps, onComplete) {
   const container = document.getElementById('agent-reasoning-container');
   const stepsList = document.getElementById('reasoning-steps-list');
   const statusBadge = document.getElementById('reasoning-status-badge');
-  if (!container || !stepsList) {
-    if (onComplete) onComplete();
-    return;
+  const typingIndicator = document.getElementById('typing-indicator');
+
+  // 1. Show Typing Indicator inside Chat Panel
+  if (typingIndicator) {
+    const isID = currentLang === 'ID';
+    const labelEl = typingIndicator.querySelector('.typing-label');
+    if (labelEl) {
+      labelEl.textContent = isID ? 'Alexa+ sedang menganalisis...' : 'Alexa+ is typing...';
+    }
+    typingIndicator.style.display = 'flex';
+    if (chatMessagesContainer) {
+      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    }
   }
 
-  container.style.display = 'block';
-  stepsList.innerHTML = '';
-  if (statusBadge) {
-    statusBadge.textContent = currentLang === 'ID' ? 'Memproses MCP...' : 'Processing MCP...';
-    statusBadge.className = 'reasoning-status text-blue';
+  // 2. Stream steps into MCP Inspector Tab
+  if (container && stepsList) {
+    stepsList.innerHTML = '';
+    if (statusBadge) {
+      statusBadge.textContent = currentLang === 'ID' ? 'Mengeksekusi MCP...' : 'Executing MCP...';
+      statusBadge.className = 'reasoning-status text-blue';
+    }
   }
 
   let index = 0;
   function showNextStep() {
     if (index < steps.length) {
-      const stepItem = document.createElement('div');
-      stepItem.className = 'reasoning-step-item';
-      stepItem.innerHTML = `
-        <i class="fa-solid fa-circle-check text-green"></i>
-        <span>${steps[index]}</span>
-      `;
-      stepsList.appendChild(stepItem);
-      if (chatMessagesContainer) {
-        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+      if (stepsList) {
+        const stepItem = document.createElement('div');
+        stepItem.className = 'reasoning-step-item';
+        stepItem.innerHTML = `
+          <i class="fa-solid fa-circle-check" style="color:#067d62;"></i>
+          <span>${steps[index]}</span>
+        `;
+        stepsList.appendChild(stepItem);
       }
       index++;
-      setTimeout(showNextStep, 400);
+      setTimeout(showNextStep, 350);
     } else {
       if (statusBadge) {
         statusBadge.textContent = currentLang === 'ID' ? 'Selesai ✓' : 'Complete ✓';
         statusBadge.className = 'reasoning-status text-green';
       }
+
+      // Hide typing indicator before rendering final message
       setTimeout(() => {
+        if (typingIndicator) typingIndicator.style.display = 'none';
         if (onComplete) onComplete();
-      }, 350);
+      }, 300);
     }
   }
   showNextStep();
