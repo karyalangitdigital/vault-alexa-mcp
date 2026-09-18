@@ -827,6 +827,90 @@ function processUserQuery(query) {
       addMessage('alexa', 'Alexa+', msg);
     });
 
+  } else if (qLower.includes('tawar') || qLower.includes('nego') || qLower.includes('voucher') || qLower.includes('diskon khusus')) {
+    const traceSteps = isID ? [
+      'Maksud: [Negosiasi Bilateral MCP Buyer-Seller]',
+      'Mendeteksi Kesenjangan Anggaran vs Harga Katalog',
+      'Memanggil Tool: negotiate_dynamic_discount(targetDiscount: "15%")',
+      'Menerima Respon Penawaran Khusus dari Amazon Seller API'
+    ] : [
+      'Intent: [Bilateral MCP Buyer-Seller Negotiation]',
+      'Detecting Budget Gap vs Catalog Price',
+      'Calling Tool: negotiate_dynamic_discount(targetDiscount: "15%")',
+      'Received Special Offer Response from Amazon Seller API'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
+      const msg = isID ? `
+        <strong>Tool MCP [negotiate_dynamic_discount]:</strong>
+        <div class="chat-order-card" style="border-color:#8b5cf6;">
+          <div class="order-card-header" style="color:#7c3aed;">
+            <i class="fa-solid fa-handshake"></i> Negosiasi Otomatis Berhasil!
+          </div>
+          <div style="font-size: 0.82rem; line-height: 1.5; margin-top: 6px;">
+            🤝 <strong>Seller:</strong> Apex Tech Store<br>
+            🏷️ <strong>Voucher Khusus:</strong> <span class="badge badge-success">AMZ-MCP-SAVE15</span> (Diskon 15%)<br>
+            💵 <strong>Harga Baru:</strong> <del style="color:var(--text-muted);">$99.99</del> ➔ <strong style="color:#10b981;">$84.99</strong><br>
+            💡 <em>Penawaran 1-Click Checkout langsung disesuaikan dengan kapasitas safe-to-spend Anda.</em>
+          </div>
+        </div>
+      ` : `
+        <strong>MCP Tool [negotiate_dynamic_discount]:</strong>
+        <div class="chat-order-card" style="border-color:#8b5cf6;">
+          <div class="order-card-header" style="color:#7c3aed;">
+            <i class="fa-solid fa-handshake"></i> Bilateral Negotiation Accepted!
+          </div>
+          <div style="font-size: 0.82rem; line-height: 1.5; margin-top: 6px;">
+            🤝 <strong>Seller:</strong> Apex Tech Store<br>
+            🏷️ <strong>Special Voucher:</strong> <span class="badge badge-success">AMZ-MCP-SAVE15</span> (15% Off)<br>
+            💵 <strong>Agreed Price:</strong> <del style="color:var(--text-muted);">$99.99</del> ➔ <strong style="color:#10b981;">$84.99</strong><br>
+            💡 <em>1-Click Checkout proposal matched with your remaining safe-to-spend headroom.</em>
+          </div>
+        </div>
+      `;
+      addMessage('alexa', 'Alexa+', msg);
+    });
+
+  } else if (qLower.includes('impulsif') || qLower.includes('boros') || qLower.includes('cooldown') || qLower.includes('cool down') || qLower.includes('target tabungan') || qLower.includes('dampak')) {
+    const traceSteps = isID ? [
+      'Maksud: [Analisis Biaya Peluang & Kunci Anti-Impulsif]',
+      'Memeriksa Target Tabungan Utama: "Liburan ke Tokyo"',
+      'Memanggil Tool: calculate_opportunity_cost(item: "Bose Headphones 700", price: 219)',
+      'Mengaktifkan Rekomendasi Jeda Refleksi 24 Jam'
+    ] : [
+      'Intent: [Opportunity Cost & Anti-Impulse Guard]',
+      'Checking Primary Savings Target: "Tokyo Vacation"',
+      'Calling Tool: calculate_opportunity_cost(item: "Bose Headphones 700", price: 219)',
+      'Activating 24-Hour Cool-Down Reflection Advice'
+    ];
+
+    showReasoningTrace(traceSteps, () => {
+      const msg = isID ? `
+        <strong>Tool MCP [calculate_opportunity_cost]:</strong>
+        <div class="chat-order-card" style="border-color:#f59e0b;">
+          <div class="order-card-header" style="color:#d97706;">
+            <i class="fa-solid fa-hourglass-half"></i> Rekomendasi Kunci Jeda Belanja (Cool-Down 24 Jam)
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+            ⚠️ <strong>Dampak Finansial:</strong> Pembelian $219.00 ini setara dengan <strong>32 hari alokasi tabungan</strong> target <em>Liburan ke Tokyo</em> Anda.<br><br>
+            🛡️ <strong>Saran Alexa+:</strong> Hindari pembelian impulsif larut malam. Kami telah memasang pengingat refleksi 24 jam sebelum mengizinkan checkout otomatis.
+          </div>
+        </div>
+      ` : `
+        <strong>MCP Tool [calculate_opportunity_cost]:</strong>
+        <div class="chat-order-card" style="border-color:#f59e0b;">
+          <div class="order-card-header" style="color:#d97706;">
+            <i class="fa-solid fa-hourglass-half"></i> Anti-Impulse Cool-Down Recommendation
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+            ⚠️ <strong>Financial Impact:</strong> This $219.00 purchase equals <strong>32 days of savings</strong> toward your <em>Tokyo Vacation</em> target.<br><br>
+            🛡️ <strong>Alexa+ Advice:</strong> Prevent late-night impulse buying. A 24-hour reflection reminder is set before enabling 1-Click checkout.
+          </div>
+        </div>
+      `;
+      addMessage('alexa', 'Alexa+', msg);
+    });
+
   } else {
     const traceSteps = isID ? [
       'Klasifikasi Maksud Otomatis (Protokol MCP 2025-11-25)',
