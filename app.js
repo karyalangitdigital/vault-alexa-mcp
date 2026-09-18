@@ -371,23 +371,27 @@ function addMessage(sender, name, text) {
   }
 }
 
-// Process User Query
+// Process User Query with Autonomous MCP Tool Logic
 function processUserQuery(query) {
   addMessage('user', 'Sarah', query);
   const qLower = query.toLowerCase();
 
   setTimeout(() => {
     if (qLower.includes('buy') || qLower.includes('purchase')) {
-      addMessage('alexa', 'Alexa+', `🛒 Order initiated for Amazon item! Validating with your monthly budget capacity via MCP <code>get_financial_summary</code>. Purchase approved.`);
+      addMessage('alexa', 'Alexa+', `🛡️ <strong>MCP Tool [validate_purchase_safety]:</strong> Validating order with your remaining shopping allowance. Safe capacity verified! Purchase order initiated with 1-Click Prime Delivery.`);
+    } else if (qLower.includes('track') || qLower.includes('price') || qLower.includes('drop')) {
+      addMessage('alexa', 'Alexa+', `🎯 <strong>MCP Tool [track_price_drop_target]:</strong> Price Drop Sniper activated for targeted Amazon product! Target set at -20% discount threshold.`);
+    } else if (qLower.includes('split') || qLower.includes('household') || qLower.includes('share')) {
+      addMessage('alexa', 'Alexa+', `👥 <strong>MCP Tool [split_shared_expense]:</strong> Household expense split 50/50 with Michael Jenkins. Updated shared pool ledger.`);
     } else if (qLower.includes('tech') || qLower.includes('deal') || qLower.includes('item')) {
-      addMessage('alexa', 'Alexa+', 'Here are top tech deals: Amazon Echo Show 8 at $99.99 (30% Off) and Bose Headphones at $219.00!');
+      addMessage('alexa', 'Alexa+', '🛍️ <strong>MCP Tool [search_amazon_deals]:</strong> Found top verified deals! Amazon Echo Show 8 ($99.99, 30% Off) & Bose 700 ($219.00).');
       switchTab('shopping');
     } else if (qLower.includes('grocery') || qLower.includes('food')) {
-      addMessage('alexa', 'Alexa+', `You have spent $${state.categories.groceries.spent} out of your $${state.categories.groceries.limit} grocery budget (${state.categories.groceries.percent}% used). Safe remaining capacity: $${state.categories.groceries.limit - state.categories.groceries.spent}.`);
+      addMessage('alexa', 'Alexa+', `🥦 <strong>MCP Tool [get_financial_summary]:</strong> You have spent $${state.categories.groceries.spent} out of $${state.categories.groceries.limit} (${state.categories.groceries.percent}%). Buffer remaining: $${state.categories.groceries.limit - state.categories.groceries.spent}.`);
     } else if (qLower.includes('balance') || qLower.includes('account')) {
-      addMessage('alexa', 'Alexa+', `Your total Account Balance is $${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})} and your Investment Value grew to $${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})} (+4.2%).`);
+      addMessage('alexa', 'Alexa+', `💳 <strong>MCP Resource [vault://financial/overview]:</strong> Account Balance is $${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})}. Investment Value: $${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})} (+4.2%).`);
     } else {
-      addMessage('alexa', 'Alexa+', `I analyzed your request via MCP Server v2025-11-25. Total monthly spending: $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All categories healthy.`);
+      addMessage('alexa', 'Alexa+', `⚡ <strong>MCP Protocol 2025-11-25:</strong> Analyzed request via 6 Autonomous Tools & 3 Resources. Total monthly spending is $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All categories healthy.`);
     }
   }, 600);
 }

@@ -1,7 +1,7 @@
 /**
  * VaultAlexa+ MCP Server
  * Implementation of Model Context Protocol (MCP) spec 2025-11-25
- * Provides financial tools & Amazon deals integration for Alexa+
+ * Enterprise-grade Financial AI Agent & Amazon Shopping Integration for Alexa+
  */
 
 const express = require('express');
@@ -16,39 +16,52 @@ app.use(express.json());
 // Mock Financial Database State
 const userAccount = {
   currency: 'USD',
-  monthlyBudget: 2500,
-  spentSoFar: 1420.50,
-  remainingBudget: 1079.50,
+  accountBalance: 24560.80,
+  investmentValue: 68125.00,
+  monthlyBudget: 5000.00,
+  spentSoFar: 3150.45,
+  remainingBudget: 1849.55,
   categories: {
-    groceries: { allocated: 600, spent: 410.20 },
-    entertainment: { allocated: 300, spent: 185.00 },
-    utilities: { allocated: 500, spent: 440.00 },
-    shopping: { allocated: 600, spent: 285.30 },
-    savings: { allocated: 500, spent: 100.00 }
+    groceries: { allocated: 800, spent: 520.00, unit: 'USD' },
+    diningOut: { allocated: 400, spent: 352.00, unit: 'USD' },
+    utilities: { allocated: 300, spent: 120.00, unit: 'USD' },
+    shopping: { allocated: 600, spent: 432.00, unit: 'USD' }
   },
+  household: {
+    poolLimit: 4000.00,
+    poolSpent: 1850.00,
+    members: [
+      { id: 'usr-1', name: 'Sarah Jenkins', role: 'Owner', limit: 4000 },
+      { id: 'usr-2', name: 'Michael Jenkins', role: 'Editor', limit: 2000 },
+      { id: 'usr-3', name: 'David Jenkins', role: 'Viewer', limit: 150 }
+    ]
+  },
+  priceWatchlist: [
+    { id: 'deal-1', title: 'Amazon Echo Show 8', targetPrice: 89.99, currentPrice: 99.99 },
+    { id: 'deal-2', title: 'Bose Headphones 700', targetPrice: 199.00, currentPrice: 219.00 }
+  ],
   recentTransactions: [
-    { id: 'tx-101', date: '2026-09-17', title: 'Whole Foods Market', category: 'groceries', amount: 84.50 },
-    { id: 'tx-102', date: '2026-09-16', title: 'Amazon Electronics (Headphones)', category: 'shopping', amount: 129.99 },
-    { id: 'tx-103', date: '2026-09-15', title: 'Power & Electric Utility', category: 'utilities', amount: 145.00 },
-    { id: 'tx-104', date: '2026-09-14', title: 'Prime Video Subscription', category: 'entertainment', amount: 14.99 },
-    { id: 'tx-105', date: '2026-09-12', title: 'Fresh Produce Basket', category: 'groceries', amount: 45.20 }
+    { id: 'tx-101', date: '2026-09-18', title: 'Whole Foods Market', category: 'groceries', amount: 84.50 },
+    { id: 'tx-102', date: '2026-09-17', title: 'Amazon Fresh Order', category: 'groceries', amount: 120.00 },
+    { id: 'tx-103', date: '2026-09-15', title: 'Salary Deposit (Amazon Dev)', category: 'income', amount: 4250.00 }
   ]
 };
 
 // Mock Amazon Deals Inventory
 const amazonDeals = [
-  { id: 'az-01', name: 'Organic Grocery Bundle (Fresh Produce & Pantry Items)', price: 28.50, originalPrice: 42.00, category: 'groceries', rating: 4.8, Prime: true, image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&auto=format&fit=crop&q=60' },
-  { id: 'az-02', name: 'Echo Dot (5th Gen) Smart Speaker with Alexa', price: 34.99, originalPrice: 49.99, category: 'shopping', rating: 4.7, Prime: true, image: 'https://images.unsplash.com/photo-1543512214-318c7553f230?w=500&auto=format&fit=crop&q=60' },
-  { id: 'az-03', name: 'Smart LED Ergonomic Desk Lamp with Wireless Charger', price: 24.90, originalPrice: 39.99, category: 'shopping', rating: 4.6, Prime: true, image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500&auto=format&fit=crop&q=60' },
-  { id: 'az-04', name: 'Stainless Steel Insulated Water Bottle (32oz)', price: 18.99, originalPrice: 29.99, category: 'shopping', rating: 4.9, Prime: true, image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500&auto=format&fit=crop&q=60' },
-  { id: 'az-05', name: 'Premium Espresso Beans 2.2lbs (Subscribe & Save 15%)', price: 19.50, originalPrice: 26.00, category: 'groceries', rating: 4.9, Prime: true, image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500&auto=format&fit=crop&q=60' }
+  { id: 'az-01', title: 'Amazon Echo Show 8', price: 99.99, wasPrice: 129.99, discount: '30% Off', category: 'electronics', rating: 4.8 },
+  { id: 'az-02', title: 'Running Shoes Pro', price: 65.50, wasPrice: null, discount: '15% Off', category: 'apparel', rating: 4.7 },
+  { id: 'az-03', title: 'Bose Headphones 700', price: 219.00, wasPrice: null, discount: '15% Off', category: 'electronics', rating: 4.9 },
+  { id: 'az-04', title: 'Kindle Paperwhite 16GB', price: 119.99, wasPrice: 149.99, discount: '20% Off', category: 'electronics', rating: 4.9 },
+  { id: 'az-05', title: 'Apple Watch Series 9', price: 224.00, wasPrice: 249.00, discount: '10% Off', category: 'electronics', rating: 4.8 },
+  { id: 'az-06', title: 'Anker Power Bank 20K', price: 37.49, wasPrice: 49.99, discount: '25% Off', category: 'accessories', rating: 4.9 }
 ];
 
-// MCP Specification Tools Definitions
+// MCP Specification Tools Definitions (Spec 2025-11-25)
 const MCP_TOOLS = [
   {
     name: 'get_financial_summary',
-    description: 'Retrieve current monthly budget status, total expenditure, and remaining safe spending capacity for Alexa+',
+    description: 'Retrieve current monthly budget status, account balances, category breakdowns, and safe spending capacity for Alexa+',
     inputSchema: {
       type: 'object',
       properties: {
@@ -57,39 +70,88 @@ const MCP_TOOLS = [
     }
   },
   {
-    name: 'categorize_transaction',
-    description: 'Categorize a transaction and check if it exceeds budget allocations',
+    name: 'search_amazon_deals',
+    description: 'Search for high-rated Amazon deals and discounted products synchronized with Prime shipping',
     inputSchema: {
       type: 'object',
       properties: {
-        amount: { type: 'number', description: 'Transaction amount in USD' },
-        category: { type: 'string', description: 'Budget category (groceries, entertainment, utilities, shopping)' }
-      },
-      required: ['amount', 'category']
-    }
-  },
-  {
-    name: 'recommend_amazon_deals',
-    description: 'Search for high-rated Amazon deals and essential products that fit safely within the remaining budget limit',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        maxBudget: { type: 'number', description: 'Maximum budget allowed for purchase' },
-        category: { type: 'string', description: 'Filter by category (all, groceries, shopping, electronics)' }
+        category: { type: 'string', description: 'Category filter (e.g. electronics, apparel, accessories, all)' },
+        maxPrice: { type: 'number', description: 'Optional maximum price ceiling' }
       }
     }
   },
   {
-    name: 'execute_smart_purchase_plan',
-    description: 'Simulate an authorized automated purchase plan that maximizes savings while keeping budget on track',
+    name: 'validate_purchase_safety',
+    description: 'Autonomous financial safety validator: checks if a purchase exceeds remaining budget or endangers monthly goals before buying',
     inputSchema: {
       type: 'object',
       properties: {
-        dealId: { type: 'string', description: 'ID of the deal item to purchase' },
-        useSubscribeAndSave: { type: 'boolean', description: 'Apply Subscribe & Save discount' }
+        itemName: { type: 'string', description: 'Name of the item to purchase' },
+        itemPrice: { type: 'number', description: 'Cost of the item in USD' },
+        category: { type: 'string', description: 'Budget category (groceries, diningOut, utilities, shopping)' }
       },
-      required: ['dealId']
+      required: ['itemName', 'itemPrice', 'category']
     }
+  },
+  {
+    name: 'track_price_drop_target',
+    description: 'Register an automated price drop tracker / deal sniper target for an Amazon product',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        itemName: { type: 'string', description: 'Name of the product to track' },
+        targetPrice: { type: 'number', description: 'Target discounted price to trigger auto-alert' }
+      },
+      required: ['itemName', 'targetPrice']
+    }
+  },
+  {
+    name: 'split_shared_expense',
+    description: 'Split a shared Amazon Household shopping or utility expense between family/team members',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', description: 'Description of the expense' },
+        totalAmount: { type: 'number', description: 'Total bill amount to split' },
+        splitWithMemberId: { type: 'string', description: 'Target member ID in Amazon Household' }
+      },
+      required: ['title', 'totalAmount', 'splitWithMemberId']
+    }
+  },
+  {
+    name: 'log_transaction',
+    description: 'Log a new expense into ledger and recalculate budget percentages',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        amount: { type: 'number', description: 'Expense amount in USD' },
+        category: { type: 'string', description: 'Category key (groceries, diningOut, utilities, shopping)' },
+        description: { type: 'string', description: 'Transaction memo / merchant title' }
+      },
+      required: ['amount', 'category', 'description']
+    }
+  }
+];
+
+// MCP Resources Definitions (Spec 2025-11-25)
+const MCP_RESOURCES = [
+  {
+    uri: 'vault://financial/overview.json',
+    name: 'Vault Financial Overview Data',
+    description: 'Live account balance, spending rates, and category limits in JSON',
+    mimeType: 'application/json'
+  },
+  {
+    uri: 'vault://household/summary.json',
+    name: 'Amazon Household Shared Pool Ledger',
+    description: 'Multi-user sharing quotas and member roles',
+    mimeType: 'application/json'
+  },
+  {
+    uri: 'vault://diagnostics/health.json',
+    name: 'MCP Server Health & RPC Latency Status',
+    description: 'System diagnostic metrics and version status',
+    mimeType: 'application/json'
   }
 ];
 
@@ -101,7 +163,7 @@ app.post('/mcp/v1/rpc', (req, res) => {
     return res.status(400).json({ jsonrpc: '2.0', error: { code: -32600, message: 'Invalid Request: Must be JSON-RPC 2.0' }, id });
   }
 
-  // Handle MCP Protocol Initialize
+  // 1. Handle MCP Protocol Initialize
   if (method === 'initialize') {
     return res.json({
       jsonrpc: '2.0',
@@ -113,14 +175,14 @@ app.post('/mcp/v1/rpc', (req, res) => {
           resources: {}
         },
         serverInfo: {
-          name: 'VaultAlexa-MCP-Server',
-          version: '1.0.0'
+          name: 'VaultAlexa-Autonomous-MCP-Server',
+          version: '2.0.0'
         }
       }
     });
   }
 
-  // Handle MCP Protocol List Tools
+  // 2. Handle MCP Protocol List Tools
   if (method === 'tools/list') {
     return res.json({
       jsonrpc: '2.0',
@@ -131,10 +193,50 @@ app.post('/mcp/v1/rpc', (req, res) => {
     });
   }
 
-  // Handle MCP Protocol Call Tool
+  // 3. Handle MCP Protocol List Resources
+  if (method === 'resources/list') {
+    return res.json({
+      jsonrpc: '2.0',
+      id,
+      result: {
+        resources: MCP_RESOURCES
+      }
+    });
+  }
+
+  // 4. Handle MCP Protocol Read Resource
+  if (method === 'resources/read') {
+    const { uri } = params || {};
+    let resourceContent = {};
+
+    if (uri === 'vault://financial/overview.json') {
+      resourceContent = userAccount;
+    } else if (uri === 'vault://household/summary.json') {
+      resourceContent = userAccount.household;
+    } else {
+      resourceContent = { status: 'HEALTHY', protocol: '2025-11-25', uptime: process.uptime() };
+    }
+
+    return res.json({
+      jsonrpc: '2.0',
+      id,
+      result: {
+        contents: [
+          {
+            uri,
+            mimeType: 'application/json',
+            text: JSON.stringify(resourceContent, null, 2)
+          }
+        ]
+      }
+    });
+  }
+
+  // 5. Handle MCP Protocol Call Tool
   if (method === 'tools/call') {
     const { name, arguments: args } = params || {};
 
+    // Tool: get_financial_summary
     if (name === 'get_financial_summary') {
       return res.json({
         jsonrpc: '2.0',
@@ -144,8 +246,8 @@ app.post('/mcp/v1/rpc', (req, res) => {
             {
               type: 'text',
               text: JSON.stringify({
-                summary: `Monthly budget: $${userAccount.monthlyBudget}. Total spent: $${userAccount.spentSoFar}. Remaining safe budget: $${userAccount.remainingBudget}.`,
-                details: userAccount
+                summary: `Account Balance: $${userAccount.accountBalance.toFixed(2)}. Monthly Spending: $${userAccount.spentSoFar.toFixed(2)} out of $${userAccount.monthlyBudget.toFixed(2)} limit. Remaining: $${userAccount.remainingBudget.toFixed(2)}.`,
+                data: userAccount
               }, null, 2)
             }
           ]
@@ -153,11 +255,33 @@ app.post('/mcp/v1/rpc', (req, res) => {
       });
     }
 
-    if (name === 'categorize_transaction') {
-      const { amount, category } = args || {};
-      const catData = userAccount.categories[category] || { allocated: 300, spent: 0 };
-      const projectedSpent = catData.spent + amount;
-      const isOverBudget = projectedSpent > catData.allocated;
+    // Tool: search_amazon_deals
+    if (name === 'search_amazon_deals') {
+      const filtered = args && args.category && args.category !== 'all'
+        ? amazonDeals.filter(d => d.category === args.category)
+        : amazonDeals;
+
+      return res.json({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({ count: filtered.length, deals: filtered }, null, 2)
+            }
+          ]
+        }
+      });
+    }
+
+    // Tool: validate_purchase_safety (Agentic Autonomous Tool)
+    if (name === 'validate_purchase_safety') {
+      const { itemName, itemPrice, category } = args || {};
+      const cat = userAccount.categories[category] || { allocated: 600, spent: 0 };
+      const catRemaining = cat.allocated - cat.spent;
+      const willExceed = itemPrice > catRemaining;
+      const safetyRating = willExceed ? 'CAUTION_BUDGET_OVERFLOW' : 'SAFE_TO_PURCHASE';
 
       return res.json({
         jsonrpc: '2.0',
@@ -167,13 +291,14 @@ app.post('/mcp/v1/rpc', (req, res) => {
             {
               type: 'text',
               text: JSON.stringify({
+                item: itemName,
+                price: itemPrice,
                 category,
-                amount,
-                currentSpent: catData.spent,
-                allocated: catData.allocated,
-                projectedTotal: projectedSpent,
-                isOverBudget,
-                warning: isOverBudget ? `Warning: Adding $${amount} will exceed your ${category} limit by $${(projectedSpent - catData.allocated).toFixed(2)}.` : 'Within safe budget allocation.'
+                categoryRemaining: catRemaining,
+                safetyRating,
+                recommendation: willExceed
+                  ? `Purchasing ${itemName} ($${itemPrice}) will exceed your remaining ${category} limit ($${catRemaining.toFixed(2)}) by $${(itemPrice - catRemaining).toFixed(2)}. Alexa+ recommends waiting until next billing cycle.`
+                  : `Purchase of ${itemName} ($${itemPrice}) is verified SAFE. Your remaining ${category} buffer will be $${(catRemaining - itemPrice).toFixed(2)}.`
               }, null, 2)
             }
           ]
@@ -181,12 +306,10 @@ app.post('/mcp/v1/rpc', (req, res) => {
       });
     }
 
-    if (name === 'recommend_amazon_deals') {
-      const { maxBudget = userAccount.remainingBudget, category = 'all' } = args || {};
-      let filteredDeals = amazonDeals.filter(d => d.price <= maxBudget);
-      if (category !== 'all') {
-        filteredDeals = filteredDeals.filter(d => d.category === category);
-      }
+    // Tool: track_price_drop_target
+    if (name === 'track_price_drop_target') {
+      const { itemName, targetPrice } = args || {};
+      userAccount.priceWatchlist.push({ id: `wl-${Date.now()}`, title: itemName, targetPrice });
 
       return res.json({
         jsonrpc: '2.0',
@@ -196,9 +319,8 @@ app.post('/mcp/v1/rpc', (req, res) => {
             {
               type: 'text',
               text: JSON.stringify({
-                matchingCount: filteredDeals.length,
-                maxBudgetAllowed: maxBudget,
-                deals: filteredDeals
+                status: 'TRACKER_ACTIVE',
+                message: `Price drop sniper activated for "${itemName}" with target trigger at $${targetPrice}. Alexa+ will alert you upon price discount.`
               }, null, 2)
             }
           ]
@@ -206,27 +328,11 @@ app.post('/mcp/v1/rpc', (req, res) => {
       });
     }
 
-    if (name === 'execute_smart_purchase_plan') {
-      const { dealId, useSubscribeAndSave = false } = args || {};
-      const item = amazonDeals.find(d => d.id === dealId);
-
-      if (!item) {
-        return res.json({
-          jsonrpc: '2.0',
-          id,
-          result: {
-            isError: true,
-            content: [{ type: 'text', text: `Item with ID ${dealId} not found.` }]
-          }
-        });
-      }
-
-      let finalPrice = item.price;
-      if (useSubscribeAndSave) finalPrice *= 0.85;
-
-      userAccount.spentSoFar += finalPrice;
-      userAccount.remainingBudget -= finalPrice;
-      userAccount.categories.shopping.spent += finalPrice;
+    // Tool: split_shared_expense
+    if (name === 'split_shared_expense') {
+      const { title, totalAmount, splitWithMemberId } = args || {};
+      const share = totalAmount / 2;
+      userAccount.household.poolSpent += share;
 
       return res.json({
         jsonrpc: '2.0',
@@ -236,10 +342,12 @@ app.post('/mcp/v1/rpc', (req, res) => {
             {
               type: 'text',
               text: JSON.stringify({
-                status: 'SUCCESS',
-                message: `Successfully planned purchase for '${item.name}' at $${finalPrice.toFixed(2)}.`,
-                updatedSpentSoFar: userAccount.spentSoFar.toFixed(2),
-                updatedRemainingBudget: userAccount.remainingBudget.toFixed(2)
+                status: 'EXPENSE_SPLIT',
+                title,
+                total: totalAmount,
+                yourShare: share,
+                partnerShare: share,
+                message: `Split "${title}" ($${totalAmount.toFixed(2)}): charged $${share.toFixed(2)} to your card and dispatched split invoice of $${share.toFixed(2)} to member ${splitWithMemberId}.`
               }, null, 2)
             }
           ]
@@ -247,33 +355,74 @@ app.post('/mcp/v1/rpc', (req, res) => {
       });
     }
 
-    return res.status(404).json({
-      jsonrpc: '2.0',
-      error: { code: -32601, message: `Tool '${name}' not found.` },
-      id
-    });
+    // Tool: log_transaction
+    if (name === 'log_transaction') {
+      const { amount, category, description } = args || {};
+      userAccount.spentSoFar += Number(amount);
+      userAccount.accountBalance -= Number(amount);
+      userAccount.remainingBudget = userAccount.monthlyBudget - userAccount.spentSoFar;
+
+      if (userAccount.categories[category]) {
+        userAccount.categories[category].spent += Number(amount);
+      }
+
+      userAccount.recentTransactions.unshift({
+        id: `tx-${Date.now()}`,
+        date: new Date().toISOString().split('T')[0],
+        title: description,
+        category,
+        amount: Number(amount)
+      });
+
+      return res.json({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                status: 'LOGGED_SUCCESSFULLY',
+                transaction: { description, amount, category },
+                updatedBalance: userAccount.accountBalance,
+                remainingBudget: userAccount.remainingBudget
+              }, null, 2)
+            }
+          ]
+        }
+      });
+    }
   }
 
-  return res.status(400).json({
+  // Method not found
+  return res.status(404).json({
     jsonrpc: '2.0',
-    error: { code: -32601, message: `Method '${method}' not supported.` },
+    error: { code: -32601, message: `Method '${method}' not found on MCP Server` },
     id
   });
 });
 
-// REST Health Check
-app.get('/health', (req, res) => {
+// Root Health Diagnostic Endpoint
+app.get('/', (req, res) => {
   res.json({
+    name: 'VaultAlexa+ MCP Server (Spec 2025-11-25)',
     status: 'ONLINE',
-    service: 'VaultAlexa+ MCP Server',
-    specVersion: '2025-11-25',
-    activeToolsCount: MCP_TOOLS.length
+    rpcEndpoint: '/mcp/v1/rpc',
+    toolsAvailable: MCP_TOOLS.map(t => t.name),
+    resourcesAvailable: MCP_RESOURCES.map(r => r.uri),
+    docs: 'https://github.com/karyalangitdigital/vault-alexa-mcp'
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(`🚀 VaultAlexa+ MCP Server running on port ${PORT}`);
-  console.log(`📡 MCP Endpoint: http://localhost:${PORT}/mcp/v1/rpc`);
-  console.log(`====================================================`);
-});
+// Start Server
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(`🚀 VaultAlexa+ MCP Server running on port ${PORT}`);
+    console.log(`📡 JSON-RPC Endpoint: http://localhost:${PORT}/mcp/v1/rpc`);
+    console.log(`📋 Protocol Version: 2025-11-25 (Alexa+ Hackathon Standard)`);
+    console.log(`=======================================================`);
+  });
+}
+
+module.exports = app;

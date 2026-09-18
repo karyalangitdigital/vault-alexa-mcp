@@ -1,29 +1,32 @@
-# VaultAlexa+ - Alexa+ Smart AI Personal Financial & Intelligent Shopping Agent
+# VaultAlexa+ - Alexa+ Autonomous AI Financial Agent & Amazon Shopping Assistant
 
 **Hackathon Submission for:** [Build, Ship, Shape: Amazon Developer Hackathon 2026](https://amazonappdev2026.devpost.com/)  
 **Primary Track:** Alexa+ Track (Self-Hosted MCP Server & Simulated Alexa+ Agentic Experience)  
-**Mini Challenges:** AWS Builder Mini Challenge (Amazon Bedrock / AgentCore Integration) & Open Source  
+**Mini Challenges:** AWS Builder Mini Challenge & Open Source Initiative (MIT License)
 
 ---
 
 ## 📌 Overview
 
-**VaultAlexa+** is an autonomous AI financial assistant built for the **Alexa+** ecosystem using the **Model Context Protocol (MCP)** specification (version `2025-11-25`). 
+**VaultAlexa+** is an enterprise-grade autonomous AI financial advisor and intelligent Amazon shopping assistant designed for the **Alexa+** ecosystem. It is powered by the **Model Context Protocol (MCP)** specification (version `2025-11-25`) over JSON-RPC 2.0.
 
-It connects Alexa+ to user financial data, enabling users to:
-1. **Monitor Budget Status**: Check monthly spending limits, category allocations, and safe remaining capacity via voice or web dashboard.
-2. **Prevent Overspending**: Real-time tool-calling (`categorize_transaction`) alerts users if a prospective purchase will breach category allocations.
-3. **Smart Amazon Shopping Recommendations**: Automatically query high-rated Amazon deals (`recommend_amazon_deals`) that fit safely within remaining budget bounds.
-4. **Autonomous Purchase Execution**: Authorize automated purchasing workflows (`execute_smart_purchase_plan`) with Subscribe & Save discounts.
+It equips Alexa+ with 6 Autonomous MCP Tools and 3 MCP Resource Schemas to deliver real-time financial protection and seamless shopping assistance:
+
+1. **Autonomous Safe-to-Spend Validator (`validate_purchase_safety`)**: Pre-validates prospective purchase costs against remaining monthly category allowances to prevent impulsive overspending.
+2. **Price Drop Sniper (`track_price_drop_target`)**: Monitors Amazon item discounts and dispatches alerts when target price thresholds are reached.
+3. **Household Split Ledger (`split_shared_expense`)**: Manages multi-user family expenses and shared budget pools across Amazon Household members.
+4. **Intelligent Deal Discovery (`search_amazon_deals`)**: Fetches verified Amazon Prime discounts tailored to current spending capacity.
+5. **Real-time Financial Overview (`get_financial_summary`)**: Delivers accurate calculations of balances, spending rates, and budget health.
+6. **Expense Logging (`log_transaction`)**: Directly registers new ledger items and updates category analytics in real time.
 
 ---
 
 ## 🏗️ Architecture & Technology Stack
 
-- **Protocol Specification**: Model Context Protocol (MCP) Spec Version `2025-11-25` over JSON-RPC & Streamable HTTP.
+- **Protocol**: Model Context Protocol (MCP) Spec Version `2025-11-25` (JSON-RPC 2.0).
 - **Backend / MCP Server**: Node.js, Express, CORS.
-- **Frontend / Simulator**: Vanilla HTML5, CSS3 Glassmorphism UI System, JavaScript ES6+, Web Speech API.
-- **AWS Integration**: Simulated Amazon Bedrock / AgentCore tool orchestration.
+- **Frontend / Simulator**: Vanilla HTML5, Modern CSS Design System (Amazon Brand Palette, Light/Dark Modes, Responsive Multi-Column Layout), ES6+ JavaScript, Web Audio API, Web Speech Synthesis.
+- **Bonus Friction Log**: Full developer friction report available in `FRICTION_LOG.md` (10% Bonus Point Claim).
 
 ---
 
@@ -31,7 +34,7 @@ It connects Alexa+ to user financial data, enabling users to:
 
 ### Prerequisites
 - Node.js (v18 or higher)
-- Any modern web browser (Google Chrome, Microsoft Edge, Safari)
+- Any modern web browser (Chrome, Edge, Firefox, Safari)
 
 ### 1. Install Dependencies
 ```bash
@@ -40,27 +43,32 @@ npm install
 
 ### 2. Start the MCP Server
 ```bash
-npm start
+node mcp-server.js
 ```
 The MCP JSON-RPC Server will run at: `http://localhost:3000/mcp/v1/rpc`
 
 ### 3. Launch the Web Simulator & Dashboard
-Open `index.html` in your peramban (browser) or run a local HTTP server.
+Simply double-click or open `index.html` in your browser. The application includes a **Dual-Mode System** with client-side fallback, allowing complete functional exploration even if the local Node.js server is offline.
 
 ---
 
 ## 🧪 Testing Instructions for Hackathon Judges
 
-1. Open `index.html` in your peramban.
-2. Verify the **MCP Server: Online** badge on the top navbar.
-3. Click the suggestion pills or type queries in the chat simulator:
-   - *"What is my remaining budget for this month?"* -> Triggers `get_financial_summary` tool.
-   - *"Can I afford a $150 headphone purchase?"* -> Triggers `categorize_transaction` tool with warning.
-   - *"Show me smart Amazon deals under $50"* -> Triggers `recommend_amazon_deals` tool.
-4. Click **Plan Purchase** on any product card to execute an automated transaction via `execute_smart_purchase_plan`.
+1. Open `index.html` in your browser.
+2. Explore the **Sidebar Navigation**:
+   - **Dashboard**: Live financial cards, category breakdown bars, SVG trendlines, and Alexa+ chat interface.
+   - **Finance**: Interactive ledger and real-time expense logging form.
+   - **Shopping**: Multi-column responsive product grid with 1-Click "Buy with Alexa+" validation.
+   - **Goals**: Automated savings goals with progress tracking.
+   - **Insights**: AI spending advice and live **MCP Protocol Diagnostics (Spec 2025-11-25)**.
+3. Test Voice & Chat Simulator:
+   - Click the **Microphone** or type: *"Buy Amazon Echo Show 8"* -> Triggers `validate_purchase_safety`.
+   - Click **Avatar (Sarah Jenkins)** -> Opens Profile KYC, Vault Totals, and Credit Score popover.
+   - Click **Group Icon (👥)** -> Opens Amazon Household multi-user budget pool manager.
 
 ---
 
-## 📜 License
+## 📜 License & Friction Log
 
-Distributed under the MIT Open Source License. See `LICENSE` for details.
+- Distributed under the **MIT Open Source License**. See `LICENSE` for details.
+- Comprehensive MCP Developer Feedback report in `FRICTION_LOG.md`.
