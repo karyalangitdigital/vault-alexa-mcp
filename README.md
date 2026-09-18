@@ -55,44 +55,46 @@ flowchart TD
         User <-->|Natural Voice & Speech Synthesis| AlexaDevice
     end
 
-    subgraph AWSCloud ["☁️ AWS Cloud Infrastructure (Self-Hosted MCP)"]
-        APIGateway["🚪 Amazon API Gateway (HTTP JSON-RPC 2.0 / SSE)"]
+    subgraph AWSCloud ["☁️ AWS Cloud Infrastructure (Self-Hosted MCP Server)"]
+        APIGateway["🚪 Amazon API Gateway\n(TLS 1.3 / HTTP JSON-RPC 2.0 / Streamable SSE)"]
         
-        subgraph ComputeLayer ["⚡ Compute & Orchestration"]
-            BedrockAgent["🧠 AWS Bedrock AgentCore (Claude 3.5 Sonnet / Nova Pro)"]
+        subgraph ComputeLayer ["⚡ Compute & Multi-Agent Orchestration"]
+            BedrockAgent["🧠 AWS Bedrock AgentCore\n(Amazon Nova Pro / Claude 3.5 Agent Swarm)"]
             LambdaMCP["⚡ AWS Lambda / Amazon ECS Fargate\n(Self-Hosted VaultAlexa+ MCP Server)"]
         end
 
         subgraph MCPRegistry ["🛠️ MCP Registry (Spec 2025-11-25)"]
-            MCPTools["🛠️ 11 Multi-Agent Tools\n(predict_runway, dispute_refund, peer_split, etc.)"]
-            MCPResources["📦 3 MCP Resources\n(vault://financial/overview, etc.)"]
-            MCPPrompts["📝 2 Context Prompts"]
+            MCPTools["🛠️ 11 Multi-Agent Tools\n(predict_monthly_runway, initiate_purchase_dispute, trigger_peer_split_request, etc.)"]
+            MCPResources["📦 3 MCP Resources\n(vault://financial/overview.json, etc.)"]
+            MCPPrompts["📝 2 Context Prompts\n(financial_health_audit, prime_deal_optimizer)"]
         end
 
-        subgraph StorageLayer ["🔒 Secure Storage & Catalogs"]
-            DynamoDB[("🗄️ Amazon DynamoDB\n(Private Financial Vault & Ledgers)")]
-            AmazonCatalog[("🛍️ Amazon Selling Partner API\n(Live Prime Deals & Inventory)")]
-            CloudWatch["📊 Amazon CloudWatch\n(Live RPC Latency & Sub-15ms Audit Logs)"]
+        subgraph StorageLayer ["🔒 Secure Storage & Enterprise Telemetry"]
+            DynamoDB[("🗄️ Amazon DynamoDB\n(Private Financial Vault & Encrypted Ledgers)")]
+            AmazonCatalog[("🛍️ Amazon Selling Partner API\n(Live Prime Deals & Seller Catalog)")]
+            CloudWatch["📊 Amazon CloudWatch Logs\n(Live RPC Latency & Sub-15ms Audit Trails)"]
         end
     end
 
-    AlexaDevice <-->|Streamable HTTP / TLS 1.3| APIGateway
-    APIGateway <--> LambdaMCP
-    LambdaMCP <--> BedrockAgent
+    AlexaDevice <-->|Streamable HTTP / SSE Protocol| APIGateway
+    APIGateway <-->|Bidirectional JSON-RPC 2.0 / SSE Stream| LambdaMCP
+    LambdaMCP <-->|Multi-Agent Swarm Orchestration| BedrockAgent
     LambdaMCP --- MCPTools
     LambdaMCP --- MCPResources
     LambdaMCP --- MCPPrompts
     LambdaMCP <-->|Encrypted IAM Auth| DynamoDB
-    LambdaMCP <-->|Signed SigV4 API| AmazonCatalog
-    LambdaMCP --> CloudWatch
+    LambdaMCP <-->|Signed SigV4 Amazon API| AmazonCatalog
+    LambdaMCP -.->|Real-Time Tool Invocation Logs| CloudWatch
+    BedrockAgent -.->|Agent Reasoning Traces & Audit Trails| CloudWatch
 ```
 
 ### ☁️ AWS Services Deployed:
-- **Amazon API Gateway**: Exposes low-latency HTTP endpoints over TLS 1.3 for bidirectional JSON-RPC 2.0 requests.
-- **AWS Lambda / Amazon ECS Fargate**: Hosts the stateless, ultra-fast MCP server logic with sub-15ms execution time.
-- **AWS Bedrock (Claude 3.5 / Amazon Nova)**: Powers multi-turn autonomous agent reasoning and dynamic tool selection.
-- **Amazon DynamoDB**: Stores personal financial vault data, encrypted ledger balances, and household split pools.
-- **Amazon CloudWatch**: Telemetry monitoring for tool invocation latency and protocol audit trails.
+- **Amazon API Gateway**: Exposes low-latency HTTP endpoints over TLS 1.3 supporting **bidirectional JSON-RPC 2.0 & Streamable Server-Sent Events (SSE)**.
+- **AWS Lambda / Amazon ECS Fargate**: Hosts the stateless, ultra-fast self-hosted MCP server with verified sub-15ms execution time.
+- **AWS Bedrock AgentCore (Amazon Nova Pro / Claude 3.5)**: Coordinates autonomous multi-agent reasoning, intent classification, and tool dispatching.
+- **Amazon DynamoDB**: Stores personal financial vault records, category limits, and household split pools with encryption at rest.
+- **Amazon Selling Partner API**: Integrates live Prime catalog inventory, dynamic deals, and Seller fulfillment status.
+- **Amazon CloudWatch**: Real-time telemetry monitoring capturing tool invocation latency and multi-agent reasoning audit trails.
 
 ---
 
