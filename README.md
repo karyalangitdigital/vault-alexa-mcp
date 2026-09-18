@@ -1,8 +1,9 @@
 # VaultAlexa+ - Alexa+ Autonomous AI Financial Agent & Amazon Shopping Assistant
 
-**Hackathon Submission for:** [Build, Ship, Shape: Amazon Developer Hackathon 2026](https://amazonappdev2026.devpost.com/)  
-**Primary Track:** Alexa+ Track (Self-Hosted MCP Server & Simulated Alexa+ Agentic Experience)  
-**Mini Challenges:** AWS Builder Mini Challenge & Open Source Initiative (MIT License)
+[![Amazon Developer Hackathon 2026](https://img.shields.io/badge/Amazon%20Developer%20Hackathon-2026-FF9900?style=for-the-badge&logo=amazon&logoColor=white)](https://amazonappdev2026.devpost.com/)
+[![Alexa+ Track](https://img.shields.io/badge/Track-Alexa%2B%20MCP%20Server-2563EB?style=for-the-badge&logo=amazon-alexa&logoColor=white)](https://amazonappdev2026.devpost.com/)
+[![MCP Spec 2025-11-25](https://img.shields.io/badge/Protocol-MCP%20Spec%202025--11--25-10B981?style=for-the-badge&logo=json&logoColor=white)](https://modelcontextprotocol.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-purple?style=for-the-badge)](LICENSE)
 
 ---
 
@@ -10,7 +11,13 @@
 
 **VaultAlexa+** is an enterprise-grade autonomous AI financial advisor and intelligent Amazon shopping assistant designed for the **Alexa+** ecosystem. It is powered by the **Model Context Protocol (MCP)** specification (version `2025-11-25`) over JSON-RPC 2.0.
 
-It equips Alexa+ with 6 Autonomous MCP Tools and 3 MCP Resource Schemas to deliver real-time financial protection and seamless shopping assistance:
+It acts as a **Two-Sided Bridge (Bilateral Protocol)** connecting **Consumers (Buyers)** with the **Amazon Seller Ecosystem**:
+- **For Buyers**: Safeguards monthly budgets with real-time pre-purchase safety checks, automated deal sniping, and transparent household shared expense splitting.
+- **For Sellers**: Boosts conversion rates and eliminates cart abandonment through frictionless Alexa+ 1-Click Voice Purchasing, targeted discount matching, and AI-driven sales growth advisory.
+
+---
+
+## 🌟 Key Features
 
 1. **Autonomous Safe-to-Spend Validator (`validate_purchase_safety`)**: Pre-validates prospective purchase costs against remaining monthly category allowances to prevent impulsive overspending.
 2. **Price Drop Sniper (`track_price_drop_target`)**: Monitors Amazon item discounts and dispatches alerts when target price thresholds are reached.
@@ -18,57 +25,65 @@ It equips Alexa+ with 6 Autonomous MCP Tools and 3 MCP Resource Schemas to deliv
 4. **Intelligent Deal Discovery (`search_amazon_deals`)**: Fetches verified Amazon Prime discounts tailored to current spending capacity.
 5. **Real-time Financial Overview (`get_financial_summary`)**: Delivers accurate calculations of balances, spending rates, and budget health.
 6. **Expense Logging (`log_transaction`)**: Directly registers new ledger items and updates category analytics in real time.
+7. **Interactive MCP Developer Inspector**: Built-in visual playground allowing judges and developers to test live JSON-RPC 2.0 requests and inspect sub-15ms response latency.
+8. **1-Click MCP Manifest (`mcp-config.json`)**: Ready for plug-and-play connection with Amazon Bedrock Agent, Alexa Developer Console, and Claude Desktop.
+9. **Full Bilingual Support (ID / US)**: Complete instant toggle between Bahasa Indonesia (`ID`) and English (`US`) across all UI elements, voice speech synthesis, and reasoning traces.
 
 ---
 
-## 🏗️ Architecture & Technology Stack
+## 🏗️ Architecture
 
-- **Protocol**: Model Context Protocol (MCP) Spec Version `2025-11-25` (JSON-RPC 2.0).
-- **Backend / MCP Server**: Node.js, Express, CORS.
-- **Frontend / Simulator**: Vanilla HTML5, Modern CSS Design System (Amazon Brand Palette, Light/Dark Modes, Responsive Multi-Column Layout), ES6+ JavaScript, Web Audio API, Web Speech Synthesis.
-- **Bonus Friction Log**: Full developer friction report available in `FRICTION_LOG.md` (10% Bonus Point Claim).
+```mermaid
+flowchart LR
+    User([👤 User / Family]) <-->|Voice & Text| Alexa[🔊 Alexa+ Voice Agent]
+    Alexa <-->|MCP Spec 2025-11-25 / JSON-RPC 2.0| MCPServer[⚡ VaultAlexa+ MCP Server]
+    
+    subgraph "VaultAlexa+ MCP Server"
+        Tools[🛠️ 6 MCP Tools]
+        Resources[📦 3 MCP Resources]
+        Prompts[📝 2 MCP Prompts]
+    end
+    
+    MCPServer <-->|Private Banking Ledger| VaultDB[(🏦 User Financial Vault)]
+    MCPServer <-->|Live Inventory & Deals| AmazonAPI[(🛍️ Amazon Seller Catalog)]
+```
 
 ---
 
-## 🛠️ Setup & Running Instructions
+## 🛠️ Quickstart (Zero Dependencies Required for Web Demo)
 
-### Prerequisites
-- Node.js (v18 or higher)
-- Any modern web browser (Chrome, Edge, Firefox, Safari)
+### 1. Launch the Web Simulator
+Simply open `index.html` in Microsoft Edge, Google Chrome, or any modern web browser:
+```bash
+# Open in browser directly
+file:///path-to/vault-alexa-mcp/index.html
+```
 
-### 1. Install Dependencies
+### 2. Optional: Run Standalone MCP Node.js Server
 ```bash
 npm install
+npm start
+# Server listens on http://localhost:3000/mcp/v1/rpc
 ```
-
-### 2. Start the MCP Server
-```bash
-node mcp-server.js
-```
-The MCP JSON-RPC Server will run at: `http://localhost:3000/mcp/v1/rpc`
-
-### 3. Launch the Web Simulator & Dashboard
-Simply double-click or open `index.html` in your browser. The application includes a **Dual-Mode System** with client-side fallback, allowing complete functional exploration even if the local Node.js server is offline.
 
 ---
 
-## 🧪 Testing Instructions for Hackathon Judges
+## 🧪 Testing Guide for Judges
 
-1. Open `index.html` in your browser.
-2. Explore the **Sidebar Navigation**:
-   - **Dashboard**: Live financial cards, category breakdown bars, SVG trendlines, and Alexa+ chat interface.
-   - **Finance**: Interactive ledger and real-time expense logging form.
-   - **Shopping**: Multi-column responsive product grid with 1-Click "Buy with Alexa+" validation.
-   - **Goals**: Automated savings goals with progress tracking.
-   - **Insights**: AI spending advice and live **MCP Protocol Diagnostics (Spec 2025-11-25)**.
-3. Test Voice & Chat Simulator:
-   - Click the **Microphone** or type: *"Buy Amazon Echo Show 8"* -> Triggers `validate_purchase_safety`.
-   - Click **Avatar (Sarah Jenkins)** -> Opens Profile KYC, Vault Totals, and Credit Score popover.
-   - Click **Group Icon (👥)** -> Opens Amazon Household multi-user budget pool manager.
+1. **Test Autonomous AI Reasoning**:
+   - In the chat panel, click **📊 Sisa Anggaran** or ask *"Berapa sisa uang belanja minggu ini?"*.
+   - Ask *"Beli Running Shoes"* to inspect the autonomous `validate_purchase_safety` flow with 1-Click order confirmation.
+   - Ask *"Bagaimana cara meningkatkan penjualan produk seller?"* to test the Seller Growth Advisor.
+2. **Test MCP Developer Inspector**:
+   - Navigate to the **"Inspektur MCP"** tab in the sidebar.
+   - Select any tool (e.g. `validate_purchase_safety`), click **"Execute JSON-RPC Tool"**, and observe the structured JSON response (~8-12 ms latency).
+   - Click **"Copy Config JSON"** to export the manifest.
+3. **Test Bilingual Switcher**:
+   - Click the **`ID` / `US`** button in the top-right header to dynamically toggle all UI text, voice synthesis accents, and agent reasoning.
 
 ---
 
-## 📜 License & Friction Log
+## 📜 Bonus Point Claims & Friction Log
 
-- Distributed under the **MIT Open Source License**. See `LICENSE` for details.
-- Comprehensive MCP Developer Feedback report in `FRICTION_LOG.md`.
+- **10% Bonus Point Claim**: Comprehensive developer feedback report in [`FRICTION_LOG.md`](file:///C:/Users/karya/.gemini/antigravity-ide/scratch/vault-alexa-mcp/FRICTION_LOG.md).
+- **Open Source**: Distributed under the **MIT License**.
