@@ -1,4 +1,4 @@
-/* VaultAlexa+ Design System - Extended Sidebar Width & Header Dropdown Modals */
+/* VaultAlexa+ Design System - Enhanced Uniform Shopping Cards & UI */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap');
 
 :root {
@@ -835,6 +835,7 @@ body.dark-mode .progress-track {
   font-size: 0.7rem;
   font-weight: 800;
   color: #ffffff;
+  z-index: 2;
 }
 
 .blue-badge { background: #2563eb; }
@@ -885,6 +886,113 @@ body.dark-mode .deal-item-img-wrapper {
   font-size: 0.75rem;
   color: var(--text-light);
   text-decoration: line-through;
+}
+
+/* UNIFORM PRODUCT SHOPPING CARDS */
+.shopping-deals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.shopping-product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.shopping-product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.shopping-img-box {
+  width: 100%;
+  height: 140px;
+  border-radius: 12px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+body.dark-mode .shopping-img-box {
+  background: #0f172a;
+}
+
+.shopping-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Uniform sharp aspect ratio */
+  transition: transform 0.3s ease;
+}
+
+.shopping-product-card:hover .shopping-img-box img {
+  transform: scale(1.05);
+}
+
+.shopping-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.product-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 4px;
+}
+
+body.dark-mode .product-tag {
+  color: #60a5fa;
+}
+
+.shopping-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.3;
+  margin-bottom: 8px;
+  min-height: 38px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.shopping-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.btn-buy-alexa {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-buy-alexa:hover {
+  background: #1d4ed8;
 }
 
 /* CHAT CARD CONTAINER & ALEXA SIMULATOR */
@@ -1146,12 +1254,6 @@ body.dark-mode .input-capsule {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-}
-
-.shopping-deals-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 14px;
 }
 
 .custom-form {

@@ -1,5 +1,5 @@
 /**
- * VaultAlexa+ Controller Logic - Full Interactive Features, Popovers, & MCP Tools
+ * VaultAlexa+ Controller Logic - Full Interactive Features, Popovers, & Verified Clean Product Assets
  */
 
 const SERVER_URL = 'http://localhost:3000/mcp/v1/rpc';
@@ -15,12 +15,54 @@ let state = {
     shopping: { title: 'Shopping', percent: 72, spent: 432, limit: 600, class: 'blue' }
   },
   deals: [
-    { title: 'Amazon Echo Show 8', discount: '30% Off', price: 99.99, wasPrice: 129.99, badgeClass: 'blue-badge', image: 'https://images.unsplash.com/photo-1543512214-318c7553f230?w=500&auto=format&fit=crop&q=60' },
-    { title: 'Running Shoes', discount: '15% Off', price: 65.50, wasPrice: null, badgeClass: 'green-badge', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60' },
-    { title: 'Bose Headphones', discount: '15% Off', price: 219.00, wasPrice: null, badgeClass: 'purple-badge', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60' },
-    { title: 'Kindle Paperwhite 16GB', discount: '20% Off', price: 119.99, wasPrice: 149.99, badgeClass: 'blue-badge', image: 'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?w=500&auto=format&fit=crop&q=60' },
-    { title: 'Apple Watch SE 2nd Gen', discount: '10% Off', price: 224.00, wasPrice: 249.00, badgeClass: 'green-badge', image: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&auto=format&fit=crop&q=60' },
-    { title: 'Anker Power Bank 20000mAh', discount: '25% Off', price: 37.49, wasPrice: 49.99, badgeClass: 'purple-badge', image: 'https://images.unsplash.com/photo-1609592424109-dd9892f1b177?w=500&auto=format&fit=crop&q=60' }
+    { 
+      title: 'Amazon Echo Show 8', 
+      discount: '30% Off', 
+      price: 99.99, 
+      wasPrice: 129.99, 
+      badgeClass: 'blue-badge', 
+      image: 'https://images.unsplash.com/photo-1543512214-318c7553f230?w=500&auto=format&fit=crop&q=80' 
+    },
+    { 
+      title: 'Running Shoes Pro', 
+      discount: '15% Off', 
+      price: 65.50, 
+      wasPrice: null, 
+      badgeClass: 'green-badge', 
+      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=80' 
+    },
+    { 
+      title: 'Bose Headphones 700', 
+      discount: '15% Off', 
+      price: 219.00, 
+      wasPrice: null, 
+      badgeClass: 'purple-badge', 
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=80' 
+    },
+    { 
+      title: 'Kindle Paperwhite 16GB', 
+      discount: '20% Off', 
+      price: 119.99, 
+      wasPrice: 149.99, 
+      badgeClass: 'blue-badge', 
+      image: 'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?w=500&auto=format&fit=crop&q=80' 
+    },
+    { 
+      title: 'Apple Watch Series 9', 
+      discount: '10% Off', 
+      price: 224.00, 
+      wasPrice: 249.00, 
+      badgeClass: 'green-badge', 
+      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=80' 
+    },
+    { 
+      title: 'Anker Power Bank 20K', 
+      discount: '25% Off', 
+      price: 37.49, 
+      wasPrice: 49.99, 
+      badgeClass: 'purple-badge', 
+      image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=500&auto=format&fit=crop&q=80' 
+    }
   ]
 };
 
@@ -150,23 +192,24 @@ if (btnSwitchToShopping) {
   btnSwitchToShopping.addEventListener('click', () => switchTab('shopping'));
 }
 
-// Render Shopping Deals
+// Render Shopping Deals (Uniform Clean Cards)
 function renderShoppingGrid() {
   if (!fullShoppingGrid) return;
   fullShoppingGrid.innerHTML = state.deals.map(deal => `
-    <div class="card deal-item-card">
+    <div class="card shopping-product-card">
       <span class="deal-discount-badge ${deal.badgeClass}">${deal.discount}</span>
-      <div class="deal-item-img-wrapper">
-        <img src="${deal.image}" alt="${deal.title}">
+      <div class="shopping-img-box">
+        <img src="${deal.image}" alt="${deal.title}" loading="lazy">
       </div>
-      <div class="deal-item-details">
-        <div class="deal-item-title">${deal.title}</div>
-        <div class="deal-price-line">
+      <div class="shopping-card-body">
+        <div class="product-tag"><i class="fa-brands fa-amazon"></i> Prime Delivery</div>
+        <div class="shopping-title">${deal.title}</div>
+        <div class="shopping-price-row">
           <span class="deal-now-price">Deal: $${deal.price.toFixed(2)}</span>
           ${deal.wasPrice ? `<span class="deal-was-price">Was $${deal.wasPrice.toFixed(2)}</span>` : ''}
         </div>
-        <button class="btn-primary-action margin-t" onclick="buyAmazonDeal('${deal.title}', ${deal.price})">
-          <i class="fa-solid fa-cart-arrow-down"></i> Buy with Alexa+
+        <button class="btn-buy-alexa" onclick="buyAmazonDeal('${deal.title}', ${deal.price})">
+          <i class="fa-solid fa-cart-shopping"></i> Buy with Alexa+
         </button>
       </div>
     </div>
