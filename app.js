@@ -1444,7 +1444,7 @@ const chatColumn = document.getElementById('chat-column');
 if (chatResizerHandle && chatColumn) {
   let isDragging = false;
   let startX = 0;
-  let startWidth = 320;
+  let startWidth = 360;
 
   chatResizerHandle.addEventListener('mousedown', (e) => {
     isDragging = true;
@@ -1458,7 +1458,7 @@ if (chatResizerHandle && chatColumn) {
   window.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     const deltaX = startX - e.clientX;
-    const newWidth = Math.min(650, Math.max(250, startWidth + deltaX));
+    const newWidth = Math.min(650, Math.max(280, startWidth + deltaX));
     chatColumn.style.width = `${newWidth}px`;
   });
 
@@ -1483,7 +1483,7 @@ if (chatResizerHandle && chatColumn) {
   window.addEventListener('touchmove', (e) => {
     if (!isDragging || e.touches.length !== 1) return;
     const deltaX = startX - e.touches[0].clientX;
-    const newWidth = Math.min(650, Math.max(250, startWidth + deltaX));
+    const newWidth = Math.min(650, Math.max(280, startWidth + deltaX));
     chatColumn.style.width = `${newWidth}px`;
   }, { passive: true });
 
