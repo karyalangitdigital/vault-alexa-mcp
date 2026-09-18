@@ -1,5 +1,5 @@
 /**
- * VaultAlexa+ Controller Logic - Standby Mic Toggle Fix
+ * VaultAlexa+ Controller Logic - Full Multi-Tab Navigation & Interactive Feature Integration
  */
 
 const SERVER_URL = 'http://localhost:3000/mcp/v1/rpc';
@@ -9,15 +9,18 @@ let state = {
   investmentValue: 68125.00,
   monthlySpending: 3150.45,
   categories: {
-    groceries: { percent: 65, spent: 520, limit: 800, class: 'blue' },
-    diningOut: { percent: 88, spent: 352, limit: 400, class: 'green' },
-    utilities: { percent: 40, spent: 120, limit: 300, class: 'purple' },
-    shopping: { percent: 72, spent: 432, limit: 600, class: 'blue' }
+    groceries: { title: 'Groceries', percent: 65, spent: 520, limit: 800, class: 'blue' },
+    diningOut: { title: 'Dining Out', percent: 88, spent: 352, limit: 400, class: 'green' },
+    utilities: { title: 'Utilities', percent: 40, spent: 120, limit: 300, class: 'purple' },
+    shopping: { title: 'Shopping', percent: 72, spent: 432, limit: 600, class: 'blue' }
   },
   deals: [
     { title: 'Amazon Echo Show 8', discount: '30% Off', price: 99.99, wasPrice: 129.99, badgeClass: 'blue-badge', image: 'https://images.unsplash.com/photo-1543512214-318c7553f230?w=500&auto=format&fit=crop&q=60' },
     { title: 'Running Shoes', discount: '15% Off', price: 65.50, wasPrice: null, badgeClass: 'green-badge', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60' },
-    { title: 'Bose Headphones', discount: '15% Off', price: 219.00, wasPrice: null, badgeClass: 'purple-badge', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60' }
+    { title: 'Bose Headphones', discount: '15% Off', price: 219.00, wasPrice: null, badgeClass: 'purple-badge', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60' },
+    { title: 'Kindle Paperwhite 16GB', discount: '20% Off', price: 119.99, wasPrice: 149.99, badgeClass: 'blue-badge', image: 'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?w=500&auto=format&fit=crop&q=60' },
+    { title: 'Apple Watch SE 2nd Gen', discount: '10% Off', price: 224.00, wasPrice: 249.00, badgeClass: 'green-badge', image: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&auto=format&fit=crop&q=60' },
+    { title: 'Anker Power Bank 20000mAh', discount: '25% Off', price: 37.49, wasPrice: 49.99, badgeClass: 'purple-badge', image: 'https://images.unsplash.com/photo-1609592424109-dd9892f1b177?w=500&auto=format&fit=crop&q=60' }
   ]
 };
 
@@ -31,6 +34,165 @@ const listeningLabel = document.getElementById('listening-label');
 const themeToggleBtn = document.getElementById('theme-toggle-btn');
 const themeIcon = document.getElementById('theme-icon');
 const themeText = document.getElementById('theme-text');
+const leftSidebar = document.getElementById('left-sidebar');
+const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+const fullShoppingGrid = document.getElementById('full-shopping-grid');
+const formAddExpense = document.getElementById('form-add-expense');
+const transactionLedgerList = document.getElementById('transaction-ledger-list');
+const btnClearChat = document.getElementById('btn-clear-chat');
+const btnSwitchToShopping = document.getElementById('btn-switch-to-shopping');
+
+// Tab Navigation Logic
+const menuItems = document.querySelectorAll('.menu-item');
+const tabViews = document.querySelectorAll('.tab-view');
+
+function switchTab(tabId) {
+  menuItems.forEach(item => {
+    if (item.getAttribute('data-tab') === tabId) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
+  tabViews.forEach(view => {
+    if (view.id === `view-${tabId}`) {
+      view.classList.add('active');
+    } else {
+      view.classList.remove('active');
+    }
+  });
+
+  if (window.innerWidth <= 900) {
+    leftSidebar.classList.remove('mobile-open');
+  }
+}
+
+menuItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const tabId = item.getAttribute('data-tab');
+    switchTab(tabId);
+  });
+});
+
+if (btnSwitchToShopping) {
+  btnSwitchToShopping.addEventListener('click', () => switchTab('shopping'));
+}
+
+// Mobile Menu Toggle
+if (mobileMenuToggle) {
+  mobileMenuToggle.addEventListener('click', () => {
+    leftSidebar.classList.toggle('mobile-open');
+  });
+}
+
+// Render Shopping Deals
+function renderShoppingGrid() {
+  if (!fullShoppingGrid) return;
+  fullShoppingGrid.innerHTML = state.deals.map(deal => `
+    <div class="card deal-item-card">
+      <span class="deal-discount-badge ${deal.badgeClass}">${deal.discount}</span>
+      <div class="deal-item-img-wrapper">
+        <img src="${deal.image}" alt="${deal.title}">
+      </div>
+      <div class="deal-item-details">
+        <div class="deal-item-title">${deal.title}</div>
+        <div class="deal-price-line">
+          <span class="deal-now-price">Deal: $${deal.price.toFixed(2)}</span>
+          ${deal.wasPrice ? `<span class="deal-was-price">Was $${deal.wasPrice.toFixed(2)}</span>` : ''}
+        </div>
+        <button class="btn-primary-action margin-t" onclick="buyAmazonDeal('${deal.title}', ${deal.price})">
+          <i class="fa-solid fa-cart-arrow-down"></i> Buy with Alexa+
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+renderShoppingGrid();
+
+// Global Amazon Buy Handler
+window.buyAmazonDeal = function(title, price) {
+  const q = `Buy ${title} for $${price}`;
+  processUserQuery(q);
+};
+
+// Add Expense Form Handler (MCP Sync)
+if (formAddExpense) {
+  formAddExpense.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const categoryKey = document.getElementById('expense-category').value;
+    const amount = parseFloat(document.getElementById('expense-amount').value);
+    const desc = document.getElementById('expense-desc').value.trim();
+
+    if (isNaN(amount) || amount <= 0) return;
+
+    // Mutate state
+    state.monthlySpending += amount;
+    state.accountBalance -= amount;
+    
+    if (state.categories[categoryKey]) {
+      state.categories[categoryKey].spent += amount;
+      state.categories[categoryKey].percent = Math.min(100, Math.round((state.categories[categoryKey].spent / state.categories[categoryKey].limit) * 100));
+    }
+
+    updateUIOverview();
+
+    // Add to ledger
+    const li = document.createElement('li');
+    li.className = 'trans-item';
+    li.innerHTML = `
+      <div class="trans-info">
+        <span class="trans-title">${desc}</span>
+        <span class="trans-date">${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • ${categoryKey}</span>
+      </div>
+      <span class="trans-amt negative">-$${amount.toFixed(2)}</span>
+    `;
+    transactionLedgerList.prepend(li);
+
+    // Reset form
+    formAddExpense.reset();
+
+    // Trigger AI notification message
+    addMessage('alexa', 'Alexa+', `✅ Logged expense of <strong>$${amount.toFixed(2)}</strong> for <em>${desc}</em> via MCP Protocol tool <code>log_transaction</code>. Updated remaining budget.`);
+  });
+}
+
+// Update UI Values
+function updateUIOverview() {
+  document.getElementById('dash-account-balance').textContent = `$${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+  document.getElementById('dash-monthly-spending').textContent = `$${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+  const catContainer = document.getElementById('cat-progress-container');
+  if (catContainer) {
+    catContainer.innerHTML = Object.keys(state.categories).map(k => {
+      const c = state.categories[k];
+      return `
+        <div class="cat-progress-row">
+          <div class="cat-row-header">
+            <span class="cat-row-title">${c.title}</span>
+            <span class="cat-row-pct ${c.class}">${c.percent}%</span>
+            <span class="cat-row-amt">$${c.spent}/$${c.limit}</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill ${c.class}-fill" style="width: ${c.percent}%;"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+// Clear Chat
+if (btnClearChat) {
+  btnClearChat.addEventListener('click', () => {
+    chatMessagesContainer.innerHTML = `
+      <div class="chat-msg alexa-msg">
+        <div class="msg-sender-name">Alexa+</div>
+        <div class="msg-bubble alexa-bubble">Chat history cleared. How can I assist with your finances or Amazon deals?</div>
+      </div>
+    `;
+  });
+}
 
 // Theme Switcher Logic
 let isDarkMode = false;
@@ -108,14 +270,17 @@ function processUserQuery(query) {
   const qLower = query.toLowerCase();
 
   setTimeout(() => {
-    if (qLower.includes('tech') || qLower.includes('deal') || qLower.includes('item')) {
-      addMessage('alexa', 'Alexa+', 'Here are tech deals for you: Amazon Echo Show 8 at $99.99 (30% Off) and Bose Headphones at $219.00!');
+    if (qLower.includes('buy') || qLower.includes('purchase')) {
+      addMessage('alexa', 'Alexa+', `🛒 Order initiated for Amazon item! Validating with your monthly budget capacity via MCP <code>get_financial_summary</code>. Purchase approved.`);
+    } else if (qLower.includes('tech') || qLower.includes('deal') || qLower.includes('item')) {
+      addMessage('alexa', 'Alexa+', 'Here are top tech deals: Amazon Echo Show 8 at $99.99 (30% Off) and Bose Headphones at $219.00!');
+      switchTab('shopping');
     } else if (qLower.includes('grocery') || qLower.includes('food')) {
-      addMessage('alexa', 'Alexa+', 'You have spent $520 out of your $800 grocery budget (65% used). Safe remaining capacity: $280.');
+      addMessage('alexa', 'Alexa+', `You have spent $${state.categories.groceries.spent} out of your $${state.categories.groceries.limit} grocery budget (${state.categories.groceries.percent}% used). Safe remaining capacity: $${state.categories.groceries.limit - state.categories.groceries.spent}.`);
     } else if (qLower.includes('balance') || qLower.includes('account')) {
-      addMessage('alexa', 'Alexa+', `Your total Account Balance is $24,560.80 and your Investment Value grew to $68,125.00 (+4.2%).`);
+      addMessage('alexa', 'Alexa+', `Your total Account Balance is $${state.accountBalance.toLocaleString('en-US', {minimumFractionDigits:2})} and your Investment Value grew to $${state.investmentValue.toLocaleString('en-US', {minimumFractionDigits:2})} (+4.2%).`);
     } else {
-      addMessage('alexa', 'Alexa+', `I analyzed your request via MCP Server v2025-11-25. Your monthly spending is $3,150.45.`);
+      addMessage('alexa', 'Alexa+', `I analyzed your request via MCP Server v2025-11-25. Total monthly spending: $${state.monthlySpending.toLocaleString('en-US', {minimumFractionDigits:2})}. All categories healthy.`);
     }
   }, 600);
 }

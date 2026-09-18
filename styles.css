@@ -1,4 +1,4 @@
-/* VaultAlexa+ Design System - Standby & Active Mic State Fix */
+/* VaultAlexa+ Design System - Full Responsive & Active Menu Navigation */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap');
 
 :root {
@@ -65,6 +65,16 @@ body {
 .header-left {
   display: flex;
   align-items: center;
+  gap: 12px;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-main);
+  cursor: pointer;
 }
 
 .header-logo {
@@ -220,6 +230,7 @@ body.dark-mode .theme-mode-btn {
   background: var(--bg-card);
   border-right: 1px solid var(--border-light);
   padding: 20px 14px;
+  transition: all 0.3s ease;
 }
 
 .sidebar-menu {
@@ -234,7 +245,11 @@ body.dark-mode .theme-mode-btn {
   gap: 12px;
   padding: 12px 16px;
   border-radius: 12px;
-  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
   color: var(--text-muted);
   font-weight: 600;
   font-size: 0.9rem;
@@ -256,13 +271,24 @@ body.dark-mode .menu-item.active {
   color: #60a5fa;
 }
 
-/* MAIN WORKSPACE GRID */
+/* MAIN WORKSPACE & TAB VIEWS */
 .main-workspace {
   flex: 1;
+  padding: 24px;
+}
+
+.tab-view {
+  display: none;
+}
+
+.tab-view.active {
+  display: block;
+}
+
+.dashboard-grid-container {
   display: grid;
   grid-template-columns: 1fr 280px 360px;
   gap: 20px;
-  padding: 24px;
 }
 
 /* Cards Standard */
@@ -419,6 +445,7 @@ body.dark-mode .progress-track {
 .progress-fill {
   height: 100%;
   border-radius: 4px;
+  transition: width 0.4s ease;
 }
 
 .blue-fill { background: #2563eb; }
@@ -585,6 +612,7 @@ body.dark-mode .deal-item-img-wrapper {
 
 .chat-scroll-area {
   flex: 1;
+  max-height: 420px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -682,7 +710,6 @@ body.dark-mode .big-mic-button {
   color: #94a3b8;
 }
 
-/* Active Listening Mic Button State */
 .listening-section.is-listening .big-mic-button,
 .big-mic-button.active-listening {
   background: linear-gradient(135deg, #2563eb, #3b82f6);
@@ -772,12 +799,261 @@ body.dark-mode .input-capsule {
   font-size: 12px;
 }
 
-/* RESPONSIVE */
+/* OTHER TAB STYLES & LAYOUTS */
+.tab-page-header {
+  margin-bottom: 20px;
+}
+
+.tab-description {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.tab-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.tab-grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.shopping-deals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* Custom Forms & Inputs */
+.custom-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.custom-input {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-light);
+  background: #f8fafc;
+  outline: none;
+  font-family: var(--font-main);
+  color: var(--text-main);
+}
+
+body.dark-mode .custom-input {
+  background: #0f172a;
+}
+
+.btn-primary-action {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Ledger List */
+.transaction-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.trans-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.trans-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.trans-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.trans-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.trans-amt {
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.trans-amt.negative { color: #ef4444; }
+.trans-amt.positive { color: #10b981; }
+
+/* Goal Cards */
+.goal-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.goal-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.blue-bg { background: #2563eb; }
+.green-bg { background: #10b981; }
+.purple-bg { background: #8b5cf6; }
+
+.goal-title {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.goal-amount {
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin: 4px 0;
+}
+
+.goal-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.margin-v { margin: 10px 0; }
+.margin-t { margin-top: 14px; }
+.max-w-600 { max-width: 600px; }
+
+/* Insights Box */
+.insight-box {
+  background: #f8fafc;
+  border-left: 4px solid #2563eb;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+body.dark-mode .insight-box {
+  background: #0f172a;
+}
+
+.mcp-diag-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.diag-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.diag-label { font-weight: 600; color: var(--text-muted); }
+.diag-value { font-weight: 700; color: var(--text-main); }
+.green-text { color: #10b981; }
+.text-blue { color: #2563eb; }
+.text-green { color: #10b981; }
+.text-purple { color: #8b5cf6; }
+.text-amber { color: #f59e0b; }
+
+/* Settings Switch */
+.setting-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.setting-title { font-weight: 700; font-size: 0.9rem; }
+.setting-desc { font-size: 0.78rem; color: var(--text-muted); }
+
+.toggle-switch {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* RESPONSIVE DESIGN FOR DESKTOP & MOBILE */
 @media (max-width: 1200px) {
-  .main-workspace {
+  .dashboard-grid-container {
+    grid-template-columns: 1fr 340px;
+  }
+  .deals-column {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .app-body {
+    position: relative;
+  }
+
+  .left-sidebar {
+    position: absolute;
+    left: -220px;
+    top: 0;
+    bottom: 0;
+    z-index: 99;
+    box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+  }
+
+  .left-sidebar.mobile-open {
+    left: 0;
+  }
+
+  .dashboard-grid-container {
     grid-template-columns: 1fr;
   }
-  .left-sidebar {
+
+  .tab-grid-2col, .tab-grid-3col {
+    grid-template-columns: 1fr;
+  }
+
+  .header-search {
+    width: 200px;
+  }
+
+  .user-name {
     display: none;
   }
 }
