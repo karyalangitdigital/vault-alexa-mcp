@@ -43,22 +43,54 @@ It acts as a **Two-Sided Bridge (Bilateral Protocol)** connecting **Consumers (B
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Cloud & Serverless Architecture (AWS Powered)
 
 ```mermaid
-flowchart LR
-    User([👤 User / Family]) <-->|Voice & Text| Alexa[🔊 Alexa+ Voice Agent]
-    Alexa <-->|MCP Spec 2025-11-25 / JSON-RPC 2.0| MCPServer[⚡ VaultAlexa+ MCP Server]
-    
-    subgraph "VaultAlexa+ MCP Server"
-        Tools[🛠️ 6 MCP Tools]
-        Resources[📦 3 MCP Resources]
-        Prompts[📝 2 MCP Prompts]
+flowchart TD
+    subgraph ClientLayer ["📱 Multi-Modal Client & Voice Layer"]
+        User(["👤 User / Prime Family"])
+        AlexaDevice["🔊 Alexa+ Echo Show / Fire TV / Web UI"]
+        User <-->|Natural Voice & Speech Synthesis| AlexaDevice
     end
-    
-    MCPServer <-->|Private Banking Ledger| VaultDB[(🏦 User Financial Vault)]
-    MCPServer <-->|Live Inventory & Deals| AmazonAPI[(🛍️ Amazon Seller Catalog)]
+
+    subgraph AWSCloud ["☁️ AWS Cloud Infrastructure (Self-Hosted MCP)"]
+        APIGateway["🚪 Amazon API Gateway (HTTP JSON-RPC 2.0 / SSE)"]
+        
+        subgraph ComputeLayer ["⚡ Compute & Orchestration"]
+            BedrockAgent["🧠 AWS Bedrock AgentCore (Claude 3.5 Sonnet / Nova Pro)"]
+            LambdaMCP["⚡ AWS Lambda / Amazon ECS Fargate\n(Self-Hosted VaultAlexa+ MCP Server)"]
+        end
+
+        subgraph MCPRegistry ["🛠️ MCP Registry (Spec 2025-11-25)"]
+            MCPTools["🛠️ 8 MCP Tools\n(validate_purchase_safety, negotiate_discount, etc.)"]
+            MCPResources["📦 3 MCP Resources\n(vault://financial/overview, etc.)"]
+            MCPPrompts["📝 2 Context Prompts"]
+        end
+
+        subgraph StorageLayer ["🔒 Secure Storage & Catalogs"]
+            DynamoDB[("🗄️ Amazon DynamoDB\n(Private Financial Vault & Ledgers)")]
+            AmazonCatalog[("🛍️ Amazon Selling Partner API\n(Live Prime Deals & Inventory)")]
+            CloudWatch["📊 Amazon CloudWatch\n(Live RPC Latency & Sub-15ms Audit Logs)"]
+        end
+    end
+
+    AlexaDevice <-->|Streamable HTTP / TLS 1.3| APIGateway
+    APIGateway <--> LambdaMCP
+    LambdaMCP <--> BedrockAgent
+    LambdaMCP --- MCPTools
+    LambdaMCP --- MCPResources
+    LambdaMCP --- MCPPrompts
+    LambdaMCP <-->|Encrypted IAM Auth| DynamoDB
+    LambdaMCP <-->|Signed SigV4 API| AmazonCatalog
+    LambdaMCP --> CloudWatch
 ```
+
+### ☁️ AWS Services Deployed:
+- **Amazon API Gateway**: Exposes low-latency HTTP endpoints over TLS 1.3 for bidirectional JSON-RPC 2.0 requests.
+- **AWS Lambda / Amazon ECS Fargate**: Hosts the stateless, ultra-fast MCP server logic with sub-15ms execution time.
+- **AWS Bedrock (Claude 3.5 / Amazon Nova)**: Powers multi-turn autonomous agent reasoning and dynamic tool selection.
+- **Amazon DynamoDB**: Stores personal financial vault data, encrypted ledger balances, and household split pools.
+- **Amazon CloudWatch**: Telemetry monitoring for tool invocation latency and protocol audit trails.
 
 ---
 

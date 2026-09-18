@@ -360,17 +360,54 @@ window.handleChipClick = function(text) {
   processUserQuery(text);
 };
 
-// Global Savings Transfer Handler
+// Global Savings Transfer Handler with Autonomous MCP Tool Calling
 window.transferFromSavings = function(amount) {
-  state.accountBalance += amount;
-  state.categories.shopping.limit += amount;
-  state.categories.shopping.percent = Math.min(100, Math.round((state.categories.shopping.spent / state.categories.shopping.limit) * 100));
-  updateUIOverview();
   const isID = currentLang === 'ID';
-  const msg = isID
-    ? `💰 Berhasil mentransfer <strong>$${amount}</strong> dari rekening tabungan ke batas belanja. Batas belanja baru sekarang <strong>$${state.categories.shopping.limit}</strong>.`
-    : `💰 Successfully transferred <strong>$${amount}</strong> from savings to shopping limit. New shopping limit is <strong>$${state.categories.shopping.limit}</strong>.`;
-  addMessage('alexa', 'Alexa+', msg);
+  const traceSteps = isID ? [
+    `Maksud: [Alokasi Dana Darurat / Transfer Saldo Tabungan]`,
+    `Membaca Resource MCP: vault://financial/overview.json`,
+    `Memanggil Tool: log_transaction(tipe: "TRANSFER_IN", nominal: $${amount}, tujuan: "Belanja Santai")`,
+    `Memperbarui Alokasi Limit Kategori & Kapasitas Safe-to-Spend`
+  ] : [
+    `Intent: [Emergency Savings Transfer / Rebalancing]`,
+    `Reading MCP Resource: vault://financial/overview.json`,
+    `Calling Tool: log_transaction(type: "TRANSFER_IN", amount: $${amount}, target: "Shopping")`,
+    `Recalculating Category Allowance & Safe-to-Spend Headroom`
+  ];
+
+  showReasoningTrace(traceSteps, () => {
+    state.accountBalance += amount;
+    state.categories.shopping.limit += amount;
+    state.categories.shopping.percent = Math.min(100, Math.round((state.categories.shopping.spent / state.categories.shopping.limit) * 100));
+    updateUIOverview();
+
+    const msg = isID ? `
+      <strong>Tool MCP [log_transaction & Rebalancing]:</strong>
+      <div class="chat-order-card" style="border-color:#10b981;">
+        <div class="order-card-header" style="color:#059669;">
+          <i class="fa-solid fa-money-bill-transfer"></i> Transfer Saldo Berhasil Diotorisasi
+        </div>
+        <div style="font-size: 0.82rem; line-height: 1.5; margin-top: 6px;">
+          💵 <strong>Nominal Transfer:</strong> +$${amount.toFixed(2)} dari Dana Cadangan<br>
+          📊 <strong>Batas Belanja Santai Baru:</strong> $${state.categories.shopping.limit.toFixed(2)} (Kapasitas: ${state.categories.shopping.percent}%)<br>
+          🛡️ <em>Status anggaran kembali normal. Anda sekarang aman untuk melanjutkan checkout barang!</em>
+        </div>
+      </div>
+    ` : `
+      <strong>MCP Tool [log_transaction & Rebalancing]:</strong>
+      <div class="chat-order-card" style="border-color:#10b981;">
+        <div class="order-card-header" style="color:#059669;">
+          <i class="fa-solid fa-money-bill-transfer"></i> Funds Transfer Authorized
+        </div>
+        <div style="font-size: 0.82rem; line-height: 1.5; margin-top: 6px;">
+          💵 <strong>Transfer Amount:</strong> +$${amount.toFixed(2)} from Savings Vault<br>
+          📊 <strong>New Shopping Limit:</strong> $${state.categories.shopping.limit.toFixed(2)} (Capacity: ${state.categories.shopping.percent}%)<br>
+          🛡️ <em>Budget headroom restored. You are now cleared to proceed with 1-Click checkout!</em>
+        </div>
+      </div>
+    `;
+    addMessage('alexa', 'Alexa+', msg);
+  });
 };
 
 // Process User Query with Autonomous MCP Reasoning (Bilingual Support)
@@ -1745,6 +1782,17 @@ const DEFAULT_TOOL_ARGS = {
     description: "Starbucks Coffee & Snacks",
     amount: 14.50,
     category: "diningOut"
+  },
+  negotiate_dynamic_discount: {
+    productId: "az-06",
+    itemTitle: "Amazon Echo Show 8",
+    currentPrice: 99.99,
+    targetBudget: 85.00
+  },
+  calculate_opportunity_cost: {
+    itemTitle: "Bose Headphones 700",
+    itemPrice: 219.00,
+    targetGoalName: "Vacation to Tokyo"
   }
 };
 
@@ -1842,6 +1890,37 @@ window.executeInspectorTool = function() {
       transactionId: "tx-" + Math.floor(10000 + Math.random() * 90000),
       recorded: parsedArgs,
       newLedgerBalance: state.accountBalance - (parsedArgs.amount || 0)
+    };
+  } else if (toolName === 'negotiate_dynamic_discount') {
+    const curP = parsedArgs.currentPrice || 99.99;
+    const tgtB = parsedArgs.targetBudget || 85.00;
+    const discPct = Math.min(30, Math.round(((curP - tgtB) / curP) * 100));
+    const agreedP = Number((curP * (1 - discPct / 100)).toFixed(2));
+    toolResultContent = {
+      status: "NEGOTIATION_SUCCESSFUL",
+      productId: parsedArgs.productId || "az-deal",
+      item: parsedArgs.itemTitle || "Product",
+      originalPrice: curP,
+      targetBudget: tgtB,
+      agreedPrice: agreedP,
+      voucherApplied: `AMZ-MCP-SAVE${discPct}`,
+      savings: Number((curP - agreedP).toFixed(2)),
+      bilateralProtocol: "Amazon Seller API <--> VaultAlexa+ MCP Server",
+      message: "Seller accepted 1-Click checkout proposal with instant volume voucher."
+    };
+  } else if (toolName === 'calculate_opportunity_cost') {
+    const itmP = parsedArgs.itemPrice || 219.00;
+    const goal = parsedArgs.targetGoalName || "Vacation to Tokyo";
+    const delayDays = Math.round((itmP / 200) * 30);
+    toolResultContent = {
+      status: "COOLDOWN_ANALYSIS_COMPLETE",
+      item: parsedArgs.itemTitle || "Item",
+      price: itmP,
+      impactedGoal: goal,
+      targetDelayDays: delayDays,
+      cooldownRecommended: itmP > 100 ? "24_HOURS" : "1_HOUR",
+      behavioralGuard: "ACTIVE",
+      advice: `Purchasing redirects funds equivalent to ${delayDays} days of savings toward "${goal}".`
     };
   }
 
