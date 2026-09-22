@@ -1095,8 +1095,8 @@ body.dark-mode .progress-track {
 
 .dashboard-deals-horizontal-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); /* Dynamically scales: 4 cards when agent panel is wide, 5-6 cards when narrow/closed */
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
   width: 100%;
 }
 
@@ -1106,16 +1106,22 @@ body.dark-mode .progress-track {
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
-  padding: 12px;
+  padding: 14px;
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-card);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  flex: none;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .deal-item-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
 .deal-item-img-wrapper {
@@ -1309,7 +1315,7 @@ body.dark-mode .product-tag {
   overflow: hidden;
   box-sizing: border-box;
   width: 100%;
-  min-width: 380px;
+  min-width: 0;
   flex-shrink: 0;
 }
 
@@ -1888,6 +1894,7 @@ body.dark-mode .custom-input {
 .blue-bg { background: #2563eb; }
 .green-bg { background: #10b981; }
 .purple-bg { background: #8b5cf6; }
+.amber-bg { background: #f59e0b; }
 
 .goal-title {
   font-weight: 700;
@@ -1921,8 +1928,35 @@ body.dark-mode .custom-input {
   line-height: 1.5;
 }
 
+.insight-box.warning-box {
+  background: #fffbeb;
+  border-left-color: #f59e0b;
+}
+
+.insight-box.critical-box {
+  background: #fef2f2;
+  border-left-color: #ef4444;
+}
+
+.insight-box.success-box {
+  background: #f0fdf4;
+  border-left-color: #10b981;
+}
+
 body.dark-mode .insight-box {
   background: #0f172a;
+}
+
+body.dark-mode .insight-box.warning-box {
+  background: #2a2012;
+}
+
+body.dark-mode .insight-box.critical-box {
+  background: #2c1517;
+}
+
+body.dark-mode .insight-box.success-box {
+  background: #112a1f;
 }
 
 .mcp-diag-list {
@@ -2795,5 +2829,1123 @@ body.dark-mode .btn-role-segment.active {
   color: #131921;
 }
 
+/* ========================================================= */
+/* 📸 AI VISION AUTO-LISTING SPECIALIST & CHAT DRAFT REVIEW */
+/* ========================================================= */
 
+.vision-listing-card {
+  background: linear-gradient(135deg, #ffffff 0%, #fbfdff 100%);
+  border: 1px solid #c7d2fe;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.07);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
 
+body.dark-mode .vision-listing-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-color: #3730a3;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.vision-card-header {
+  margin-bottom: 16px;
+}
+
+.vision-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+.vision-card-title {
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.vision-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* Upload Workspace */
+.vision-upload-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vision-dropzone {
+  position: relative;
+  border: 2px dashed #93c5fd;
+  border-radius: 12px;
+  background: #f8faff;
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+.vision-dropzone:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.1);
+}
+
+body.dark-mode .vision-dropzone {
+  border-color: #3b82f6;
+  background: #1e293b;
+}
+
+body.dark-mode .vision-dropzone:hover {
+  background: #233554;
+}
+
+.dropzone-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropzone-icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: transform 0.25s ease;
+}
+
+.vision-dropzone:hover .dropzone-icon-circle {
+  transform: scale(1.1);
+}
+
+.dropzone-text-main {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.dropzone-text-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Scanning Overlay Animation */
+.vision-scanning-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(19, 25, 33, 0.88);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.scanner-laser-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, transparent);
+  box-shadow: 0 0 14px #38bdf8, 0 0 28px #818cf8;
+  animation: laserScanMotion 1.8s infinite ease-in-out alternate;
+}
+
+@keyframes laserScanMotion {
+  0% { top: 10%; }
+  100% { top: 90%; }
+}
+
+.scanner-status-text {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+/* Sample Products Tray */
+.vision-sample-tray {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(0,0,0,0.02);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.sample-tray-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.sample-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sample-chip-btn {
+  background: var(--bg-card);
+  border: 1px solid #cbd5e1;
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sample-chip-btn:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* ========================================================= */
+/* 💬 CHAT DRAFT REVIEW CARD (HUMAN-IN-THE-LOOP PREVIEW)   */
+/* ========================================================= */
+
+.chat-draft-card {
+  background: #ffffff;
+  border: 1.5px solid #f59e0b;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 10px;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+body.dark-mode .chat-draft-card {
+  background: #1e293b;
+  border-color: #d97706;
+}
+
+.draft-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.draft-badge-pill {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+body.dark-mode .draft-badge-pill {
+  background: #78350f;
+  color: #fef3c7;
+  border-color: #92400e;
+}
+
+.draft-product-box {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.draft-thumb-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.draft-product-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.draft-title-text {
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--text-main);
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+.draft-meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* Live Market Web Search Grounding Box */
+.draft-web-search-box {
+  background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
+  border: 1px solid #86efac;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+body.dark-mode .draft-web-search-box {
+  background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+  border-color: #059669;
+}
+
+.web-search-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.web-search-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #047857;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+body.dark-mode .web-search-title {
+  color: #6ee7b7;
+}
+
+.web-search-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: #dcfce7;
+  color: #15803d;
+  padding: 2px 7px;
+  border-radius: 10px;
+  border: 1px solid #bbf7d0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+body.dark-mode .web-search-badge {
+  background: #14532d;
+  color: #bbf7d0;
+  border-color: #166534;
+}
+
+.web-search-query {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-family: 'Consolas', 'Courier New', monospace;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.dark-mode .web-search-query {
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+}
+
+.web-sources-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.web-source-pill {
+  flex: 1;
+  min-width: 90px;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+body.dark-mode .web-source-pill {
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.source-store {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.source-price {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.pricing-logic-note {
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+  border-top: 1px dashed rgba(0, 0, 0, 0.08);
+  padding-top: 6px;
+}
+
+body.dark-mode .pricing-logic-note {
+  border-top-color: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+}
+
+.draft-pricing-comparison {
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+body.dark-mode .draft-pricing-comparison {
+  background: #0f172a;
+}
+
+.pricing-block-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-lbl {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.pricing-val-comp {
+  font-size: 0.88rem;
+  color: #64748b;
+  text-decoration: line-through;
+  font-weight: 600;
+}
+
+.pricing-val-suggested {
+  font-size: 1.05rem;
+  color: #059669;
+  font-weight: 800;
+}
+
+.pricing-margin-pill {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+/* Bullet Points Summary */
+.draft-bullets-box {
+  background: rgba(0,0,0,0.02);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.draft-bullets-box ul {
+  margin-left: 14px;
+}
+
+/* Action Button & Chat Edit Hint */
+.draft-actions-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-confirm-publish {
+  background: linear-gradient(135deg, #f08804, #ff9900);
+  color: #111827;
+  border: 1px solid #d97706;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.btn-confirm-publish:hover {
+  background: linear-gradient(135deg, #ea580c, #f59e0b);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(245, 158, 11, 0.35);
+}
+
+.draft-chat-edit-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.35;
+  font-style: italic;
+}
+
+/* ========================================================================= */
+/* 📱 COMPREHENSIVE RESPONSIVE DESIGN SYSTEM (DESKTOP, LAPTOP, TABLET, MOBILE) */
+/* ========================================================================= */
+
+/* Mobile Sidebar Backdrop Overlay */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 890;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 1. Standard Laptops & Medium Screens (<= 1366px)                          */
+/* ------------------------------------------------------------------------- */
+@media (max-width: 1366px) {
+  .header-search {
+    width: 280px;
+  }
+
+  .chat-column {
+    width: 380px;
+    max-width: 460px;
+  }
+
+  .dashboard-deals-horizontal-grid,
+  .shopping-deals-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .financial-cards-grid {
+    gap: 12px;
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* 2. Tablets & Small Laptops (<= 1024px)                                    */
+/* ------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .app-header {
+    padding: 0 16px;
+  }
+
+  .header-search {
+    width: 220px;
+  }
+
+  .main-workspace-layout {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  /* Slim icon-first left sidebar */
+  .left-sidebar {
+    width: 68px;
+    padding: 20px 8px;
+  }
+
+  .left-sidebar.is-collapsed {
+    width: 0;
+    padding: 20px 0;
+  }
+
+  .menu-item {
+    padding: 12px 0;
+    justify-content: center;
+    gap: 0;
+    border-radius: 14px;
+  }
+
+  .menu-item span {
+    display: none;
+  }
+
+  .menu-item i {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  .chat-column {
+    width: 340px;
+    max-width: 400px;
+  }
+
+  /* Grids & Cards Adaptations */
+  .financial-cards-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .balance-card {
+    grid-column: 1 / -1;
+  }
+
+  .tab-grid-2col {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .mcp-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .mcp-inspector-workspace {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .dashboard-deals-horizontal-grid,
+  .shopping-deals-grid {
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 12px;
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* 3. Mobile Phones & Phablets (<= 768px)                                    */
+/* ------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  html, body {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+
+  /* Compact Adaptive Header */
+  .app-header {
+    height: 58px;
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .header-left {
+    gap: 10px;
+  }
+
+  .sidebar-toggle-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  .logo-v-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-title {
+    font-size: 1rem;
+  }
+
+  .logo-subtitle {
+    display: none;
+  }
+
+  .header-search {
+    flex: 1;
+    width: auto;
+    max-width: 240px;
+    min-width: 100px;
+  }
+
+  .search-input {
+    height: 34px;
+    font-size: 0.78rem;
+    padding: 0 12px 0 32px;
+  }
+
+  .search-icon {
+    left: 10px;
+    font-size: 12px;
+  }
+
+  .header-right {
+    gap: 6px;
+  }
+
+  .user-name,
+  .profile-arrow {
+    display: none;
+  }
+
+  .user-profile {
+    padding: 2px;
+  }
+
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .header-icon-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .lang-switch-btn {
+    padding: 4px 8px;
+    font-size: 0.72rem;
+    gap: 4px;
+  }
+
+  /* Full Screen Popovers on Mobile */
+  .header-popover-menu {
+    position: fixed;
+    top: 58px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-width: calc(100vw - 16px);
+    padding: 14px;
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .popover-metrics {
+    gap: 6px;
+  }
+
+  .pop-metric-val {
+    font-size: 1rem;
+  }
+
+  /* Main Workspace */
+  .app-body {
+    height: calc(100dvh - 58px);
+  }
+
+  .main-workspace-layout {
+    padding: 12px 10px;
+    gap: 0;
+  }
+
+  .center-views-container {
+    padding-right: 0;
+  }
+
+  /* Off-canvas Left Sidebar Mobile Drawer */
+  .left-sidebar {
+    position: fixed;
+    top: 58px;
+    left: 0;
+    bottom: 0;
+    width: 260px !important;
+    max-width: 82vw;
+    height: calc(100dvh - 58px);
+    z-index: 900;
+    background: var(--bg-card);
+    box-shadow: 6px 0 24px rgba(0, 0, 0, 0.18);
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    border-right: 1px solid var(--border-light);
+    padding: 18px 12px;
+    opacity: 1 !important;
+  }
+
+  .left-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .left-sidebar.is-collapsed {
+    transform: translateX(-100%);
+  }
+
+  .menu-item {
+    justify-content: flex-start;
+    padding: 12px 16px;
+    gap: 14px;
+    border-radius: 20px;
+  }
+
+  .menu-item span {
+    display: inline !important;
+  }
+
+  .menu-item i {
+    font-size: 16px;
+    width: 20px;
+  }
+
+  /* Resizer handle disabled on touch/mobile */
+  .chat-resizer-handle {
+    display: none !important;
+  }
+
+  /* Chat Panel as Full-Screen Sheet Modal on Mobile */
+  .chat-column {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    z-index: 1200;
+    border-radius: 0;
+    background: var(--bg-card);
+    transform: translateY(0);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .chat-column.is-closed {
+    transform: translateY(100%) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .chat-card-container {
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    border: none;
+    padding: 14px 12px;
+  }
+
+  .chat-header-actions #btn-close-chat {
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
+    background: #e2e8f0;
+  }
+
+  body.dark-mode .chat-header-actions #btn-close-chat {
+    background: #334155;
+  }
+
+  /* Floating Launcher on Mobile */
+  .floating-chat-launcher {
+    bottom: 16px;
+    right: 16px;
+    width: 52px;
+    height: 52px;
+    z-index: 1050;
+  }
+
+  .floating-launcher-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Mobile Content Cards & Grids */
+  .financial-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .dashboard-deals-horizontal-grid,
+  .shopping-deals-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .deal-item-card,
+  .shopping-product-card {
+    padding: 12px;
+  }
+
+  .deal-item-img-wrapper,
+  .shopping-img-box {
+    height: 115px;
+    margin-bottom: 8px;
+  }
+
+  .deal-item-title,
+  .shopping-title {
+    font-size: 0.8rem;
+    min-height: 32px;
+    margin-bottom: 4px;
+  }
+
+  .shopping-price-row {
+    margin-bottom: 8px;
+    gap: 4px;
+  }
+
+  .btn-buy-alexa {
+    font-size: 0.72rem;
+    padding: 6px 8px;
+  }
+
+  /* Vision Upload Workspace Mobile */
+  .vision-listing-card {
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .vision-card-title {
+    font-size: 1.05rem;
+  }
+
+  .vision-card-desc {
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .vision-dropzone {
+    padding: 16px 10px;
+  }
+
+  .dropzone-icon-circle {
+    width: 42px;
+    height: 42px;
+    font-size: 16px;
+  }
+
+  .dropzone-text-main {
+    font-size: 0.82rem;
+  }
+
+  .dropzone-text-sub {
+    font-size: 0.7rem;
+  }
+
+  .sample-chips-row {
+    gap: 5px;
+  }
+
+  .sample-chip-btn {
+    font-size: 0.72rem;
+    padding: 5px 8px;
+  }
+
+  /* MCP Inspector Mobile */
+  .mcp-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .mcp-stat-num {
+    font-size: 1.15rem;
+  }
+
+  .mcp-stat-lbl {
+    font-size: 0.68rem;
+  }
+
+  .custom-modal-card {
+    border-radius: 14px;
+    max-width: 95%;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* 4. Small Phones (<= 480px)                                                */
+/* ------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0 8px;
+  }
+
+  .logo-title {
+    font-size: 0.92rem;
+  }
+
+  .header-search {
+    max-width: 160px;
+  }
+
+  .dashboard-deals-horizontal-grid,
+  .shopping-deals-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .deal-item-card {
+    min-width: 0;
+    flex: none;
+    padding: 10px;
+  }
+
+  .card-value-large {
+    font-size: 1.45rem;
+  }
+
+  .card-value-medium {
+    font-size: 1.25rem;
+  }
+}
+
+/* ==========================================================================
+   Google Gemini Live AI Integration (Optional for Hackathon Judges)
+   ========================================================================== */
+.gemini-config-card {
+  margin-top: 18px;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 12px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .gemini-config-card {
+  border-color: rgba(96, 165, 250, 0.3);
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.25) 0%, rgba(88, 28, 135, 0.2) 100%);
+}
+
+.gemini-status-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.gemini-status-badge.status-connected {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+body.dark-mode .gemini-status-badge.status-connected {
+  background: #14532d;
+  color: #86efac;
+  border-color: #166534;
+}
+
+.gemini-status-badge.status-simulated {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}
+
+body.dark-mode .gemini-status-badge.status-simulated {
+  background: #1e293b;
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+.gemini-live-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+}
+
+.ai-engine-pill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 0.74rem;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ai-engine-status-link {
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+}
+
+.ai-engine-status-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}

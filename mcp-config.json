@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/mcp.json",
   "name": "vault-alexa-mcp",
-  "version": "1.0.0",
+  "version": "2.5.0",
   "description": "VaultAlexa+ Enterprise Financial AI Agent & Autonomous Amazon Shopping MCP Server",
   "protocolVersion": "2025-11-25",
   "author": "Amazon Developer Hackathon 2026 - Alexa+ Track Participant",
@@ -19,8 +19,9 @@
         "DYNAMODB_TABLE": "PrimeVaultLedger"
       },
       "transport": {
-        "type": "http-jsonrpc",
-        "url": "http://localhost:3000/mcp/v1/rpc"
+        "type": "streamable-http",
+        "url": "http://localhost:3000/mcp/v1/rpc",
+        "sseUrl": "http://localhost:3000/mcp/v1/sse"
       }
     }
   },
@@ -50,7 +51,9 @@
       "InitiatePurchaseDisputeIntent",
       "PeerSplitRequestIntent",
       "DynamicNegotiateIntent",
-      "OpportunityCostIntent"
+      "OpportunityCostIntent",
+      "MorningBriefingIntent",
+      "InventoryStockoutForecastIntent"
     ]
   },
   "amazonBedrockAgent": {

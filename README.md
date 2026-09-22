@@ -29,19 +29,21 @@ It acts as a **Two-Sided Bridge (Bilateral Protocol)** connecting **Consumers (B
 
 ---
 
-## 🌟 Key Features (11 Enterprise Multi-Agent Tools)
+## 🌟 Key Features (13 Enterprise Multi-Agent Tools)
 
-1. **🔮 Proactive Budget Runway & Deficit Risk Forecast (`predict_monthly_runway`)**: Machine Learning forecasting (Amazon Forecast / Bedrock) that detects upcoming recurring utility & insurance obligations ($450) to prevent month-end cashflow deficit before discretionary checkouts.
-2. **🛡️ Autonomous Safe-to-Spend Validator (`validate_purchase_safety`)**: Pre-validates prospective purchase costs against remaining monthly category allowances to prevent impulsive overspending.
-3. **🤝 Bilateral Dynamic Discount Negotiation (`negotiate_dynamic_discount`)**: Real-time automated negotiation bridge connecting Buyer safe-budget limits with Amazon Seller API to unlock instant 1-Click volume vouchers.
-4. **🚨 Impulse Buying Cool-Down & Opportunity Cost (`calculate_opportunity_cost`)**: Projects the delay in savings goals (e.g. 32 days of Tokyo vacation funds) and triggers a 24-hour reflection reminder.
-5. **🎫 Full Lifecycle Post-Purchase Dispute & Refund Agent (`initiate_purchase_dispute`)**: Auto-generates Amazon RMA tickets, issues prepaid carrier return QR codes, and queues instant escrow refunds for defective deliveries.
-6. **👥 Smart Community Social Bill Split (`trigger_peer_split_request`)**: Dispatches automated Alexa voice bill-split requests across Alexa Household Contacts with real-time settlement tracking.
-7. **🎯 Price Drop Sniper (`track_price_drop_target`)**: Monitors Amazon item discounts and dispatches alerts when target price thresholds are reached.
-8. **📊 Real-time Financial Overview (`get_financial_summary`)**: Delivers accurate calculations of balances, spending rates, and budget health.
-9. **🛍️ Intelligent Prime Deal Discovery (`search_amazon_deals`)**: Fetches verified Amazon Prime discounts tailored to current spending capacity.
-10. **⚡ Interactive MCP Developer Inspector**: Built-in visual playground allowing judges and developers to test live JSON-RPC 2.0 requests across all 11 tools with sub-15ms response latency.
-11. **🌐 Full Bilingual Support (ID / US)**: Complete instant toggle between Bahasa Indonesia (`ID`) and English (`US`) across all UI elements, voice speech synthesis, and reasoning traces.
+1. **🌅 Autonomous Executive Morning Standup (`generate_morning_briefing`)**: Proactive daily financial standup synthesizing cashflow health, calculating safe daily spending velocity, counting down upcoming bills (3-7 days), and scanning price-drop radar without requiring user prompt interrogation.
+2. **📦 Seller Operations & FBA Stockout Co-Pilot (`predict_inventory_stockout`)**: Autonomous store operations agent tracking FBA warehouse burn rates, projecting days-to-stockout (e.g. 3.3 days remaining), drafting supplier purchase orders (PO), and unlocking dynamic repricing upside (+5% margin gain).
+3. **🔮 Proactive Budget Runway & Deficit Risk Forecast (`predict_monthly_runway`)**: Machine Learning forecasting (Amazon Forecast / Bedrock) that detects upcoming recurring utility & insurance obligations ($450) to prevent month-end cashflow deficit before discretionary checkouts.
+4. **🛡️ Autonomous Safe-to-Spend Validator (`validate_purchase_safety`)**: Pre-validates prospective purchase costs against remaining monthly category allowances to prevent impulsive overspending.
+5. **🤝 Bilateral Dynamic Discount Negotiation (`negotiate_dynamic_discount`)**: Real-time automated negotiation bridge connecting Buyer safe-budget limits with Amazon Seller API to unlock instant 1-Click volume vouchers.
+6. **🚨 Impulse Buying Cool-Down & Opportunity Cost (`calculate_opportunity_cost`)**: Projects the delay in savings goals (e.g. 32 days of Tokyo vacation funds) and triggers a 24-hour reflection reminder.
+7. **🎫 Full Lifecycle Post-Purchase Dispute & Refund Agent (`initiate_purchase_dispute`)**: Auto-generates Amazon RMA tickets, issues prepaid carrier return QR codes, and queues instant escrow refunds for defective deliveries.
+8. **👥 Smart Community Social Bill Split (`trigger_peer_split_request`)**: Dispatches automated Alexa voice bill-split requests across Alexa Household Contacts with real-time settlement tracking.
+9. **🎯 Price Drop Sniper (`track_price_drop_target`)**: Monitors Amazon item discounts and dispatches alerts when target price thresholds are reached.
+10. **📊 Real-time Financial Overview (`get_financial_summary`)**: Delivers accurate calculations of balances, spending rates, and budget health.
+11. **🛍️ Intelligent Prime Deal Discovery (`search_amazon_deals`)**: Fetches verified Amazon Prime discounts tailored to current spending capacity.
+12. **⚡ Interactive MCP Developer Inspector**: Built-in visual playground allowing judges and developers to test live JSON-RPC 2.0 requests across all 13 tools with sub-15ms response latency.
+13. **🌐 Full Bilingual Support (ID / US)**: Complete instant toggle between Bahasa Indonesia (`ID`) and English (`US`) across all UI elements, voice speech synthesis, and reasoning traces.
 
 ---
 
@@ -64,7 +66,7 @@ flowchart TD
         end
 
         subgraph MCPRegistry ["🛠️ MCP Registry (Spec 2025-11-25)"]
-            MCPTools["🛠️ 11 Multi-Agent Tools\n(predict_monthly_runway, initiate_purchase_dispute, trigger_peer_split_request, etc.)"]
+            MCPTools["🛠️ 13 Multi-Agent Tools\n(generate_morning_briefing, predict_inventory_stockout, predict_monthly_runway, etc.)"]
             MCPResources["📦 3 MCP Resources\n(vault://financial/overview.json, etc.)"]
             MCPPrompts["📝 2 Context Prompts\n(financial_health_audit, prime_deal_optimizer)"]
         end
@@ -111,7 +113,7 @@ flowchart TD
    - **Process**: Orchestrates workload distribution across an **Amazon Nova Pro & Claude 3.5 Agent Swarm**. Dynamic tool invocation routes low-complexity queries with minimum latency while applying deep reasoning chains to sensitive financial risk transactions.
 
 4. **Layer 4: MCP Registry & Secure Storage (Data & Enterprise Telemetry Layer)**
-   - **MCP Registry (Spec 2025-11-25 Compliant)**: Houses the manifest (`mcp-config.json`) registering **11 Multi-Agent Tools** (`predict_monthly_runway`, `initiate_purchase_dispute`, `trigger_peer_split_request`, etc.) and 3 active MCP Resources (`vault://financial/overview.json`).
+   - **MCP Registry (Spec 2025-11-25 Compliant)**: Houses the manifest (`mcp-config.json`) registering **13 Multi-Agent Tools** (`generate_morning_briefing`, `predict_inventory_stockout`, `predict_monthly_runway`, `validate_purchase_safety`, `negotiate_dynamic_discount`, `calculate_opportunity_cost`, `initiate_purchase_dispute`, `trigger_peer_split_request`, `track_price_drop_target`, `get_financial_summary`, `search_amazon_deals`, `split_shared_expense`, `log_transaction`) and 3 active MCP Resources (`vault://financial/overview.json`).
    - **Amazon DynamoDB**: High-throughput NoSQL datastore managing encrypted personal financial vaults and multi-user household ledgers.
    - **Amazon Selling Partner API**: Real-time sync with Amazon Prime inventory and seller catalog fulfillment data.
    - **Amazon CloudWatch Logs**: Central observability hub recording structured **Sub-15ms AI Reasoning Traces & Audit Trails** for financial regulatory compliance.
@@ -162,21 +164,19 @@ npm start
 
 ## 🚀 Future Roadmap & Next-Gen MCP Capabilities
 
-1. **🤖 Autonomous Deal Negotiation Protocol (`negotiate_dynamic_discount`)**:
-   - Multi-agent negotiation bridge between Buyer and Seller MCP servers to unlock tailored bundle vouchers and dynamic volume discounts.
-2. **🧾 Instant Receipt & Offline Expense OCR (`parse_receipt_data`)**:
+1. **🧾 Instant Receipt & Offline Expense OCR (`parse_receipt_data`)**:
    - Automated invoice scanning and tax itemization to log offline retail transactions directly into the private financial vault.
-3. **🚨 Impulse Buying Cool-Down & Opportunity Cost Simulator (`calculate_opportunity_cost`)**:
-   - Behavioral AI guardrails that simulate the long-term impact on savings goals before purchasing discretionary luxury items.
-4. **📦 Multi-Store Basket Arbitrage & Unit-Price Optimizer (`find_unit_price_arbitrage`)**:
+2. **📦 Multi-Store Basket Arbitrage & Unit-Price Optimizer (`find_unit_price_arbitrage`)**:
    - Real-time price-per-unit comparisons across Amazon Prime sizes to maximize household savings.
-5. **📊 Interactive Voice-Driven Stress-Test Simulator (`simulate_financial_stress_test`)**:
+3. **📊 Interactive Voice-Driven Stress-Test Simulator (`simulate_financial_stress_test`)**:
    - On-demand "What-If" voice simulations to model income fluctuations or unexpected emergency expenses.
+4. **🔗 Alexa Routines Auto-Trigger Integration**:
+   - Trigger Alexa smart home routines based on financial milestones (e.g. savings goal reached = turn on celebration lights).
 
 ---
 
 ## 📜 Bonus Point Claims & Friction Log
 
-- **10% Bonus Point Claim**: Comprehensive developer feedback report in [`FRICTION_LOG.md`](file:///C:/Users/karya/.gemini/antigravity-ide/scratch/vault-alexa-mcp/FRICTION_LOG.md).
+- **10% Bonus Point Claim**: Comprehensive developer feedback report in [`FRICTION_LOG.md`](FRICTION_LOG.md).
 - **Open Source**: Distributed under the **MIT License**.
 

@@ -8,7 +8,7 @@
 ## 📋 1. Developer Tools, APIs & SDKs Used
 
 1. **Model Context Protocol (MCP) Spec 2025-11-25**:
-   - Used to expose financial tools (`get_financial_summary`, `categorize_transaction`, `recommend_amazon_deals`, `execute_smart_purchase_plan`) to the Alexa+ LLM agent orchestrator over Streamable HTTP / JSON-RPC 2.0.
+   - Used to expose 13 autonomous tools (including proactive executive standup `generate_morning_briefing`, seller operations co-pilot `predict_inventory_stockout`, runway deficit forecast `predict_monthly_runway`, and bilateral discount negotiation `negotiate_dynamic_discount`) to the Alexa+ LLM agent orchestrator over Streamable HTTP (SSE) & JSON-RPC 2.0.
 2. **AWS Bedrock / AgentCore (Simulated Integration)**:
    - Used for natural language intent resolution and tool selection routing.
 3. **Web Speech API**:

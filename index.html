@@ -186,6 +186,9 @@
   <!-- App Main Content Container with Left Sidebar & 3-Column Grid -->
   <div class="app-body">
 
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
     <!-- Left Sidebar Menu (Collapsible / Toggleable on Desktop & Mobile) -->
     <aside class="left-sidebar" id="left-sidebar">
       <nav class="sidebar-menu">
@@ -496,7 +499,6 @@
               </div>
 
             </section>
-
           </div>
         </div>
 
@@ -507,11 +509,11 @@
             <p class="tab-description">Track transactions, create budget alerts, and log new expenses via MCP Agent protocol.</p>
           </div>
           <div class="tab-grid-2col">
-            <div class="card">
+            <div class="card" id="finance-form-card">
               <h3 class="card-subtitle"><i class="fa-solid fa-plus-circle text-green"></i> Add New Expense (MCP Protocol)</h3>
               <form id="form-add-expense" class="custom-form">
                 <div class="form-group">
-                  <label>Category</label>
+                  <label id="lbl-expense-category">Category</label>
                   <select id="expense-category" class="custom-input" required>
                     <option value="groceries">Groceries</option>
                     <option value="diningOut">Dining Out</option>
@@ -520,18 +522,18 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label>Amount ($)</label>
+                  <label id="lbl-expense-amount">Amount ($)</label>
                   <input type="number" id="expense-amount" class="custom-input" placeholder="e.g. 45.00" step="0.01" required>
                 </div>
                 <div class="form-group">
-                  <label>Description</label>
+                  <label id="lbl-expense-desc">Description</label>
                   <input type="text" id="expense-desc" class="custom-input" placeholder="e.g. Whole Foods Organic Market" required>
                 </div>
-                <button type="submit" class="btn-primary-action"><i class="fa-solid fa-paper-plane"></i> Log Expense via MCP</button>
+                <button type="submit" class="btn-primary-action" id="btn-submit-expense"><i class="fa-solid fa-paper-plane"></i> Log Expense via MCP</button>
               </form>
             </div>
 
-            <div class="card">
+            <div class="card" id="finance-ledger-card">
               <h3 class="card-subtitle"><i class="fa-solid fa-list-check text-purple"></i> Recent Transactions Ledger</h3>
               <ul class="transaction-list" id="transaction-ledger-list">
                 <li class="trans-item">
@@ -566,6 +568,65 @@
             <h2 class="column-title"><i class="fa-solid fa-cart-shopping text-blue"></i> Intelligent Amazon Shopping Assistant</h2>
             <p class="tab-description">Curated Amazon deals synchronized with Alexa+ voice purchasing capability and budget safety checks.</p>
           </div>
+
+          <!-- AI Vision Auto-Listing Specialist Card (Active only in Seller Mode) -->
+          <div class="card vision-listing-card" id="seller-vision-listing-container" style="display: none; margin-bottom: 20px;">
+            <div class="vision-card-header">
+              <div class="vision-title-group">
+                <span class="vision-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> Autonomous Vision AI</span>
+                <h3 class="vision-card-title"><i class="fa-solid fa-camera text-amber"></i> AI 1-Click Auto-Listing Specialist</h3>
+                <p class="vision-card-desc">Cukup unggah foto barang — Agen AI akan memindai visual produk, meriset harga kompetitor Amazon, menulis judul SEO, deskripsi, bobot FBA, dan mengirimkan draf ke Chat untuk ditinjau sebelum diposting.</p>
+                <div class="ai-engine-pill-row" id="auto-listing-engine-bar" style="margin-top: 6px; margin-bottom: 2px;">
+                  <span class="ai-engine-status-link" onclick="switchTab('settings')" title="Klik untuk mengonfigurasi API Key Google Gemini">
+                    <i class="fa-solid fa-microchip text-blue"></i> Model AI: <strong id="auto-listing-engine-name">Mode Simulasi Cepat (Default)</strong> <i class="fa-solid fa-gear text-muted" style="font-size:0.75rem;"></i>
+                  </span>
+                  <button type="button" class="btn-quick-gemini-key" onclick="switchTab('settings')" style="font-size:0.68rem; padding:2px 10px; border-radius:12px; border:1px solid #93c5fd; background:#eff6ff; color:#1d4ed8; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; gap:4px;">
+                    <i class="fa-solid fa-key text-blue"></i> Pasang Gemini API Key (Juri)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="vision-upload-workspace">
+              <!-- Drag & Drop Zone -->
+              <div class="vision-dropzone" id="vision-dropzone" onclick="document.getElementById('seller-image-file-input').click()">
+                <input type="file" id="seller-image-file-input" accept="image/*" style="display: none;">
+                <div class="dropzone-inner" id="dropzone-content">
+                  <div class="dropzone-icon-circle">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                  </div>
+                  <div class="dropzone-text-main">Pilih atau Drag & Drop Foto Produk Baru</div>
+                  <div class="dropzone-text-sub">Mendukung JPG, PNG, WEBP • Analisis visual instan</div>
+                </div>
+
+                <!-- Active Scanning Overlay (Laser Scan Animation) -->
+                <div class="vision-scanning-overlay" id="vision-scanning-overlay" style="display: none;">
+                  <div class="scanner-laser-line"></div>
+                  <div class="scanner-status-text" id="scanner-status-text"><i class="fa-solid fa-microchip fa-spin"></i> AI Vision sedang memindai objek & meriset harga kompetitor Amazon...</div>
+                </div>
+              </div>
+
+              <!-- Quick Sample Products (Demo Buttons for Instant Testing) -->
+              <div class="vision-sample-tray">
+                <span class="sample-tray-label"><i class="fa-solid fa-bolt text-amber"></i> Coba Cepat dengan Contoh Produk:</span>
+                <div class="sample-chips-row">
+                  <button type="button" class="sample-chip-btn" onclick="triggerSampleListing('headphones')">
+                    🎧 Wireless ANC Headphones
+                  </button>
+                  <button type="button" class="sample-chip-btn" onclick="triggerSampleListing('smartwatch')">
+                    ⌚ Fitness Smartwatch GPS
+                  </button>
+                  <button type="button" class="sample-chip-btn" onclick="triggerSampleListing('keyboard')">
+                    ⌨️ RGB Mechanical Keyboard
+                  </button>
+                  <button type="button" class="sample-chip-btn" onclick="triggerSampleListing('tumbler')">
+                    💧 Insulated Travel Tumbler
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="shopping-deals-grid" id="full-shopping-grid"></div>
         </div>
 
@@ -575,7 +636,7 @@
             <h2 class="column-title"><i class="fa-solid fa-bullseye text-blue"></i> Financial Goals & Savings Targets</h2>
             <p class="tab-description">Automated savings tracking powered by Alexa+ smart budget recommendations.</p>
           </div>
-          <div class="tab-grid-2col">
+          <div class="tab-grid-2col" id="goals-grid-container">
             <div class="card goal-card">
               <div class="goal-icon-wrapper blue-bg"><i class="fa-solid fa-plane"></i></div>
               <h3 class="goal-title">Vacation to Tokyo</h3>
@@ -604,25 +665,25 @@
             <p class="tab-description">Deep insights generated by Model Context Protocol (MCP 2025-11-25) analyzing your habits.</p>
           </div>
           <div class="tab-grid-2col">
-            <div class="card">
+            <div class="card" id="insights-recommendations-card">
               <h3 class="card-subtitle"><i class="fa-solid fa-lightbulb text-amber"></i> Alexa+ Smart Spending Recommendation</h3>
               <div class="insight-box">
                 <p>💡 <strong>Dining Out Alert:</strong> You have spent <strong>88%</strong> of your dining budget ($352/$400) with 12 days remaining in the month. Alexa+ recommends cooking at home this weekend to save ~$75.</p>
               </div>
-                      <div class="insight-box margin-t">
+              <div class="insight-box margin-t">
                 <p>🛍️ <strong>Amazon Deal Match:</strong> Buying the <em>Amazon Echo Show 8</em> at 30% Off today saves $30.00 while remaining within your total $600 shopping capacity.</p>
               </div>
             </div>
-            <div class="card">
-            <h3 class="card-subtitle"><i class="fa-solid fa-network-wired text-blue"></i> MCP Protocol Diagnostics (Spec 2025-11-25)</h3>
-            <div class="mcp-diag-list">
-              <div class="diag-row"><span class="diag-label">Server Engine:</span> <span class="diag-value green-text">VaultAlexa Autonomous MCP Server v2.0</span></div>
-              <div class="diag-row"><span class="diag-label">RPC Endpoint:</span> <span class="diag-value">/mcp/v1/rpc (JSON-RPC 2.0)</span></div>
-              <div class="diag-row"><span class="diag-label">Registered Tools (11):</span> <span class="diag-value">predict_monthly_runway, initiate_purchase_dispute, trigger_peer_split_request, validate_purchase_safety, negotiate_dynamic_discount, calculate_opportunity_cost, get_financial_summary, search_amazon_deals, track_price_drop_target, split_shared_expense, log_transaction</span></div>
-              <div class="diag-row"><span class="diag-label">MCP Resources (3):</span> <span class="diag-value">vault://financial/overview, vault://household/summary, vault://diagnostics/health</span></div>
-              <div class="diag-row"><span class="diag-label">Agentic Safety:</span> <span class="diag-value text-green">Autonomous Safe-to-Spend Active</span></div>
+            <div class="card" id="insights-diagnostics-card">
+              <h3 class="card-subtitle"><i class="fa-solid fa-network-wired text-blue"></i> MCP Protocol Diagnostics (Spec 2025-11-25)</h3>
+              <div class="mcp-diag-list">
+                <div class="diag-row"><span class="diag-label">Server Engine:</span> <span class="diag-value green-text">VaultAlexa Autonomous MCP Server v2.0</span></div>
+                <div class="diag-row"><span class="diag-label">RPC Endpoint:</span> <span class="diag-value">/mcp/v1/rpc (JSON-RPC 2.0)</span></div>
+                <div class="diag-row"><span class="diag-label">Registered Tools (13):</span> <span class="diag-value">generate_morning_briefing, predict_inventory_stockout, predict_monthly_runway, initiate_purchase_dispute, trigger_peer_split_request, validate_purchase_safety, negotiate_dynamic_discount, calculate_opportunity_cost, get_financial_summary, search_amazon_deals, track_price_drop_target, split_shared_expense, log_transaction</span></div>
+                <div class="diag-row"><span class="diag-label">MCP Resources (3):</span> <span class="diag-value">vault://financial/overview, vault://household/summary, vault://diagnostics/health</span></div>
+                <div class="diag-row"><span class="diag-label">Agentic Safety:</span> <span class="diag-value text-green">Autonomous Safe-to-Spend Active</span></div>
+              </div>
             </div>
-          </div>
           </div>
         </div>
 
@@ -632,8 +693,8 @@
             <h2 class="column-title"><i class="fa-solid fa-gear text-blue"></i> Agent & Application Settings</h2>
             <p class="tab-description">Configure your VaultAlexa+ AI voice preferences, budget limits, and MCP integration.</p>
           </div>
-          <div class="card max-w-600">
-            <h3 class="card-subtitle">Preferences & Configuration</h3>
+          <div class="card max-w-600" id="settings-card-container">
+            <h3 class="card-subtitle" id="settings-card-title">Preferences & Configuration</h3>
             <div class="setting-item-row">
               <div>
                 <div class="setting-title">Voice Chime Sound</div>
@@ -664,7 +725,7 @@
           <!-- Protocol Handshake Summary Cards -->
           <div class="mcp-stats-grid">
             <div class="mcp-stat-card">
-              <div class="mcp-stat-num text-blue">11 Tools</div>
+              <div class="mcp-stat-num text-blue" id="mcp-stat-tools-count">13 Tools</div>
               <div class="mcp-stat-lbl">Multi-Agent Swarm Handlers</div>
             </div>
             <div class="mcp-stat-card">
@@ -694,6 +755,10 @@
               <div class="inspector-field-group">
                 <label class="inspector-label">Select Registered MCP Tool:</label>
                 <select id="mcp-tool-select" class="mcp-select-input" onchange="onInspectorToolChange(this.value)">
+                  <option value="analyze_product_image_listing">analyze_product_image_listing (Multimodal AI Vision & Listing)</option>
+                  <option value="publish_seller_product">publish_seller_product (Auto-Publish Approved Product to FBA)</option>
+                  <option value="generate_morning_briefing">generate_morning_briefing (Autonomous Morning Standup Briefing)</option>
+                  <option value="predict_inventory_stockout">predict_inventory_stockout (Seller FBA Stockout & Reprice Co-Pilot)</option>
                   <option value="predict_monthly_runway">predict_monthly_runway (Proactive AI Cashflow Forecast)</option>
                   <option value="initiate_purchase_dispute">initiate_purchase_dispute (Post-Purchase Care & Refund)</option>
                   <option value="trigger_peer_split_request">trigger_peer_split_request (Smart Community Alexa Split)</option>
@@ -779,12 +844,12 @@
       </div>
 
       <!-- Interactive Draggable Splitter Handle (Resize Agent Panel) -->
-      <div class="chat-resizer-handle is-hidden" id="chat-resizer-handle" title="Drag left/right to resize Agent panel">
+      <div class="chat-resizer-handle" id="chat-resizer-handle" title="Drag left/right to resize Agent panel">
         <div class="resizer-pill"></div>
       </div>
 
       <!-- Right Column 3: Alexa+ AI Chat Panel (Resizable with Cursor) -->
-      <aside class="chat-column is-closed" id="chat-column">
+      <aside class="chat-column" id="chat-column">
         <div class="card chat-card-container">
           <!-- Chat Header -->
           <div class="chat-card-header">
@@ -845,12 +910,15 @@
             </div>
           </div>
 
-          <!-- Quick Action Suggestion Chips -->
+          <!-- Quick Action Suggestion Chips (Dynamically rendered per Role: Buyer / Seller) -->
           <div class="chat-quick-chips" id="chat-quick-chips">
-            <button class="chip-item" onclick="handleChipClick('What is my remaining budget?')">📊 Budget</button>
+            <button class="chip-item" onclick="handleChipClick('Give me my morning financial standup briefing')">🌅 Morning Standup</button>
+            <button class="chip-item" onclick="handleChipClick('What is my remaining safe-to-spend budget?')">🛡️ Budget Safety</button>
             <button class="chip-item" onclick="handleChipClick('Find deals on tech items.')">🛍️ Tech Deals</button>
+            <button class="chip-item" onclick="handleChipClick('Negotiate discount for Echo Show')">🤝 Negotiate</button>
             <button class="chip-item" onclick="handleChipClick('Split 120 with household for groceries')">👥 Split Bill</button>
-            <button class="chip-item" onclick="handleChipClick('Track price drop for Echo Spot to $45')">🎯 Sniper</button>
+            <button class="chip-item" onclick="handleChipClick('Track price drop for Echo Show to $89.99')">🎯 Price Sniper</button>
+            <button class="chip-item" onclick="handleChipClick('Claim refund for damaged order')">📦 Claim & RMA</button>
           </div>
 
           <!-- Input Bar with Mic on Left & Send Button on Right -->
@@ -895,7 +963,7 @@
   </div>
 
   <!-- Modern Floating Chatbot Launcher Bubble -->
-  <button class="floating-chat-launcher is-visible" id="floating-chat-launcher" title="Buka Alexa+ AI Assistant" aria-label="Buka Chat Alexa+">
+  <button class="floating-chat-launcher" id="floating-chat-launcher" title="Buka Alexa+ AI Assistant" aria-label="Buka Chat Alexa+">
     <img src="alexa_plus_logo.jpg" alt="Alexa+" class="floating-launcher-img">
     <span class="floating-pulse-ring"></span>
     <span class="floating-badge-alert">1</span>

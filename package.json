@@ -1,12 +1,15 @@
 {
   "name": "vault-alexa-mcp",
-  "version": "1.0.0",
+  "version": "2.5.0",
   "description": "Alexa+ Smart Personal Financial & Intelligent Shopping Agent powered by Model Context Protocol (MCP)",
   "main": "mcp-server.js",
   "scripts": {
     "start": "node mcp-server.js",
     "dev": "node mcp-server.js",
-    "test": "node test-mcp.js"
+    "test": "node test-mcp.js",
+    "test:dom": "node test-dom-and-sync.js",
+    "test:e2e": "node test-e2e-dom.js",
+    "test:all": "node test-mcp.js && node test-dom-and-sync.js"
   },
   "keywords": [
     "alexa-plus",
@@ -20,7 +23,11 @@
   "author": "KARYA LANGIT Digital. ( Supriadi )",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.19.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.0"
   }
 }
+
