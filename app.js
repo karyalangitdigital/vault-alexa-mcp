@@ -678,54 +678,102 @@ function processUserQuery(query) {
     }
   }
 
-  // 0A. Autonomous Proactive Morning Financial Standup (Executive Digital Worker)
+  // 0A. Autonomous Proactive Morning Standup — ROLE-AWARE (Buyer vs Seller)
   if (qLower.includes('briefing') || qLower.includes('standup') || qLower.includes('pagi') || qLower.includes('morning') || qLower.includes('harian')) {
-    const traceSteps = isID ? [
-      '🤖 [Autonomous Executive Standup Officer: AWS Bedrock AgentCore]',
-      '📊 Memindai Arus Kas & Saldo Prime Vault: $24,560.80',
-      '🗓️ Menghitung Batas Belanja Harian Aman: $116.63/hari (Setelah alokasi tagihan wajib)',
-      '⚡ Memanggil Tool: generate_morning_briefing(includeWatchlistRadar: true)'
-    ] : [
-      '🤖 [Autonomous Executive Standup Officer: AWS Bedrock AgentCore]',
-      '📊 Auditing Cashflow & Prime Vault Balance: $24,560.80',
-      '🗓️ Computing Safe Daily Spending Velocity: $116.63/day (Post obligations reserved)',
-      '⚡ Calling Tool: generate_morning_briefing(includeWatchlistRadar: true)'
-    ];
+    const isSeller = window.currentUserRole === 'seller';
+    const traceSteps = isSeller
+      ? (isID ? [
+          '🤖 [Merchant Standup Officer: AWS Bedrock AgentCore]',
+          '🏪 Memindai Performa Toko Apex Tech Store',
+          '📦 FBA Stockout Alert: Echo Show 8 tersisa 14 unit (3.3 hari)',
+          '⚡ Memanggil Tool: generate_morning_briefing(entity: "MERCHANT_APEX", includeStockRadar: true)'
+        ] : [
+          '🤖 [Merchant Standup Officer: AWS Bedrock AgentCore]',
+          '🏪 Scanning Apex Tech Store Performance Dashboard',
+          '📦 FBA Stockout Alert: Echo Show 8 at 14 units (3.3 days left)',
+          '⚡ Calling Tool: generate_morning_briefing(entity: "MERCHANT_APEX", includeStockRadar: true)'
+        ])
+      : (isID ? [
+          '🤖 [Autonomous Executive Standup Officer: AWS Bedrock AgentCore]',
+          '📊 Memindai Arus Kas & Saldo Prime Vault: $24,560.80',
+          '🗓️ Menghitung Batas Belanja Harian Aman: $116.63/hari (Setelah alokasi tagihan wajib)',
+          '⚡ Memanggil Tool: generate_morning_briefing(includeWatchlistRadar: true)'
+        ] : [
+          '🤖 [Autonomous Executive Standup Officer: AWS Bedrock AgentCore]',
+          '📊 Auditing Cashflow & Prime Vault Balance: $24,560.80',
+          '🗓️ Computing Safe Daily Spending Velocity: $116.63/day (Post obligations reserved)',
+          '⚡ Calling Tool: generate_morning_briefing(includeWatchlistRadar: true)'
+        ]);
 
     showReasoningTrace(traceSteps, () => {
-      const msg = isID ? `
-        <strong>Tool MCP [generate_morning_briefing & Standup Officer]:</strong>
-        <div class="chat-order-card" style="border-color:#3b82f6; background: linear-gradient(to bottom, #ffffff, #f8faff);">
-          <div class="order-card-header" style="color:#1d4ed8;">
-            <i class="fa-solid fa-sun"></i> Executive Standup Keuangan Pagi Ini
+      let msg;
+      if (isSeller) {
+        msg = isID ? `
+          <strong>Tool MCP [generate_morning_briefing — Merchant Standup]:</strong>
+          <div class="chat-order-card" style="border-color:#7c3aed; background: linear-gradient(to bottom, #ffffff, #faf5ff);">
+            <div class="order-card-header" style="color:#6d28d9;">
+              <i class="fa-solid fa-store"></i> Laporan Standup Operasional Toko Pagi Ini
+            </div>
+            <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+              🏪 <em>Selamat pagi, Apex Tech Store! Ringkasan operasional merchant Anda hari ini:</em><br><br>
+              💵 <strong>Total Omzet Bulan Ini:</strong> <span class="badge badge-success">$14,850.00</span> (+28.4% WoW)<br>
+              📦 <strong>⚠️ Stok Kritis:</strong> <strong>Echo Show 8</strong> tersisa <strong>14 unit</strong> — habis dalam <strong>3.3 hari!</strong><br>
+              📬 <strong>Pesanan Masuk Hari Ini:</strong> <strong>18 pesanan</strong> baru antri ($1,940.00)<br>
+              🏆 <strong>Buy Box Share:</strong> <span style="color:#7c3aed; font-weight:800;">89.4%</span> (Target: 96%)<br><br>
+              💡 <strong>Aksi Prioritas:</strong> Setujui PO Restock 50 unit Echo Show 8 sebelum listing nonaktif hari Kamis.
+            </div>
           </div>
-          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
-            ☀️ <em>Selamat pagi, Sarah! Berikut ringkasan otonom asisten pribadi Anda:</em><br><br>
-            💵 <strong>Batas Belanja Aman Hari Ini:</strong> <span class="badge badge-success" style="font-size:0.8rem; background:#dcfce7; color:#15803d;">$116.63 / hari</span><br>
-            🗓️ <strong>Kalender Tagihan Wajib (5-7 Hari Ke Depan):</strong><br>
-            • Listrik & Smart Home: <strong>$180.00</strong> (Jatuh tempo 5 hari)<br>
-            • Premi Asuransi: <strong>$270.00</strong> (Jatuh tempo 7 hari)<br>
-            🎯 <strong>Radar Incaran Diskon:</strong> Echo Show 8 tersisa selisih <strong>$10.00</strong> menuju target sniper Anda ($89.99).<br><br>
-            💡 <strong>Rekomendasi Tindakan:</strong> Saldo dan arus kas Anda berada pada status <strong>NOMINAL SURPLUS</strong>. Tabungan Liburan Tokyo Anda tetap aman!
+        ` : `
+          <strong>MCP Tool [generate_morning_briefing — Merchant Standup]:</strong>
+          <div class="chat-order-card" style="border-color:#7c3aed; background: linear-gradient(to bottom, #ffffff, #faf5ff);">
+            <div class="order-card-header" style="color:#6d28d9;">
+              <i class="fa-solid fa-store"></i> Store Operations Morning Standup
+            </div>
+            <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+              🏪 <em>Good morning, Apex Tech Store! Here is your merchant operations briefing:</em><br><br>
+              💵 <strong>Monthly Revenue:</strong> <span class="badge badge-success">$14,850.00</span> (+28.4% WoW)<br>
+              📦 <strong>⚠️ Critical Stock Alert:</strong> <strong>Echo Show 8</strong> at <strong>14 units</strong> — stockout in <strong>3.3 days!</strong><br>
+              📬 <strong>Incoming Orders Today:</strong> <strong>18 new orders</strong> queued ($1,940.00)<br>
+              🏆 <strong>Buy Box Share:</strong> <span style="color:#7c3aed; font-weight:800;">89.4%</span> (Target: 96%)<br><br>
+              💡 <strong>Top Priority:</strong> Authorize Restock PO for 50 units of Echo Show 8 before Thursday listing suppression.
+            </div>
           </div>
-        </div>
-      ` : `
-        <strong>MCP Tool [generate_morning_briefing & Standup Officer]:</strong>
-        <div class="chat-order-card" style="border-color:#3b82f6; background: linear-gradient(to bottom, #ffffff, #f8faff);">
-          <div class="order-card-header" style="color:#1d4ed8;">
-            <i class="fa-solid fa-sun"></i> Executive Morning Financial Standup
+        `;
+      } else {
+        msg = isID ? `
+          <strong>Tool MCP [generate_morning_briefing & Standup Officer]:</strong>
+          <div class="chat-order-card" style="border-color:#3b82f6; background: linear-gradient(to bottom, #ffffff, #f8faff);">
+            <div class="order-card-header" style="color:#1d4ed8;">
+              <i class="fa-solid fa-sun"></i> Executive Standup Keuangan Pagi Ini
+            </div>
+            <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+              ☀️ <em>Selamat pagi, Sarah! Berikut ringkasan otonom asisten pribadi Anda:</em><br><br>
+              💵 <strong>Batas Belanja Aman Hari Ini:</strong> <span class="badge badge-success" style="font-size:0.8rem; background:#dcfce7; color:#15803d;">$116.63 / hari</span><br>
+              🗓️ <strong>Kalender Tagihan Wajib (5-7 Hari Ke Depan):</strong><br>
+              • Listrik & Smart Home: <strong>$180.00</strong> (Jatuh tempo 5 hari)<br>
+              • Premi Asuransi: <strong>$270.00</strong> (Jatuh tempo 7 hari)<br>
+              🎯 <strong>Radar Incaran Diskon:</strong> Echo Show 8 tersisa selisih <strong>$10.00</strong> menuju target sniper Anda ($89.99).<br><br>
+              💡 <strong>Rekomendasi Tindakan:</strong> Saldo dan arus kas Anda berada pada status <strong>NOMINAL SURPLUS</strong>. Tabungan Liburan Tokyo Anda tetap aman!
+            </div>
           </div>
-          <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
-            ☀️ <em>Good morning Sarah! Here is your autonomous executive personal briefing:</em><br><br>
-            💵 <strong>Safe Spending Velocity Today:</strong> <span class="badge badge-success" style="font-size:0.8rem; background:#dcfce7; color:#15803d;">$116.63 / day</span><br>
-            🗓️ <strong>Upcoming Obligations (5-7 Days Countdown):</strong><br>
-            • Utilities & Smart Home: <strong>$180.00</strong> (Due in 5 days)<br>
-            • Health Insurance Premium: <strong>$270.00</strong> (Due in 7 days)<br>
-            🎯 <strong>Price Watchlist Radar:</strong> Echo Show 8 is only <strong>$10.00</strong> away from your deal sniper threshold ($89.99).<br><br>
-            💡 <strong>Actionable Advice:</strong> Cashflow status is <strong>NOMINAL SURPLUS</strong>. Your Tokyo Vacation savings trajectory remains fully protected!
+        ` : `
+          <strong>MCP Tool [generate_morning_briefing & Standup Officer]:</strong>
+          <div class="chat-order-card" style="border-color:#3b82f6; background: linear-gradient(to bottom, #ffffff, #f8faff);">
+            <div class="order-card-header" style="color:#1d4ed8;">
+              <i class="fa-solid fa-sun"></i> Executive Morning Financial Standup
+            </div>
+            <div style="font-size: 0.8rem; line-height: 1.5; margin-top: 6px;">
+              ☀️ <em>Good morning Sarah! Here is your autonomous executive personal briefing:</em><br><br>
+              💵 <strong>Safe Spending Velocity Today:</strong> <span class="badge badge-success" style="font-size:0.8rem; background:#dcfce7; color:#15803d;">$116.63 / day</span><br>
+              🗓️ <strong>Upcoming Obligations (5-7 Days Countdown):</strong><br>
+              • Utilities & Smart Home: <strong>$180.00</strong> (Due in 5 days)<br>
+              • Health Insurance Premium: <strong>$270.00</strong> (Due in 7 days)<br>
+              🎯 <strong>Price Watchlist Radar:</strong> Echo Show 8 is only <strong>$10.00</strong> away from your deal sniper threshold ($89.99).<br><br>
+              💡 <strong>Actionable Advice:</strong> Cashflow status is <strong>NOMINAL SURPLUS</strong>. Your Tokyo Vacation savings trajectory remains fully protected!
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      }
       addMessage('alexa', 'Alexa+', msg);
     });
     return;
@@ -1178,6 +1226,15 @@ function processUserQuery(query) {
   }
 
   if (qLower.includes('buy') || qLower.includes('beli') || qLower.includes('purchase') || qLower.includes('order')) {
+    // BUG #3 FIX: Guard — Seller cannot trigger Buyer purchase flow & state mutation
+    if (window.currentUserRole === 'seller') {
+      const sellerOrderMsg = isID
+        ? `🏪 <strong>Mode Seller Aktif:</strong> Perintah beli/purchase tidak mempengaruhi saldo toko Anda. Gunakan <em>"cek pesanan masuk"</em> untuk memantau pesanan dari pembeli, atau ketik <em>"briefing"</em> untuk laporan toko harian Anda.`
+        : `🏪 <strong>Seller Mode Active:</strong> Buy/purchase commands don't affect your store account. Use <em>"check incoming orders"</em> to monitor buyer orders, or type <em>"briefing"</em> for your daily store report.`;
+      addMessage('alexa', 'Alexa+', sellerOrderMsg);
+      return;
+    }
+
     let matchedDeal = state.deals.find(d => {
       const dTitle = d.title.toLowerCase();
       if (qLower.includes(dTitle)) return true;
