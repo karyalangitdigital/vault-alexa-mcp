@@ -33,6 +33,20 @@
 
 ---
 
+## 📸 Screenshots
+
+| 📊 Financial Dashboard & Alexa+ Chat | 🛍️ Intelligent Amazon Shopping Assistant |
+|:---:|:---:|
+| ![Dashboard Overview](docs/screenshots/dashboard_preview.jpeg) | ![Shopping Deals](docs/screenshots/shopping_deals.jpeg) |
+
+| 🔌 Interactive MCP Protocol Inspector | 🤝 AI Negotiation & Anti-Impulse Guard |
+|:---:|:---:|
+| ![MCP Inspector](docs/screenshots/mcp_inspector.jpeg) | ![AI Negotiation Cooldown](docs/screenshots/ai_negotiation_cooldown.jpeg) |
+
+
+
+---
+
 ## 🌟 Key Highlights
 
 - **15 MCP Tools** (far exceeding the minimum 5 required)
