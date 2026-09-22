@@ -204,44 +204,29 @@ Click the **`ID` / `US`** toggle in the top-right header to instantly switch all
 
 ## 🏗️ Architecture
 
+![VaultAlexa+ Architecture](docs/screenshots/architecture.jpg)
+
 ```mermaid
 flowchart TD
-    subgraph ClientLayer ["📱 Multi-Modal Client Layer"]
-        User(["👤 Buyer / Seller"])
-        AlexaDevice["🔊 Alexa+ Echo Show / Fire TV / Web Simulator"]
-        User <-->|Voice + Touch| AlexaDevice
+    A["👤 Buyer / Seller"] -->|Voice + Touch| B["🔊 Alexa+ Echo Show / Fire TV / Web Simulator"]
+    B -->|"Streamable HTTP / SSE"| C["🔌 JSON-RPC 2.0\n/mcp/v1/rpc + /mcp/v1/sse"]
+
+    subgraph MCP ["⚡ VaultAlexa+ MCP Server — Node.js / Express"]
+        C --> D["🧠 Role-Aware Intent Router\nprocessUserQuery()"]
+        D --> E["🛒 Buyer Branch\n11 Tools"]
+        D --> F["🏪 Seller Branch\n4 Tools"]
+        E & F --> G["🛠️ 15 MCP Tools"]
+        E & F --> H["📦 3 Resources"]
+        E & F --> I["📝 2 Prompts"]
     end
 
-    subgraph MCPServer ["⚡ VaultAlexa+ MCP Server (Node.js / Express)"]
-        JSONRPC["🔌 JSON-RPC 2.0 Endpoint\n/mcp/v1/rpc  ·  /mcp/v1/sse"]
-        Router["🧠 Intent Router\nprocessUserQuery() — Role-Aware\nBuyer Branch ⟷ Seller Branch"]
-        Tools["🛠️ 15 MCP Tools\n11 Buyer + 4 Seller"]
-        Resources["📦 3 MCP Resources\nvault://financial · household · diagnostics"]
-        Prompts["📝 2 Prompts"]
-    end
-
-    subgraph AILayer ["🤖 AI & Vision Layer"]
-        BedrockAgent["☁️ AWS Bedrock AgentCore\nClaude 3.5 / Amazon Nova Pro"]
-        GeminiVision["👁️ Google Gemini 2.0 Flash\nMultimodal Product Vision"]
-    end
-
-    subgraph DataLayer ["🔒 Data & Storage Layer"]
-        DynamoDB[("🗄️ Amazon DynamoDB\nPrimeVaultLedger")]
-        SellerAPI[("🛍️ Amazon Selling Partner API")]
-        CloudWatch["📊 Amazon CloudWatch\nRPC Latency & Audit Logs"]
-    end
-
-    AlexaDevice <-->|Streamable HTTP / SSE| JSONRPC
-    JSONRPC --> Router
-    Router --> Tools
-    Router --> Resources
-    Router --> Prompts
-    Tools <-->|Agent Orchestration| BedrockAgent
-    Tools <-->|Vision Analysis| GeminiVision
-    Tools <-->|Encrypted IAM| DynamoDB
-    Tools <-->|SigV4 Auth| SellerAPI
-    Tools -.->|Telemetry| CloudWatch
+    G -->|"Agent Orchestration"| J["☁️ AWS Bedrock AgentCore\nClaude 3.5 / Nova Pro"]
+    G -->|"Vision Analysis"| K["👁️ Google Gemini 2.0 Flash\nMultimodal Product Vision"]
+    G -->|"Encrypted IAM"| L[("🗄️ DynamoDB\nPrimeVaultLedger")]
+    G -->|"SigV4 Auth"| M[("🛍️ Amazon SP API")]
+    G -.->|"Telemetry"| N["📊 CloudWatch"]
 ```
+
 
 ### Role-Aware Dual-Agent Flow
 
