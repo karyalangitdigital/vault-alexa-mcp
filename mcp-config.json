@@ -2,9 +2,9 @@
   "$schema": "https://json.schemastore.org/mcp.json",
   "name": "vault-alexa-mcp",
   "version": "2.5.0",
-  "description": "VaultAlexa+ Enterprise Financial AI Agent & Autonomous Amazon Shopping MCP Server",
+  "description": "VaultAlexa+ Enterprise Financial AI Agent & Autonomous Amazon Shopping MCP Server — 15 tools, Buyer & Seller dual-agent, Bilingual EN/ID",
   "protocolVersion": "2025-11-25",
-  "author": "Amazon Developer Hackathon 2026 - Alexa+ Track Participant",
+  "author": "KARYA LANGIT Digital (Supriadi) — Amazon Developer Hackathon 2026 Alexa+ Track",
   "mcpServers": {
     "vault-alexa": {
       "command": "node",
@@ -53,7 +53,10 @@
       "DynamicNegotiateIntent",
       "OpportunityCostIntent",
       "MorningBriefingIntent",
-      "InventoryStockoutForecastIntent"
+      "InventoryStockoutForecastIntent",
+      "LogTransactionIntent",
+      "AnalyzeProductImageIntent",
+      "PublishSellerProductIntent"
     ]
   },
   "amazonBedrockAgent": {

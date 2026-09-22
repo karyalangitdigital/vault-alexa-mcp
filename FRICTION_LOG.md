@@ -8,11 +8,14 @@
 ## 📋 1. Developer Tools, APIs & SDKs Used
 
 1. **Model Context Protocol (MCP) Spec 2025-11-25**:
-   - Used to expose 13 autonomous tools (including proactive executive standup `generate_morning_briefing`, seller operations co-pilot `predict_inventory_stockout`, runway deficit forecast `predict_monthly_runway`, and bilateral discount negotiation `negotiate_dynamic_discount`) to the Alexa+ LLM agent orchestrator over Streamable HTTP (SSE) & JSON-RPC 2.0.
+   - Used to expose **15 autonomous tools** across two role-based agent branches (11 Buyer tools + 4 Seller tools), including proactive executive standup `generate_morning_briefing` (role-aware: Buyer vs Seller), FBA co-pilot `predict_inventory_stockout`, runway deficit forecast `predict_monthly_runway`, and bilateral discount negotiation `negotiate_dynamic_discount`. Transport: Streamable HTTP (SSE) + JSON-RPC 2.0.
 2. **AWS Bedrock / AgentCore (Simulated Integration)**:
-   - Used for natural language intent resolution and tool selection routing.
-3. **Web Speech API**:
+   - Used for natural language intent resolution and multi-agent tool selection routing.
+3. **Google Gemini 2.0 Flash (Multimodal Vision)**:
+   - Used for AI-powered product image analysis to auto-generate Amazon-ready product listings (`analyze_product_image_listing` tool) — supporting the Human-in-the-Loop Seller workflow.
+4. **Web Speech API**:
    - Used for hands-free voice synthesis (Text-to-Speech) and Speech Recognition in the Alexa+ simulator.
+
 
 ---
 
