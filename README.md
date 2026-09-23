@@ -15,6 +15,20 @@
 
 </div>
 
+<div align="center">
+
+![VaultAlexa+ Hero Banner](docs/images/hero-banner.jpg)
+
+</div>
+
+---
+
+<div align="center">
+
+![Key Features](docs/images/features-showcase.jpg)
+
+</div>
+
 ---
 
 ## 📌 Overview
