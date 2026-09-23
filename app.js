@@ -4237,26 +4237,171 @@ window.buildListingDataFromUploadedFile = function(hintProductName, dataUrl) {
   };
 };
 
-// Google Gemini Multimodal Live API Vision & Web Grounding Handler
+// Amazon Nova Pro Multimodal Vision via MCP Server (Bedrock Mantle)
+// Routes: Browser → /mcp/v1/rpc → analyze_product_image_listing → Nova Pro
+window.callNovaProVisionForListing = async function(base64Data, mimeType, hintName) {
+  const mcpEndpoint = `${window.location.origin}/mcp/v1/rpc`;
+
+  const payload = {
+    jsonrpc: '2.0',
+    id: Date.now(),
+    method: 'tools/call',
+    params: {
+      name: 'analyze_product_image_listing',
+      arguments: {
+        imageDataUrl:    base64Data,  // pass full data URI to server
+        hintProductName: hintName || '',
+        wholesaleCost:   20
+      }
+    }
+  };
+
+  const controller = new AbortController();
+  const timeoutId  = setTimeout(() => controller.abort(), 30000);
+
+  const response = await fetch(mcpEndpoint, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload),
+    signal:  controller.signal
+  });
+  clearTimeout(timeoutId);
+
+  if (!response.ok) throw new Error(`MCP Server error: ${response.status}`);
+
+  const rpcResult = await response.json();
+  if (rpcResult.error) throw new Error(`Nova Pro MCP error: ${rpcResult.error.message}`);
+
+  const textContent = rpcResult?.result?.content?.[0]?.text || '';
+  const cleanJson   = textContent.replace(/```json/gi, '').replace(/```/g, '').trim();
+  let parsed = {};
+  try { parsed = JSON.parse(cleanJson); } catch(e) {
+    const match = textContent.match(/\{[\s\S]*\}/);
+    if (match) parsed = JSON.parse(match[0]);
+    else throw new Error('Nova Pro returned non-JSON response');
+  }
+
+  // Normalize to same shape as Gemini result
+  const listing = parsed.proposedListing || {};
+  return {
+    title:           listing.title           || parsed.title || hintName,
+    category:        listing.category        || 'electronics',
+    competitorPrice: listing.competitorPriceBenchmark || parsed.competitorPrice || 59.99,
+    wholesaleCost:   listing.wholesaleAcquisitionCost || 20,
+    suggestedPrice:  listing.suggestedListingPrice    || parsed.suggestedPrice || 49.99,
+    weightLbs:       listing.shippingWeightLbs        || 0.95,
+    fbaTier:         listing.fbaLogisticsTier         || 'Small Standard-Size ($3.42/unit)',
+    webSearchQuery:  parsed.marketWebSearchGrounding?.searchQuery || '',
+    webSources:      (parsed.marketWebSearchGrounding?.groundedSources || []).map(s => ({
+      marketplace: s.marketplace,
+      price:       s.price,
+      seller:      s.seller,
+      icon:        s.icon || 'fa-solid fa-store',
+      tag:         s.tag || 'Marketplace'
+    })),
+    bullets:         listing.bulletPoints || [],
+    imageUrl:        base64Data,
+    hintProductName: hintName || listing.title,
+    isNovaProLive:   true,
+    novaModel:       'amazon.nova-pro-v1:0',
+    aiProvider:      parsed.aiProvider || 'Amazon Nova Pro — AWS Bedrock'
+  };
+};
+
+// Legacy Gemini Vision Handler (kept as fallback if Nova Pro unavailable)
 window.callGeminiVisionForListing = async function(base64Data, mimeType, hintName, apiKey) {
   const cleanBase64 = base64Data.replace(/^data:[^;]+;base64,/, '');
 
-  let selectedModel = 'gemini-3.8-flash';
+  let selectedModel = 'gemini-2.0-flash';
   try {
-    selectedModel = localStorage.getItem('gemini_selected_model') || localStorage.getItem('gemini_active_model') || 'gemini-3.8-flash';
+    selectedModel = localStorage.getItem('gemini_selected_model') || localStorage.getItem('gemini_active_model') || 'gemini-2.0-flash';
   } catch(e) {}
 
   const candidateModels = [
-    selectedModel,
-    'gemini-3.8-flash',
-    'gemini-3.7-flash',
-    'gemini-3.5-flash',
-    'gemini-2.5-flash',
-    'gemini-2.0-flash'
+    selectedModel, 'gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-1.5-flash'
   ].filter((v, i, a) => a.indexOf(v) === i);
 
   const prompt = `You are VaultAlexa+, an autonomous Amazon FBA commercial cataloging specialist and live market grounding agent.
 Analyze this product image carefully.
+${hintName ? `User file name hint: "${hintName}".` : ''}
+
+Instructions:
+1. Identify the exact product title, brand/model, and category (electronics, kitchen, wearables, apparel, home, or general).
+2. Ground realistic competitor market prices across Amazon, Best Buy, and Walmart in USD. IMPORTANT: Accurately estimate based on actual retail market value:
+   - Flagship smartphones (e.g. Samsung Galaxy S25/S24 Plus/Ultra, iPhone 16/15 Pro) sell between $799 - $1,399.
+   - High-end laptops & MacBooks sell between $900 - $2,500.
+   - Tablets & iPads sell between $399 - $1,100.
+   - Premium smartwatches & wearables sell between $199 - $499.
+   - Wireless headphones sell between $49 - $350.
+   - Everyday accessories, tumblers, & home items sell between $15 - $60.
+   Never quote low accessory prices (like $40-$50) for high-end flagship phones or laptops.
+3. Propose an optimal suggested price that undercuts market competitor average by 10-15% to win 95%+ Amazon Buy Box share while locking in a healthy net profit margin.
+4. Estimate realistic shipping weight in lbs and FBA fulfillment tier.
+5. Provide 4 compelling Amazon SEO bullet points.
+
+Respond ONLY with a valid raw JSON object (no markdown, no backticks):
+{
+  "title": "Clear SEO title with model and key features",
+  "category": "electronics",
+  "competitorPrice": 999.99,
+  "wholesaleCost": 680.00,
+  "suggestedPrice": 889.99,
+  "weightLbs": 0.45,
+  "fbaTier": "Small Standard-Size ($3.42/unit)",
+  "webSearchQuery": "Brand Model live price Amazon BestBuy Walmart",
+  "webSources": [
+    {"marketplace": "Amazon Live", "price": 999.99, "seller": "Verified Prime Buy Box", "icon": "fa-brands fa-amazon", "tag": "Amazon Buy Box"},
+    {"marketplace": "Best Buy", "price": 1049.99, "seller": "Best Buy Direct", "icon": "fa-solid fa-store", "tag": "Official Retail"},
+    {"marketplace": "Walmart", "price": 989.00, "seller": "Top Rated Merchant", "icon": "fa-solid fa-basket-shopping", "tag": "Top Marketplace"}
+  ],
+  "bullets": [
+    "Feature 1 with technical detail",
+    "Feature 2 with performance metric",
+    "Feature 3 with build quality",
+    "Feature 4 with Prime delivery and warranty"
+  ]
+}`;
+
+  let resJson = null, usedModel = selectedModel, lastError = null;
+
+  for (const modelToTry of candidateModels) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelToTry}:generateContent?key=${encodeURIComponent(apiKey.trim())}`;
+    for (const useTools of [true, false]) {
+      const controller = new AbortController();
+      const timeoutId  = setTimeout(() => controller.abort(), 15000);
+      const reqPayload = {
+        contents: [{ parts: [{ text: prompt }, { inlineData: { mimeType: mimeType || 'image/jpeg', data: cleanBase64 } }] }],
+        generationConfig: { temperature: 0.2, maxOutputTokens: 1500 }
+      };
+      if (useTools) reqPayload.tools = [{ google_search: {} }];
+      try {
+        const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: controller.signal, body: JSON.stringify(reqPayload) });
+        clearTimeout(timeoutId);
+        if (response.ok) { resJson = await response.json(); usedModel = modelToTry; try { localStorage.setItem('gemini_active_model', modelToTry); } catch(e) {} break; }
+        else { const t = await response.text(); let m = t; try { m = JSON.parse(t).error?.message || t; } catch(e) {} lastError = new Error(`Gemini ${response.status}: ${m}`); if (response.status === 400 && useTools) continue; if (response.status !== 404) break; }
+      } catch (netErr) { clearTimeout(timeoutId); lastError = netErr; }
+    }
+    if (resJson) break;
+  }
+
+  if (!resJson) throw lastError || new Error('Gemini API failed on all models');
+
+  const rawText = resJson?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  const cleanJsonText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+  let parsed = {};
+  try { parsed = JSON.parse(cleanJsonText); } catch(parseErr) {
+    const m = rawText.match(/\{[\s\S]*\}/);
+    if (m) parsed = JSON.parse(m[0]); else throw parseErr;
+  }
+  parsed.imageUrl = base64Data;
+  parsed.hintProductName = hintName || parsed.title;
+  parsed.isGeminiLive = true;
+  parsed.geminiModel  = usedModel;
+  return parsed;
+};
+
+
+
 ${hintName ? `User file name hint: "${hintName}".` : ''}
 
 Instructions:

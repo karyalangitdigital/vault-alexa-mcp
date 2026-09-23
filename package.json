@@ -12,7 +12,6 @@
     "test:e2e": "node test-e2e-dom.js",
     "test:all": "node test-mcp.js && node test-dom-and-sync.js"
   },
-
   "keywords": [
     "alexa-plus",
     "mcp",
@@ -25,11 +24,12 @@
   "author": "KARYA LANGIT Digital. ( Supriadi )",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.1138.0",
     "cors": "^2.8.5",
+    "dotenv": "^18.0.3",
     "express": "^4.19.2"
   },
   "devDependencies": {
     "jsdom": "^30.1.0"
   }
 }
-
