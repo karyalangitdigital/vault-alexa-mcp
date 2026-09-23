@@ -307,7 +307,7 @@ const MCP_PROMPTS = [
 ];
 
 // Core MCP JSON-RPC 2.0 Handler (Shared between HTTP POST, Streamable SSE, and Stdio)
-function handleRpc(req, res) {
+async function handleRpc(req, res) {
   const { jsonrpc, id = null, method, params = {} } = (req && req.body) || {};
 
   if (jsonrpc !== '2.0') {
