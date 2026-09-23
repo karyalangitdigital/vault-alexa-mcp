@@ -1,129 +1,150 @@
 'use strict';
 /**
- * bedrock-client.js — Amazon Nova Pro via Bedrock Mantle API
+ * bedrock-client.js — Amazon Nova Pro via AWS Bedrock
  * VaultAlexa+ MCP Server | Amazon Developer Hackathon 2026
  *
- * Supports two auth modes:
- *   1. Bedrock Mantle API Key  (BEDROCK_MANTLE_API_KEY)  — new Bedrock console key
- *   2. AWS IAM Credentials     (AWS_ACCESS_KEY_ID + SECRET) — standard SDK auth
+ * Auth Priority:
+ *   1. IAM Credentials  (AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY) — SigV4, full $150 credit access
+ *   2. Mantle API Key   (BEDROCK_MANTLE_API_KEY)                    — Bearer token, limited demo quota
  */
 
 require('dotenv').config();
-const https = require('https');
 
-const REGION       = process.env.AWS_REGION || 'us-east-1';
-const MANTLE_KEY   = (process.env.BEDROCK_MANTLE_API_KEY || '').trim();
-const MODEL_ID     = 'amazon.nova-pro-v1:0';
+const https  = require('https');
+const crypto = require('crypto');
 
-// Bedrock Mantle endpoint uses Bearer token auth (new Bedrock console API keys)
-const MANTLE_HOST  = `bedrock-mantle.${REGION}.amazonaws.com`;
-// Standard Bedrock Runtime — confirmed working with Bearer auth from Mantle key
-const RUNTIME_HOST = `bedrock-runtime.${REGION}.amazonaws.com`;
+const REGION    = process.env.AWS_REGION || 'us-east-1';
+const ACCESS_ID = (process.env.AWS_ACCESS_KEY_ID     || '').trim();
+const SECRET    = (process.env.AWS_SECRET_ACCESS_KEY  || '').trim();
+const MANTLE    = (process.env.BEDROCK_MANTLE_API_KEY || '').trim();
+const MODEL_ID  = 'amazon.nova-pro-v1:0';
+const HOST      = `bedrock-runtime.${REGION}.amazonaws.com`;
+const SERVICE   = 'bedrock';
 
-// Always use runtime host (confirmed works with Bearer token auth)
-const ACTIVE_HOST  = RUNTIME_HOST;
-const INVOKE_PATH  = `/model/${encodeURIComponent(MODEL_ID)}/invoke`;
+// ─── SigV4 Signing ────────────────────────────────────────────────────────────
+function hmac(key, data) {
+  return crypto.createHmac('sha256', key).update(data, 'utf8').digest();
+}
+function sha256hex(data) {
+  return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
+}
 
+function buildSigV4Headers(method, path, payload) {
+  const now        = new Date();
+  const amzDate    = now.toISOString().replace(/[:-]|\.\d{3}/g, '').slice(0, 15) + 'Z';
+  const dateStamp  = amzDate.slice(0, 8);
+  const bodyHash   = sha256hex(payload);
 
-/**
- * makeHttpsRequest — thin HTTPS wrapper (no external deps)
- */
-function makeHttpsRequest(options, body) {
+  const canonHeaders = `content-type:application/json\nhost:${HOST}\nx-amz-date:${amzDate}\n`;
+  const signedHeaders = 'content-type;host;x-amz-date';
+
+  const canonRequest = [
+    method, path, '',
+    canonHeaders, signedHeaders, bodyHash
+  ].join('\n');
+
+  const credScope = `${dateStamp}/${REGION}/${SERVICE}/aws4_request`;
+  const strToSign = [
+    'AWS4-HMAC-SHA256', amzDate, credScope,
+    sha256hex(canonRequest)
+  ].join('\n');
+
+  const sigKey = hmac(
+    hmac(hmac(hmac(`AWS4${SECRET}`, dateStamp), REGION), SERVICE),
+    'aws4_request'
+  );
+  const signature = hmac(sigKey, strToSign).toString('hex');
+
+  const authHeader = [
+    `AWS4-HMAC-SHA256 Credential=${ACCESS_ID}/${credScope}`,
+    `SignedHeaders=${signedHeaders}`,
+    `Signature=${signature}`
+  ].join(', ');
+
+  return {
+    'Content-Type':  'application/json',
+    'Host':          HOST,
+    'X-Amz-Date':   amzDate,
+    'Authorization': authHeader
+  };
+}
+
+// ─── HTTPS Request ────────────────────────────────────────────────────────────
+function makeRequest(headers, payload) {
   return new Promise((resolve, reject) => {
+    const options = {
+      hostname: HOST,
+      path:     `/model/${encodeURIComponent(MODEL_ID)}/invoke`,
+      method:   'POST',
+      headers:  { ...headers, 'Content-Length': Buffer.byteLength(payload) }
+    };
     const req = https.request(options, (res) => {
       let data = '';
-      res.on('data', chunk => { data += chunk; });
+      res.on('data', c => { data += c; });
       res.on('end', () => {
         try {
           const parsed = JSON.parse(data);
           if (res.statusCode >= 400) {
-            reject(new Error(`Bedrock HTTP ${res.statusCode}: ${JSON.stringify(parsed.message || parsed)}`));
+            const msg = parsed.message || parsed.Message || JSON.stringify(parsed);
+            reject(new Error(`Bedrock HTTP ${res.statusCode}: ${msg}`));
           } else {
             resolve(parsed);
           }
         } catch (e) {
-          reject(new Error(`Bedrock parse error: ${data.slice(0, 200)}`));
+          reject(new Error(`Bedrock parse error (${res.statusCode}): ${data.slice(0, 300)}`));
         }
       });
     });
     req.on('error', reject);
-    req.setTimeout(30000, () => { req.destroy(new Error('Bedrock request timeout (30s)')); });
-    req.write(body);
+    req.setTimeout(30000, () => req.destroy(new Error('Bedrock timeout (30s)')));
+    req.write(payload);
     req.end();
   });
 }
 
-/**
- * invokeNovaPro — invoke Amazon Nova Pro with text-only or multimodal (image) prompt
- * @param {string} textPrompt
- * @param {string|null} imageBase64  — raw base64 (no data URI prefix)
- * @param {string}      imageMime    — e.g. 'image/jpeg'
- * @returns {Promise<string>}        — model text output
- */
+// ─── Nova Pro Invocation ──────────────────────────────────────────────────────
 async function invokeNovaPro(textPrompt, imageBase64 = null, imageMime = 'image/jpeg') {
   const contentParts = [];
 
-  // Add image block if provided (Nova Pro multimodal)
   if (imageBase64) {
-    const fmt = (imageMime || 'image/jpeg').replace('image/', ''); // jpeg|png|gif|webp
-    contentParts.push({
-      image: {
-        format: fmt,
-        source: { bytes: imageBase64 }
-      }
-    });
+    const fmt = (imageMime || 'image/jpeg').replace('image/', '');
+    contentParts.push({ image: { format: fmt, source: { bytes: imageBase64 } } });
   }
-
-  // Add text block
   contentParts.push({ text: textPrompt });
 
-  const payload = JSON.stringify({
-    messages: [
-      { role: 'user', content: contentParts }
-    ],
-    inferenceConfig: {
-      maxTokens: 1500,
-      temperature: 0.2,
-      topP: 0.9
-    }
+  const body = JSON.stringify({
+    messages: [{ role: 'user', content: contentParts }],
+    inferenceConfig: { maxTokens: 1500, temperature: 0.2, topP: 0.9 }
   });
 
-  const headers = {
-    'Content-Type':   'application/json',
-    'Accept':         'application/json',
-    'Content-Length': Buffer.byteLength(payload)
-  };
+  let response;
 
-  // Bedrock Mantle API key → Authorization: Bearer
-  // Standard Bedrock Runtime → requires SigV4 (AWS_ACCESS_KEY_ID + SECRET)
-  if (MANTLE_KEY) {
-    headers['Authorization'] = `Bearer ${MANTLE_KEY}`;
+  // ── Priority 1: IAM SigV4 (full $150 credit access) ──
+  if (ACCESS_ID && SECRET) {
+    const headers = buildSigV4Headers('POST', `/model/${encodeURIComponent(MODEL_ID)}/invoke`, body);
+    response = await makeRequest(headers, body);
+  }
+  // ── Priority 2: Mantle API Key (Bearer token, limited quota) ──
+  else if (MANTLE) {
+    const headers = {
+      'Content-Type':  'application/json',
+      'Authorization': `Bearer ${MANTLE}`
+    };
+    response = await makeRequest(headers, body);
+  }
+  else {
+    throw new Error('No Bedrock credentials. Set AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY in .env');
   }
 
-  const options = {
-    hostname: ACTIVE_HOST,
-    path:     INVOKE_PATH,
-    method:   'POST',
-    headers
-  };
-
-  const response = await makeHttpsRequest(options, payload);
-
-  // Nova Pro response: response.output.message.content[0].text
   const text = response?.output?.message?.content?.[0]?.text
-            || response?.results?.[0]?.outputText
-            || '';
-
+             || response?.results?.[0]?.outputText
+             || '';
   if (!text) throw new Error('Nova Pro returned empty response');
   return text;
 }
 
-/**
- * analyzeProductImageWithNova — analyze uploaded product image → Amazon listing JSON
- * Mirrors the Gemini vision function signature for drop-in replacement.
- */
+// ─── Product Image → Amazon Listing ─────────────────────────────────────────
 async function analyzeProductImageWithNova(base64Data, mimeType, hintProductName) {
-  // Strip data URI prefix if present
   const cleanBase64 = base64Data.replace(/^data:[^;]+;base64,/, '');
 
   const prompt = `You are VaultAlexa+, an autonomous Amazon FBA commercial cataloging specialist and live market grounding agent.
@@ -167,29 +188,33 @@ Respond ONLY with a valid raw JSON object (no markdown, no backticks, no explana
 }`;
 
   const rawText = await invokeNovaPro(prompt, cleanBase64, mimeType);
-  const cleanJson = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+  const clean   = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
 
   let parsed = {};
   try {
-    parsed = JSON.parse(cleanJson);
+    parsed = JSON.parse(clean);
   } catch (e) {
-    const match = rawText.match(/\{[\s\S]*\}/);
-    if (match) parsed = JSON.parse(match[0]);
-    else throw new Error(`Nova Pro returned non-JSON: ${rawText.slice(0, 200)}`);
+    const m = rawText.match(/\{[\s\S]*\}/);
+    if (m) parsed = JSON.parse(m[0]);
+    else throw new Error(`Nova Pro non-JSON: ${rawText.slice(0, 200)}`);
   }
 
-  parsed.imageUrl         = base64Data;
-  parsed.hintProductName  = hintProductName || parsed.title;
-  parsed.isNovaProLive    = true;
-  parsed.novaModel        = MODEL_ID;
+  parsed.imageUrl        = base64Data;
+  parsed.hintProductName = hintProductName || parsed.title;
+  parsed.isNovaProLive   = true;
+  parsed.novaModel       = MODEL_ID;
+  parsed.authMethod      = (ACCESS_ID && SECRET) ? 'IAM-SigV4' : 'Mantle-Bearer';
   return parsed;
 }
 
-/**
- * isBedrockAvailable — check if Mantle key or IAM creds are configured
- */
 function isBedrockAvailable() {
-  return !!(MANTLE_KEY || (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY));
+  return !!(ACCESS_ID && SECRET) || !!MANTLE;
 }
 
-module.exports = { invokeNovaPro, analyzeProductImageWithNova, isBedrockAvailable, MODEL_ID };
+function getAuthMode() {
+  if (ACCESS_ID && SECRET) return 'IAM SigV4 (Full Access)';
+  if (MANTLE)              return 'Mantle Bearer Token (Demo)';
+  return 'Not configured';
+}
+
+module.exports = { invokeNovaPro, analyzeProductImageWithNova, isBedrockAvailable, getAuthMode, MODEL_ID };
