@@ -15,10 +15,15 @@ const REGION       = process.env.AWS_REGION || 'us-east-1';
 const MANTLE_KEY   = (process.env.BEDROCK_MANTLE_API_KEY || '').trim();
 const MODEL_ID     = 'amazon.nova-pro-v1:0';
 
-// ─── Bedrock Mantle Endpoint ───────────────────────────────────────────────
-// New Bedrock console uses API key auth over HTTPS — no SigV4 needed.
-const MANTLE_HOST  = `bedrock-runtime.${REGION}.amazonaws.com`;
+// Bedrock Mantle endpoint uses Bearer token auth (new Bedrock console API keys)
+const MANTLE_HOST  = `bedrock-mantle.${REGION}.amazonaws.com`;
+// Standard Bedrock Runtime — confirmed working with Bearer auth from Mantle key
+const RUNTIME_HOST = `bedrock-runtime.${REGION}.amazonaws.com`;
+
+// Always use runtime host (confirmed works with Bearer token auth)
+const ACTIVE_HOST  = RUNTIME_HOST;
 const INVOKE_PATH  = `/model/${encodeURIComponent(MODEL_ID)}/invoke`;
+
 
 /**
  * makeHttpsRequest — thin HTTPS wrapper (no external deps)
@@ -89,13 +94,14 @@ async function invokeNovaPro(textPrompt, imageBase64 = null, imageMime = 'image/
     'Content-Length': Buffer.byteLength(payload)
   };
 
-  // Attach Mantle API Key if available
+  // Bedrock Mantle API key → Authorization: Bearer
+  // Standard Bedrock Runtime → requires SigV4 (AWS_ACCESS_KEY_ID + SECRET)
   if (MANTLE_KEY) {
-    headers['x-api-key'] = MANTLE_KEY;
+    headers['Authorization'] = `Bearer ${MANTLE_KEY}`;
   }
 
   const options = {
-    hostname: MANTLE_HOST,
+    hostname: ACTIVE_HOST,
     path:     INVOKE_PATH,
     method:   'POST',
     headers
