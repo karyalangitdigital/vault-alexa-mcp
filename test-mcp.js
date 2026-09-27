@@ -172,7 +172,7 @@ setTimeout(() => {
 
 // Exit test after completions
 setTimeout(() => {
-  console.log('✅ All 9 MCP JSON-RPC 2.0 Method Calls Verified Successfully! (13 Tools + 3 Resources + 2 Prompts registered on server)');
+  console.log('✅ All 9 MCP JSON-RPC 2.0 Method Calls Verified Successfully! (15 Tools + 3 Resources + 2 Prompts registered on server)');
   mcpProcess.kill();
   process.exit(0);
 }, 6800);

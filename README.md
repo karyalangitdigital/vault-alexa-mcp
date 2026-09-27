@@ -301,7 +301,7 @@ npm run test:dom
 npm run test:all
 ```
 
-Expected output: `✅ All MCP tests passed — 9/9 JSON-RPC 2.0 methods verified`
+Expected output: `✅ All 9 MCP JSON-RPC 2.0 Method Calls Verified Successfully! (15 Tools + 3 Resources + 2 Prompts registered on server)`
 
 ---
 

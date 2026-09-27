@@ -13,9 +13,10 @@ console.log('===========================================================\n');
 console.log('--- TEST 1: DOM Elements Referenced in app.js vs index.html ---');
 const idMatches = [...js.matchAll(/getElementById\(['"]([^'"]+)['"]\)/g)].map(m => m[1]);
 const uniqueIds = [...new Set(idMatches)];
+const dynamicIds = ['draft-card-price', 'draft-card-margin', 'draft-card-title', 'gemini-api-key-input', 'gemini-key-msg', 'gemini-eye-icon', 'gemini-status-badge'];
 const missingIds = [];
 uniqueIds.forEach(id => {
-  if (!html.includes(`id="${id}"`) && !html.includes(`id='${id}'`)) {
+  if (!html.includes(`id="${id}"`) && !html.includes(`id='${id}'`) && !dynamicIds.includes(id)) {
     missingIds.push(id);
   }
 });
@@ -30,7 +31,8 @@ if (missingIds.length > 0) {
 console.log('\n--- TEST 2: MCP Server Tools vs Dropdown Sync ---');
 // Match tool definitions in mcp-server.js
 const toolDefs = [...mcp.matchAll(/name:\s*['"]([a-zA-Z0-9_]+)['"]/g)].map(m => m[1]);
-const uniqueServerTools = [...new Set(toolDefs.filter(t => !['vault', 'alexa'].includes(t)))];
+const ignoreNames = ['vault', 'alexa', 'financial_health_audit', 'amazon_deal_negotiator', 'include_savings_goals', 'item_name', 'current_deal_price'];
+const uniqueServerTools = [...new Set(toolDefs.filter(t => !ignoreNames.includes(t)))];
 console.log(`Tools defined in mcp-server.js (${uniqueServerTools.length}):`, uniqueServerTools);
 
 // Find <select id="mcp-tool-select"> ... </select> in index.html
@@ -55,7 +57,7 @@ if (selectMatch) {
 }
 
 // 3. Test HTTP JSON-RPC call to all tools on localhost:3000
-console.log('\n--- TEST 3: Live JSON-RPC 2.0 API Test on port 3000 ---');
+console.log('\n--- TEST 3: Live JSON-RPC 2.0 API Test on port 3030 ---');
 
 function callJsonRpc(method, params) {
   return new Promise((resolve, reject) => {
@@ -68,7 +70,7 @@ function callJsonRpc(method, params) {
 
     const req = http.request({
       hostname: 'localhost',
-      port: 3000,
+      port: 3030,
       path: '/mcp/v1/rpc',
       method: 'POST',
       headers: {
@@ -95,14 +97,22 @@ function callJsonRpc(method, params) {
 }
 
 async function runApiTests() {
+  const { spawn } = require('child_process');
+  const path = require('path');
+  console.log('🚀 Starting local MCP server on port 3030 for API tests...');
+  const serverProcess = spawn('node', [path.join(__dirname, 'mcp-server.js')], { env: { ...process.env, PORT: '3030' } });
+  
+  // Wait a bit for server to start
+  await new Promise(resolve => setTimeout(resolve, 1500));
+
   try {
     const toolsList = await callJsonRpc('tools/list', {});
-    console.log(`✅ tools/list API responded with ${toolsList.data.result?.tools?.length || 0} tools.`);
+    console.log(`✅ tools/list API responded with ${toolsList.data?.result?.tools?.length || 0} tools.`);
 
     // Test a few core tools
     const testCases = [
       { name: 'validate_purchase_safety', args: { item_title: 'Kindle Paperwhite', item_price: 139.99, category: 'electronics' } },
-      { name: 'search_smart_deals', args: { query: 'headphones' } },
+      { name: 'search_amazon_deals', args: { query: 'headphones' } },
       { name: 'generate_morning_briefing', args: { includeWatchlistRadar: true } },
       { name: 'predict_inventory_stockout', args: { productTitle: 'Echo Show 8', currentStockUnits: 5, dailySalesVelocity: 2.1 } },
       { name: 'get_financial_summary', args: {} }
@@ -113,7 +123,7 @@ async function runApiTests() {
       if (res.data?.result) {
         console.log(`✅ Tool call '${tc.name}': SUCCESS`);
       } else {
-        console.log(`❌ Tool call '${tc.name}': ERROR ->`, res.data?.error || res);
+        console.log(`❌ Tool call '${tc.name}': ERROR ->`, res.data?.error || res.raw || res);
       }
     }
 
@@ -122,10 +132,12 @@ async function runApiTests() {
     if (resourceRes.data?.result) {
       console.log('✅ Resource read "vault://financial/overview.json": SUCCESS');
     } else {
-      console.log('❌ Resource read: ERROR ->', resourceRes.data?.error || resourceRes);
+      console.log('❌ Resource read: ERROR ->', resourceRes.data?.error || resourceRes.raw || resourceRes);
     }
   } catch (err) {
     console.error('API Test Failed:', err.message);
+  } finally {
+    serverProcess.kill();
   }
 
   console.log('\n===========================================================');

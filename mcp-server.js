@@ -8,8 +8,8 @@
 require('dotenv').config(); // Load .env (BEDROCK_MANTLE_API_KEY, AWS_REGION, etc.)
 
 const express = require('express');
-const cors    = require('cors');
-const path    = require('path');
+const cors = require('cors');
+const path = require('path');
 
 // Amazon Bedrock Nova Pro client (replaces Google Gemini Vision)
 const { analyzeProductImageWithNova, isBedrockAvailable } = require('./bedrock-client');
@@ -907,11 +907,11 @@ async function handleRpc(req, res) {
       if (isBedrockAvailable() && isBase64Image) {
         try {
           const mimeMatch = imageData.match(/^data:([^;]+);base64,/);
-          const mimeType  = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+          const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
           const novaResult = await analyzeProductImageWithNova(imageData, mimeType, hintProductName);
 
           const marginPct = Number((((novaResult.suggestedPrice - (novaResult.wholesaleCost || wholesaleCost || 20)) / novaResult.suggestedPrice) * 100).toFixed(1));
-          const draftId   = `DRAFT-${Math.floor(100000 + Math.random() * 900000)}`;
+          const draftId = `DRAFT-${Math.floor(100000 + Math.random() * 900000)}`;
 
           return res.json({
             jsonrpc: '2.0',
@@ -920,33 +920,33 @@ async function handleRpc(req, res) {
               content: [{
                 type: 'text',
                 text: JSON.stringify({
-                  status:            'DRAFT_REVIEW_REQUIRED',
-                  subAgentExecutor:  'Amazon Nova Pro Multimodal Vision Agent (AWS Bedrock)',
-                  aiProvider:        'Amazon Nova Pro v1 — AWS Bedrock Mantle',
+                  status: 'DRAFT_REVIEW_REQUIRED',
+                  subAgentExecutor: 'Amazon Nova Pro Multimodal Vision Agent (AWS Bedrock)',
+                  aiProvider: 'Amazon Nova Pro v1 — AWS Bedrock Mantle',
                   draftId,
-                  analyzedImageUrl:  imageData,
+                  analyzedImageUrl: imageData,
                   marketWebSearchGrounding: {
-                    status:                   'LIVE_MARKET_GROUNDED',
-                    searchQuery:              novaResult.webSearchQuery || `${novaResult.title} live price Amazon`,
-                    sourcesCount:             (novaResult.webSources || []).length,
-                    groundedSources:          novaResult.webSources || [],
+                    status: 'LIVE_MARKET_GROUNDED',
+                    searchQuery: novaResult.webSearchQuery || `${novaResult.title} live price Amazon`,
+                    sourcesCount: (novaResult.webSources || []).length,
+                    groundedSources: novaResult.webSources || [],
                     competitorPriceBenchmark: novaResult.competitorPrice,
                     pricingStrategyExplanation: `Amazon Nova Pro analyzed the product image and benchmarked live competitor prices. Recommended price $${novaResult.suggestedPrice} undercuts market by ~12% to win Buy Box with ${marginPct}% margin.`
                   },
                   proposedListing: {
-                    title:                   novaResult.title,
-                    category:                novaResult.category,
-                    bulletPoints:            novaResult.bullets || [],
-                    shippingWeightLbs:       novaResult.weightLbs,
-                    fbaLogisticsTier:        novaResult.fbaTier,
+                    title: novaResult.title,
+                    category: novaResult.category,
+                    bulletPoints: novaResult.bullets || [],
+                    shippingWeightLbs: novaResult.weightLbs,
+                    fbaLogisticsTier: novaResult.fbaTier,
                     competitorPriceBenchmark: novaResult.competitorPrice,
                     wholesaleAcquisitionCost: Number(wholesaleCost || novaResult.wholesaleCost || 20),
-                    suggestedListingPrice:   novaResult.suggestedPrice,
-                    projectedMarginPercent:  marginPct,
-                    estimatedBuyBoxWinRate:  '95.4%'
+                    suggestedListingPrice: novaResult.suggestedPrice,
+                    projectedMarginPercent: marginPct,
+                    estimatedBuyBoxWinRate: '95.4%'
                   },
-                  humanInTheLoopAlert:  'DRAFT_PENDING_SELLER_REVIEW: Amazon Nova Pro draft requires seller approval before publishing.',
-                  sellerActionPrompt:   `Nova Pro Vision siap! Harga rekomendasi $${novaResult.suggestedPrice} (kompetitor: $${novaResult.competitorPrice}). Balas jika ingin ubah sebelum diposting.`
+                  humanInTheLoopAlert: 'DRAFT_PENDING_SELLER_REVIEW: Amazon Nova Pro draft requires seller approval before publishing.',
+                  sellerActionPrompt: `Nova Pro Vision siap! Harga rekomendasi $${novaResult.suggestedPrice} (kompetitor: $${novaResult.competitorPrice}). Balas jika ingin ubah sebelum diposting.`
                 }, null, 2)
               }]
             }
@@ -958,7 +958,7 @@ async function handleRpc(req, res) {
       }
 
       // ── MOCK/FALLBACK PATH: Keyword-based heuristic when Bedrock unavailable ──
-      
+
       let title = "Anker Space One Wireless ANC Over-Ear Headphones - 2X Voice Reduction, 40H ANC Playtime, LDAC Hi-Res Audio";
       let category = "electronics";
       let weightLbs = 0.95;
@@ -1231,8 +1231,8 @@ function startStdioTransport() {
       const parsed = JSON.parse(trimmed);
       const mockRes = {
         statusCode: 200,
-        status: function(code) { this.statusCode = code; return this; },
-        json: function(payload) {
+        status: function (code) { this.statusCode = code; return this; },
+        json: function (payload) {
           process.stdout.write(JSON.stringify(payload) + '\n');
         }
       };
