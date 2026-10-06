@@ -8,16 +8,23 @@
 [![JSON-RPC 2.0](https://img.shields.io/badge/Transport-Streamable%20HTTP%20%2B%20SSE-6366F1?style=for-the-badge)](https://www.jsonrpc.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-8B5CF6?style=for-the-badge)](LICENSE)
 [![Version](https://img.shields.io/badge/Version-2.5.0-F59E0B?style=for-the-badge)](package.json)
+[![YouTube Demo](https://img.shields.io/badge/YouTube-Watch%20Demo%20Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=U0SNEII29Cg)
 
 **Enterprise-grade autonomous AI financial advisor and intelligent Amazon shopping assistant** — powered by Model Context Protocol (MCP) Spec `2025-11-25` over JSON-RPC 2.0 Streamable HTTP.
 
-[🚀 Quickstart](#-quickstart) · [🛠️ MCP Tools Reference](#️-mcp-tools-reference-15-tools) · [🧪 Testing Guide for Judges](#-testing-guide-for-judges) · [🏗️ Architecture](#️-architecture) · [📜 Friction Log](FRICTION_LOG.md)
+[🎬 Watch Demo Video](https://www.youtube.com/watch?v=U0SNEII29Cg) · [🚀 Quickstart](#-quickstart) · [🛠️ MCP Tools Reference](#️-mcp-tools-reference-15-tools) · [🧪 Testing Guide for Judges](#-testing-guide-for-judges) · [🏗️ Architecture](#️-architecture) · [📜 Friction Log](FRICTION_LOG.md)
 
 </div>
 
+---
+
 <div align="center">
 
-![VaultAlexa+ Hero Banner](docs/images/hero-banner.jpg)
+### 🎬 Watch Live Product Demo Video (3 Minutes)
+
+[![VaultAlexa+ Live Demo Video](https://img.youtube.com/vi/U0SNEII29Cg/maxresdefault.jpg)](https://www.youtube.com/watch?v=U0SNEII29Cg)
+
+*👉 Click the banner above to watch the full demonstration on YouTube: [https://www.youtube.com/watch?v=U0SNEII29Cg](https://www.youtube.com/watch?v=U0SNEII29Cg)*
 
 </div>
 
