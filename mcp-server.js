@@ -1249,32 +1249,36 @@ function startStdioTransport() {
 
 // Start Server (Supports Dual-Mode: Streamable HTTP + Stdio)
 if (require.main === module) {
-  const isStdioMode = process.argv.includes('--stdio') || !process.stdin.isTTY;
-  if (isStdioMode) {
+  const isStdioMode = process.argv.includes('--stdio') || process.argv.includes('--stdio-only');
+  if (isStdioMode || !process.stdin.isTTY && !process.argv.includes('--http')) {
     startStdioTransport();
   }
 
   // Launch HTTP / SSE Server unless explicitly run in stdio-only mode
   if (!process.argv.includes('--stdio-only')) {
-    const server = app.listen(PORT, () => {
-      const logger = isStdioMode ? console.error : console.log;
-      logger(`=======================================================`);
-      logger(`🚀 VaultAlexa+ MCP Server running on port ${PORT}`);
-      logger(`📡 JSON-RPC Endpoint: http://localhost:${PORT}/mcp/v1/rpc`);
-      logger(`🌊 Streamable HTTP (SSE): http://localhost:${PORT}/mcp/v1/sse`);
-      logger(`📋 Protocol Version: 2025-11-25 (Alexa+ Hackathon Standard)`);
-      if (isStdioMode) logger(`🔌 Stdio Transport Active (Listening on stdin/stdout)`);
-      logger(`=======================================================`);
-    });
+    function startHttpServer(portToTry) {
+      const server = app.listen(portToTry, () => {
+        console.log(`=======================================================`);
+        console.log(`🚀 VaultAlexa+ MCP Server running on port ${portToTry}`);
+        console.log(`📡 JSON-RPC Endpoint: http://localhost:${portToTry}/mcp/v1/rpc`);
+        console.log(`🌊 Streamable HTTP (SSE): http://localhost:${portToTry}/mcp/v1/sse`);
+        console.log(`🌐 Web Simulator: http://localhost:${portToTry}`);
+        console.log(`📋 Protocol Version: 2025-11-25 (Alexa+ Hackathon Standard)`);
+        if (isStdioMode) console.error(`🔌 Stdio Transport Active (Listening on stdin/stdout)`);
+        console.log(`=======================================================`);
+      });
 
-    server.on('error', (err) => {
-      if (err.code === 'EADDRINUSE') {
-        const logger = isStdioMode ? console.error : console.log;
-        logger(`⚠️ Port ${PORT} is already in use. Continuing with Stdio transport.`);
-      } else {
-        throw err;
-      }
-    });
+      server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+          console.warn(`⚠️ Port ${portToTry} is already in use (e.g. by Docker/WSL). Trying port ${portToTry + 1}...`);
+          startHttpServer(portToTry + 1);
+        } else {
+          console.error(`Server error:`, err);
+        }
+      });
+    }
+
+    startHttpServer(Number(PORT));
   }
 }
 

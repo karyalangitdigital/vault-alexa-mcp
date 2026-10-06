@@ -1,304 +1,145 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Naskah Video Demo Juri & Panduan Voice-Over - VaultAlexa+ MCP</title>
-  <style>
-    @page {
-      size: A4;
-      margin: 12mm 12mm 12mm 12mm;
-    }
-    * {
-      box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      color: #0f172a;
-      line-height: 1.5;
-      background: #ffffff;
-      margin: 0;
-      padding: 10px 15px;
-      font-size: 9pt;
-    }
-    .header {
-      border-bottom: 3px solid #ff9900;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-    .header-title h1 {
-      margin: 0;
-      color: #0f172a;
-      font-size: 16pt;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-    }
-    .header-title .subtitle {
-      color: #1d4ed8;
-      font-size: 9pt;
-      font-weight: 700;
-      margin-top: 2px;
-    }
-    .header-badge {
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 7.5pt;
-      color: #475569;
-      text-align: right;
-      line-height: 1.3;
-    }
-
-    .tips-box {
-      background: #fffdf5;
-      border: 1px solid #fde68a;
-      border-left: 4px solid #f59e0b;
-      border-radius: 6px;
-      padding: 8px 12px;
-      margin-bottom: 12px;
-      font-size: 8.5pt;
-      page-break-inside: avoid;
-    }
-    .tips-box strong { color: #b45309; }
-
-    /* Scene Cards */
-    .scene-card {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-left: 5px solid #2563eb;
-      border-radius: 6px;
-      padding: 10px 14px;
-      margin-bottom: 10px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-      page-break-inside: avoid;
-    }
-    .scene-card.accent-orange { border-left-color: #ea580c; }
-    .scene-card.accent-purple { border-left-color: #7c3aed; }
-    .scene-card.accent-emerald { border-left-color: #059669; }
-    .scene-card.accent-slate { border-left-color: #334155; }
-
-    .scene-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 4px;
-      margin-bottom: 6px;
-    }
-    .scene-title {
-      font-size: 9.5pt;
-      font-weight: 800;
-      color: #0f172a;
-    }
-    .scene-time {
-      background: #0f172a;
-      color: #ffffff;
-      font-size: 7.5pt;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-family: Consolas, monospace;
-    }
-
-    .scene-action {
-      background: #f8fafc;
-      border-left: 3px solid #38bdf8;
-      padding: 5px 8px;
-      margin-bottom: 6px;
-      font-size: 8pt;
-      color: #334155;
-    }
-    .scene-action strong { color: #0284c7; }
-
-    .script-box-en {
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-left: 4px solid #16a34a;
-      border-radius: 4px;
-      padding: 7px 10px;
-      margin-bottom: 4px;
-      font-size: 8.5pt;
-      color: #14532d;
-      line-height: 1.45;
-    }
-    .script-box-en .tag {
-      display: inline-block;
-      font-size: 7pt;
-      font-weight: 800;
-      background: #16a34a;
-      color: white;
-      padding: 1px 5px;
-      border-radius: 3px;
-      margin-right: 4px;
-      text-transform: uppercase;
-    }
-
-    .script-meaning-id {
-      font-size: 7.5pt;
-      color: #64748b;
-      font-style: italic;
-      padding-left: 4px;
-      margin-bottom: 2px;
-    }
-
-    /* Full Script Block */
-    .full-script-box {
-      background: #0f172a;
-      color: #f8fafc;
-      border-radius: 6px;
-      padding: 10px 12px;
-      font-size: 8pt;
-      line-height: 1.45;
-      margin-top: 10px;
-      page-break-inside: avoid;
-    }
-    .full-script-box h4 {
-      margin: 0 0 6px 0;
-      color: #38bdf8;
-      font-size: 8.5pt;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .footer {
-      margin-top: 15px;
-      border-top: 1px solid #e2e8f0;
-      padding-top: 6px;
-      font-size: 7.5pt;
-      color: #94a3b8;
-      display: flex;
-      justify-content: space-between;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naskah Video Demo VaultAlexa+</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 { color: #232F3E; border-bottom: 2px solid #FF9900; padding-bottom: 10px; }
+        h2 { color: #FF9900; margin-top: 30px; }
+        .section {
+            background: #f8f9fa;
+            border-left: 4px solid #232F3E;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        .visual { font-weight: bold; color: #007185; }
+        .voice {
+            font-style: italic;
+            font-size: 1.1em;
+            background: #e7f4f5;
+            padding: 10px;
+            border-radius: 5px;
+            color: #0F1111;
+        }
+        .translation {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 10px;
+        }
+        @media print {
+            body { padding: 0; }
+            .section { page-break-inside: avoid; }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="header-title">
-      <h1>Naskah Video Demo Juri & Voice-Over Guide</h1>
-      <div class="subtitle">VaultAlexa+ : Autonomous Multi-Agent Financial Operating System (MCP Spec 2025-11-25)</div>
+    <h1>🎥 Skenario & Naskah Video Demo: "VaultAlexa+"</h1>
+    <p><strong>Durasi Target:</strong> 2.5 - 3 Menit</p>
+    
+    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 30px;">
+        <strong>Persiapan Sebelum Merekam:</strong>
+        <ol>
+            <li>Buka Terminal/Command Prompt, jalankan <code>npm start</code>.</li>
+            <li>Buka browser, masuk ke <code>http://localhost:3000</code> (atau buka file <code>index.html</code> Anda).</li>
+            <li>Buka tab Terminal lain yang siap menjalankan <code>npm test</code>.</li>
+        </ol>
     </div>
-    <div class="header-badge">
-      <strong>Kompetisi:</strong> Amazon Developer Hackathon 2026<br>
-      <strong>Durasi Target:</strong> 2 Menit 15 Detik<br>
-      <strong>Pengembang:</strong> KARYA LANGIT Digital (Supriadi)
-    </div>
-  </div>
 
-  <div class="tips-box">
-    <strong>💡 Cara Praktis Mengisi Suara Narasi (TTS):</strong>
-    Gunakan aplikasi bawaan Windows <strong>Clipchamp</strong> atau <strong>CapCut PC</strong> (Gratis). Pilih menu <em>Text-to-Speech</em>, pilih bahasa <em>English (United States)</em> dengan suara <em>Jenny</em> atau <em>Guy</em>, lalu masukkan teks bahasa Inggris dari kotak hijau di bawah ini.
-  </div>
+    <h2>⏱️ Detik 0:00 - 0:30 | Pembukaan & Pengenalan Visi</h2>
+    <div class="section">
+        <p class="visual">🖥️ Di Layar (Visual):</p>
+        <p>Menampilkan halaman GitHub README.md Anda, lalu berpindah ke tampilan UI web simulator VaultAlexa+ yang bersih.</p>
+        
+        <p class="visual">🎙️ Naskah (Voiceover):</p>
+        <div class="voice">
+            "Hello judges, welcome to VaultAlexa+. Traditional shopping apps rely on clunky interfaces and rigid databases. But for the Amazon Developer Hackathon, we envisioned something completely different: a true Zero-Backend, Two-Sided Autonomous Agent powered entirely by the Model Context Protocol."
+        </div>
+        <div class="translation">
+            (Terjemahan: Halo juri, selamat datang di VaultAlexa+. Aplikasi belanja tradisional bergantung pada UI yang kaku dan database. Tapi untuk Hackathon ini, kami merancang sesuatu yang berbeda: Agen Otonom Dua-Sisi tanpa-backend yang ditenagai sepenuhnya oleh Model Context Protocol.)
+        </div>
+    </div>
 
-  <!-- ADEGAN 1 -->
-  <div class="scene-card">
-    <div class="scene-header">
-      <span class="scene-title">ADEGAN 1: PEMBUKA & MASALAH BELANJA IMPULSIF (THE PROBLEM)</span>
-      <span class="scene-time">⏱️ 00:00 - 00:25 (25 Detik)</span>
+    <h2>⏱️ Detik 0:30 - 1:15 | Skenario 1: Agen Pembeli (Buyer)</h2>
+    <div class="section">
+        <p class="visual">🖥️ Di Layar (Visual):</p>
+        <ol>
+            <li>Pastikan profil di pojok kanan atas di-set sebagai <strong>"Buyer"</strong>.</li>
+            <li>Ketik di kolom chat UI: <em>"I want to buy Bose Headphones for $219."</em></li>
+            <li>Tunjukkan layar saat agen Alexa+ menolak/memperingatkan karena melebihi budget, lalu memanggil tool <code>validate_purchase_safety</code> dan <code>negotiate_dynamic_discount</code>.</li>
+        </ol>
+        
+        <p class="visual">🎙️ Naskah (Voiceover):</p>
+        <div class="voice">
+            "Let's look at the Buyer Agent. When I ask Alexa+ to buy a $219 headphone, it doesn't just add it to a cart. Using our MCP Server, it autonomously calls the validate_purchase_safety tool. It notices my entertainment budget is low. Instead of just failing, it automatically calls the negotiate_dynamic_discount tool to simulate a real-time bilateral negotiation with the seller, getting me a 15% discount voucher instantly."
+        </div>
+        <div class="translation">
+            (Terjemahan: Mari lihat Agen Pembeli. Saat saya meminta Alexa+ membeli headphone seharga $219, ia tidak sekadar memasukannya ke keranjang. Menggunakan server MCP, ia secara otonom memanggil tool validasi budget. Karena budget saya menipis, ia otomatis menawar harga ke penjual dan mendapatkan diskon 15% secara instan.)
+        </div>
     </div>
-    <div class="scene-action">
-      <strong>👁️ Tampilan Layar:</strong> Buka halaman web simulator <code>index.html</code>. Sorot Kartu 3D Prime Vault yang melayang interaktif dan tunjukkan ringkasan saldo $24,560.80.
-    </div>
-    <div class="script-box-en">
-      <span class="tag">VOICE-OVER (TTS EN)</span>
-      "Welcome to VaultAlexa+, an enterprise autonomous financial operating system for Alexa+ powered by the Model Context Protocol. While voice shopping makes buying effortless, it often triggers impulsive overspending without financial guardrails. VaultAlexa+ acts as an intelligent shopping guardian to protect user cashflow."
-    </div>
-    <div class="script-meaning-id">
-      🇮🇩 Arti: Selamat datang di VaultAlexa+, sistem operasi finansial otonom untuk Alexa+ berbasis MCP. Meskipun belanja suara sangat mudah, ini sering memicu belanja impulsif tanpa batas anggaran. VaultAlexa+ hadir sebagai pelindung belanja pintar untuk menjaga arus kas pengguna.
-    </div>
-  </div>
 
-  <!-- ADEGAN 2 -->
-  <div class="scene-card accent-orange">
-    <div class="scene-header">
-      <span class="scene-title">ADEGAN 2: CEK ANGGARAN & REBALANCING SALDO OTOMATIS</span>
-      <span class="scene-time">⏱️ 00:25 - 00:55 (30 Detik)</span>
+    <h2>⏱️ Detik 1:15 - 2:00 | Skenario 2: Agen Penjual (Seller)</h2>
+    <div class="section">
+        <p class="visual">🖥️ Di Layar (Visual):</p>
+        <ol>
+            <li>Klik tombol <em>Role Switch</em> di UI untuk berubah menjadi mode <strong>"Seller"</strong>.</li>
+            <li>Ketik di kolom chat: <em>"Give me my morning briefing."</em></li>
+            <li>Sorot layar saat agen memanggil tool <code>generate_morning_briefing</code> dan <code>predict_inventory_stockout</code>.</li>
+        </ol>
+        
+        <p class="visual">🎙️ Naskah (Voiceover):</p>
+        <div class="voice">
+            "But VaultAlexa+ is two-sided. I can switch my role to Seller. When I ask for my morning briefing, the agent dynamically routes the intent to the Seller MCP tools. It calls predict_inventory_stockout and warns me that my Amazon FBA inventory will run out in 3 days, and proactively drafts a purchase order for my supplier. No databases, just intelligent tool orchestration."
+        </div>
+        <div class="translation">
+            (Terjemahan: Namun VaultAlexa+ ini memiliki dua sisi. Saya bisa berganti peran menjadi Penjual. Saat saya meminta laporan pagi, agen akan mengeksekusi tool penjual. Ia memprediksi stok akan habis dalam 3 hari, dan secara proaktif membuatkan draf pemesanan barang. Tanpa database, murni orkestrasi tool yang cerdas.)
+        </div>
     </div>
-    <div class="scene-action">
-      <strong>👁️ Tampilan Layar:</strong> Buka panel chat Alexa+ di sebelah kanan. Ketik perintah <code>Beli Bose Headphones 700</code>. Muncul kartu peringatan merah limit belanja 100%. Klik tombol <code>+ Transfer $250 dari Tabungan</code> dan perlihatkan limit belanja bertambah secara live!
-    </div>
-    <div class="script-box-en">
-      <span class="tag">VOICE-OVER (TTS EN)</span>
-      "Watch what happens when we ask Alexa to buy Bose Headphones. The agent immediately evaluates our shopping budget and flags an over-budget alert. With one click on 'Transfer 250 dollars from Savings', the agent autonomously rebalances our ledger and updates our Prime card in real time."
-    </div>
-    <div class="script-meaning-id">
-      🇮🇩 Arti: Lihat apa yang terjadi saat kita menyuruh Alexa membeli headphone Bose. Agen langsung mengevaluasi sisa anggaran dan memunculkan peringatan over-budget. Dengan satu klik transfer $250 dari tabungan, agen secara otomatis menyeimbangkan buku besar dan memperbarui kartu Prime secara live.
-    </div>
-  </div>
 
-  <!-- ADEGAN 3 -->
-  <div class="scene-card accent-purple">
-    <div class="scene-header">
-      <span class="scene-title">ADEGAN 3: TAWAR DISKON SELLER & PREDIKSI DEFISIT TAGIHAN</span>
-      <span class="scene-time">⏱️ 00:55 - 01:30 (35 Detik)</span>
+    <h2>⏱️ Detik 2:00 - 2:30 | "Under The Hood" (Teknis & MCP Inspector)</h2>
+    <div class="section">
+        <p class="visual">🖥️ Di Layar (Visual):</p>
+        <ol>
+            <li>Klik menu <strong>"MCP Inspector"</strong> di panel samping UI, pilih tool, klik Execute.</li>
+            <li>Buka Terminal, jalankan perintah <code>npm test</code> dan tunjukkan teks hijau: <code>✅ All 9 MCP JSON-RPC 2.0 Method Calls Verified...</code></li>
+        </ol>
+        
+        <p class="visual">🎙️ Naskah (Voiceover):</p>
+        <div class="voice">
+            "Under the hood, we strictly followed the November 2025 MCP specification using Streamable HTTP. Our Node.js server exposes 15 distinct autonomous tools and 3 resources. As you can see from our test suite, it perfectly passes all JSON-RPC 2.0 compliance checks."
+        </div>
+        <div class="translation">
+            (Terjemahan: Di balik layar, kami secara ketat mengikuti spesifikasi MCP November 2025 menggunakan Streamable HTTP. Server Node.js kami menyediakan 15 tool otonom dan 3 resource. Seperti yang terlihat di test suite kami, proyek ini lulus uji kepatuhan JSON-RPC 2.0 dengan sempurna.)
+        </div>
     </div>
-    <div class="scene-action">
-      <strong>👁️ Tampilan Layar:</strong> Di chat ketik: <code>Tawar harga untuk speaker Echo Show</code> (muncul voucher diskon AMZ-MCP-SAVE15). Lalu ketik: <code>Apakah aman beli headphone atau ada prediksi defisit tagihan rutin?</code> (muncul deteksi tagihan listrik & asuransi $450 dalam 7 hari).
-    </div>
-    <div class="script-box-en">
-      <span class="tag">VOICE-OVER (TTS EN)</span>
-      "VaultAlexa+ can negotiate bilateral discounts with Amazon sellers, instantly securing a fifteen percent discount voucher. More importantly, it is proactive, not reactive. Powered by AWS Bedrock, it detects upcoming utility and insurance bills due in seven days, warning users before a cashflow deficit occurs."
-    </div>
-    <div class="script-meaning-id">
-      🇮🇩 Arti: VaultAlexa+ dapat menegosiasikan diskon langsung dengan penjual Amazon, memberikan voucher diskon 15%. Yang terpenting, sistem ini proaktif, bukan reaktif. Ditenagai AWS Bedrock, sistem mendeteksi tagihan listrik dan asuransi dalam 7 hari ke depan, memperingatkan pengguna sebelum terjadi defisit uang.
-    </div>
-  </div>
 
-  <!-- ADEGAN 4 -->
-  <div class="scene-card accent-emerald">
-    <div class="scene-header">
-      <span class="scene-title">ADEGAN 4: REFUND KOMPLAIN INSTAN & INSPEKTUR PROTOKOL MCP</span>
-      <span class="scene-time">⏱️ 01:30 - 02:05 (35 Detik)</span>
+    <h2>⏱️ Detik 2:30 - 3:00 | Penutup (Conclusion)</h2>
+    <div class="section">
+        <p class="visual">🖥️ Di Layar (Visual):</p>
+        <p>Kembali ke halaman UI awal (Dashboard), lalu tampilkan wajah Anda atau logo proyek.</p>
+        
+        <p class="visual">🎙️ Naskah (Voiceover):</p>
+        <div class="voice">
+            "By connecting the Amazon ecosystem directly to Agentic reasoning via MCP, VaultAlexa+ shapes the future of how humans interact with smart commerce—transforming passive interfaces into proactive digital assistants. Thank you!"
+        </div>
+        <div class="translation">
+            (Terjemahan: Dengan menghubungkan ekosistem Amazon langsung ke penalaran Agentic via MCP, VaultAlexa+ membentuk masa depan perdagangan cerdas—mengubah antarmuka pasif menjadi asisten digital proaktif. Terima kasih!)
+        </div>
     </div>
-    <div class="scene-action">
-      <strong>👁️ Tampilan Layar:</strong> Di chat ketik: <code>Barang Bose Headphones rusak di jalan, tolong ajukan komplain dan refund</code> (kartu tiket RMA terbit dan saldo instan bertambah +$219). Pindah ke tab menu <strong>"Inspektur MCP"</strong> di sidebar kiri, pilih tool <code>predict_monthly_runway</code>, klik tombol <strong>Execute JSON-RPC Tool</strong>, dan tunjukkan badge latensi sub-15ms!
+    
+    <div style="text-align: center; margin-top: 40px; color: #888;">
+        <em>💡 Tip: Tekan <strong>Ctrl + P</strong> (Windows) atau <strong>Cmd + P</strong> (Mac) untuk menyimpan halaman ini sebagai PDF.</em>
     </div>
-    <div class="script-box-en">
-      <span class="tag">VOICE-OVER (TTS EN)</span>
-      "For post-purchase protection, if an item arrives damaged, a simple voice command automatically generates an RMA return ticket and instantly refunds two hundred and nineteen dollars back to the Prime Vault. Developers and judges can inspect all thirteen autonomous tools in the live MCP Protocol Inspector with sub-fifteen millisecond latency."
-    </div>
-    <div class="script-meaning-id">
-      🇮🇩 Arti: Untuk perlindungan purna jual, jika barang rusak di jalan, perintah suara otomatis menerbitkan tiket retur RMA dan merefund $219 seketika ke Prime Vault. Dewan juri dapat menguji seluruh 13 tools otonom di panel Inspektur MCP dengan latensi super cepat di bawah 15 milidetik.
-    </div>
-  </div>
-
-  <!-- ADEGAN 5 -->
-  <div class="scene-card accent-slate">
-    <div class="scene-header">
-      <span class="scene-title">ADEGAN 5: PENUTUP & ARSITEKTUR CLOUD AWS SERVERLESS</span>
-      <span class="scene-time">⏱️ 02:05 - 02:20 (15 Detik)</span>
-    </div>
-    <div class="scene-action">
-      <strong>👁️ Tampilan Layar:</strong> Buka tab halaman GitHub repository README.md, sorot diagram arsitektur AWS Serverless (AWS Lambda, Bedrock AgentCore, DynamoDB PrimeVaultLedger, CloudWatch).
-    </div>
-    <div class="script-box-en">
-      <span class="tag">VOICE-OVER (TTS EN)</span>
-      "Built with AWS Lambda, Bedrock AgentCore, DynamoDB, and CloudWatch, VaultAlexa+ delivers a secure, production-ready foundation for the future of autonomous voice commerce. Thank you."
-    </div>
-    <div class="script-meaning-id">
-      🇮🇩 Arti: Dibangun dengan AWS Lambda, Bedrock AgentCore, DynamoDB, dan CloudWatch, VaultAlexa+ menghadirkan fondasi aman dan siap produksi untuk masa depan belanja suara otonom. Terima kasih.
-    </div>
-  </div>
-
-  <!-- TEKS LENGKAP SEKALI COPY -->
-  <div class="full-script-box">
-    <h4>📋 Teks Utuh Bahasa Inggris (Tinggal 1x Copy-Paste ke AI Voice / TTS)</h4>
-    "Welcome to VaultAlexa+, an enterprise autonomous financial operating system for Alexa+ powered by the Model Context Protocol. While voice shopping makes buying effortless, it often triggers impulsive overspending without financial guardrails. VaultAlexa+ acts as an intelligent shopping guardian to protect user cashflow.
-    Watch what happens when we ask Alexa to buy Bose Headphones. The agent immediately evaluates our shopping budget and flags an over-budget alert. With one click on 'Transfer 250 dollars from Savings', the agent autonomously rebalances our ledger and updates our Prime card in real time.
-    VaultAlexa+ can negotiate bilateral discounts with Amazon sellers, instantly securing a fifteen percent discount voucher. More importantly, it is proactive, not reactive. Powered by AWS Bedrock, it detects upcoming utility and insurance bills due in seven days, warning users before a cashflow deficit occurs.
-    For post-purchase protection, if an item arrives damaged, a simple voice command automatically generates an RMA return ticket and instantly refunds two hundred and nineteen dollars back to the Prime Vault. Developers and judges can inspect all thirteen autonomous tools in the live MCP Protocol Inspector with sub-fifteen millisecond latency.
-    Built with AWS Lambda, Bedrock AgentCore, DynamoDB, and CloudWatch, VaultAlexa+ delivers a secure, production-ready foundation for the future of autonomous voice commerce. Thank you."
-  </div>
-
-  <div class="footer">
-    <span>Dokumen Naskah Video Demo • VaultAlexa+ MCP • Amazon Developer Hackathon 2026</span>
-    <span>Tersimpan di: C:\document\Naskah_Video_Demo_VaultAlexa.pdf</span>
-  </div>
 
 </body>
 </html>
